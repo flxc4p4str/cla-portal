@@ -1,0 +1,66 @@
+<div class="login-page">
+  <section class="login-hero">
+    <div class="logo-slot">
+      <img class="logo-slot__image" src="/images/auth/absLogoCircle02.png" alt="cla-portal logo" />
+      <span class="logo-slot__name">cla-portal</span>
+    </div>
+
+    <h1>Welcome back</h1>
+    <p>Sign in to access your workspace, reports, and operational controls.</p>
+
+    <figure class="image-placeholder">
+      <img src="/images/auth/login-placeholder.svg" alt="Product dashboard placeholder preview" />
+    </figure>
+  </section>
+
+  <section class="login-panel">
+    <p class="eyebrow">Secure sign-in</p>
+    <h2>Login</h2>
+
+    <form (submit)="onSubmit($event)">
+      <igx-input-group class="field-group" type="box">
+        <label igxLabel>Username</label>
+        <input
+          igxInput
+          type="text"
+          name="userId"
+          required
+          [ngModel]="model().USER_ID"
+          (ngModelChange)="updateField('USER_ID', $event)"
+          placeholder="Enter username"
+          autocomplete="username"
+          #userIdModel="ngModel"
+        />
+      </igx-input-group>
+      @if ((userIdModel.touched || submitAttempted()) && userIdModel.invalid) {
+        <small class="error">Username is required.</small>
+      }
+
+      <igx-input-group class="field-group" type="box">
+        <label igxLabel>Password</label>
+        <input
+          igxInput
+          type="password"
+          name="password"
+          required
+          [ngModel]="model().USER_PASSWORD"
+          (ngModelChange)="updateField('USER_PASSWORD', $event)"
+          placeholder="Enter password"
+          autocomplete="current-password"
+          #passwordModel="ngModel"
+        />
+      </igx-input-group>
+      @if ((passwordModel.touched || submitAttempted()) && passwordModel.invalid) {
+        <small class="error">Password is required.</small>
+      }
+
+      @if (errorMessage()) {
+        <div class="error-banner">{{ errorMessage() }}</div>
+      }
+
+      <button type="submit" igxButton="contained" class="submit-btn" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+  </section>
+</div>

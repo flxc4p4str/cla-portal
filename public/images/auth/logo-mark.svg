@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="pocApplication logo mark">
+  <defs>
+    <linearGradient id="brand" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2563EB" />
+      <stop offset="1" stop-color="#0F172A" />
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="48" height="48" rx="10" fill="url(#brand)" />
+  <rect x="19" y="18" width="6" height="28" rx="3" fill="#F8FAFC" />
+  <rect x="29" y="24" width="6" height="22" rx="3" fill="#DBEAFE" />
+  <rect x="39" y="30" width="6" height="16" rx="3" fill="#BFDBFE" />
+</svg>
