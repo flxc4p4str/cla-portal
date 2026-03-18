@@ -31,7 +31,16 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-light.css"
+              {
+                "input": "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-light.css",
+                "bundleName": "igniteui-fluent-light",
+                "inject": false
+              },
+              {
+                "input": "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-dark.css",
+                "bundleName": "igniteui-fluent-dark",
+                "inject": false
+              }
             ]
           },
           "configurations": {
@@ -75,7 +84,16 @@
           "options": {
             "styles": [
               "src/styles.scss",
-              "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-light.css"
+              {
+                "input": "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-light.css",
+                "bundleName": "igniteui-fluent-light",
+                "inject": false
+              },
+              {
+                "input": "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-dark.css",
+                "bundleName": "igniteui-fluent-dark",
+                "inject": false
+              }
             ]
           }
         }

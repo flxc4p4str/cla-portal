@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
       }
     </section>
   `,
-  styles: [`.card{background:#fff;border:1px solid #e5e7eb;border-radius:1.5rem;padding:1.5rem;display:grid;gap:1rem}.field{display:grid;gap:.4rem}input,textarea{width:100%;border:1px solid #cbd5e1;border-radius:.875rem;padding:.85rem 1rem;font:inherit}textarea{resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.actions{display:flex;gap:.75rem}button{border:1px solid #111827;background:#111827;color:#fff;border-radius:.875rem;padding:.75rem 1rem;cursor:pointer}.secondary{background:#fff;color:#111827}.error{background:#fff1f2;color:#9f1239;padding:1rem;border-radius:1rem;overflow:auto}`],
+  styles: [`.card{background:var(--surface);border:1px solid var(--surface-border);border-radius:var(--app-radius);padding:1.5rem;display:grid;gap:1rem;color:var(--text-primary)}p{color:var(--text-muted)}.field{display:grid;gap:.4rem}input,textarea{width:100%;border:1px solid var(--surface-border);background:var(--app-surface-soft);color:var(--text-primary);border-radius:var(--app-radius);padding:.85rem 1rem;font:inherit}textarea{resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.actions{display:flex;gap:.75rem}button{border:1px solid var(--app-brand);background:var(--app-brand);color:var(--app-brand-contrast);border-radius:var(--app-radius);padding:.75rem 1rem;cursor:pointer}.secondary{background:var(--button-bg);border-color:var(--button-border);color:var(--button-text)}.error{background:var(--app-error-bg);color:var(--app-error);padding:1rem;border:1px solid var(--app-error-border);border-radius:var(--app-radius);overflow:auto}`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApiTestComponent {

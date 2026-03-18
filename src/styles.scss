@@ -1,18 +1,22 @@
-/* Global starter styles for cla-portal */
+@use './styles/theme';
+
 :root {
-  color-scheme: light;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 html, body {
   margin: 0;
   min-height: 100%;
-  background: #f8fafc;
-  color: #0f172a;
+  background: var(--layout-bg);
+  color: var(--text-primary);
 }
 
 body {
   min-height: 100vh;
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--app-brand) 8%, transparent), transparent 38%),
+    linear-gradient(180deg, var(--app-bg), var(--app-bg-alt));
+  transition: background-color 180ms ease, color 180ms ease;
 }
 
 * {
@@ -21,4 +25,14 @@ body {
 
 button, input, textarea {
   font: inherit;
+  border-radius: var(--app-radius);
+}
+
+a {
+  color: var(--app-brand);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--app-brand) 22%, transparent);
+  color: var(--text-primary);
 }

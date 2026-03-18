@@ -13,7 +13,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </div>
     </section>
   `,
-  styles: [`.page{display:grid;gap:1rem}.hero{background:#fff;border:1px solid #e5e7eb;border-radius:1.5rem;padding:2rem;box-shadow:0 10px 30px rgba(15,23,42,.04)}.eyebrow{text-transform:uppercase;letter-spacing:.08em;color:#6366f1;font-weight:700;font-size:.75rem}h1{margin:.25rem 0 .5rem;font-size:2rem}.lede{color:#4b5563;max-width:48rem}`],
+  styles: [`.page{display:grid;gap:1rem}.hero{background:var(--surface);border:1px solid var(--surface-border);border-radius:var(--app-radius);padding:2rem;box-shadow:var(--app-shadow)}.eyebrow{text-transform:uppercase;letter-spacing:.08em;color:var(--app-brand-strong);font-weight:700;font-size:.75rem}h1{margin:.25rem 0 .5rem;font-size:2rem;color:var(--text-primary)}.lede{color:var(--text-muted);max-width:48rem}`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {}

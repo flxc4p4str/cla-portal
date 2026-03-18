@@ -1,0 +1,181 @@
+/* Centralized theme tokens. Update palette values here to retune branding. */
+
+@mixin light-theme {
+  color-scheme: light;
+
+  --theme-brand-50: #fff4f5;
+  --theme-brand-100: #ffe4e8;
+  --theme-brand-200: #fecdd6;
+  --theme-brand-300: #fda4af;
+  --theme-brand-400: #fb7185;
+  --theme-brand-500: #ef4444;
+  --theme-brand-600: #dc2626;
+  --theme-brand-700: #b91c1c;
+  --theme-brand-800: #991b1b;
+  --theme-brand-900: #7f1d1d;
+
+  --ig-primary-50: var(--theme-brand-50);
+  --ig-primary-100: var(--theme-brand-100);
+  --ig-primary-200: var(--theme-brand-200);
+  --ig-primary-300: var(--theme-brand-300);
+  --ig-primary-400: var(--theme-brand-400);
+  --ig-primary-500: var(--theme-brand-500);
+  --ig-primary-600: var(--theme-brand-600);
+  --ig-primary-700: var(--theme-brand-700);
+  --ig-primary-800: var(--theme-brand-800);
+  --ig-primary-900: var(--theme-brand-900);
+  --ig-primary-50-contrast: #1f2328;
+  --ig-primary-100-contrast: #1f2328;
+  --ig-primary-200-contrast: #1f2328;
+  --ig-primary-300-contrast: #1f2328;
+  --ig-primary-400-contrast: #fff8f8;
+  --ig-primary-500-contrast: #fff8f8;
+  --ig-primary-600-contrast: #fff8f8;
+  --ig-primary-700-contrast: #fff8f8;
+  --ig-primary-800-contrast: #fff8f8;
+  --ig-primary-900-contrast: #fff8f8;
+  --ig-radius-factor: 0;
+
+  --app-radius: 3px;
+  --app-bg: #f3f4f6;
+  --app-bg-alt: #ebedf0;
+  --app-surface: #ffffff;
+  --app-surface-soft: #f8f9fb;
+  --app-text: #1f2328;
+  --app-text-muted: #5d6670;
+  --app-text-inverse: #fff8f8;
+  --app-border: #d9dde3;
+  --app-border-strong: #bcc4cc;
+  --app-brand: var(--theme-brand-600);
+  --app-brand-strong: var(--theme-brand-700);
+  --app-brand-contrast: #fff8f8;
+  --app-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+  --app-error: #b91c1c;
+  --app-error-bg: #fff1f2;
+  --app-error-border: #f9a8b5;
+
+  --nav-bg: #854442;
+  --nav-text: #f8f9fb;
+  --nav-muted: #ccd2da;
+  --nav-hover: rgba(220, 38, 38, 0.18);
+  --nav-active-border: var(--app-brand);
+  --button-bg: var(--app-surface-soft);
+  --button-text: var(--app-text);
+  --button-border: var(--app-border);
+  --backdrop: rgba(15, 23, 42, 0.38);
+
+  --login-hero-overlay-start: rgba(17, 24, 39, 0.24);
+  --login-hero-overlay-end: rgba(127, 29, 29, 0.12);
+  --login-hero-text: #f8fafc;
+  --login-hero-muted: #e5e7eb;
+  --login-glass-bg: rgba(17, 24, 39, 0.24);
+  --login-glass-border: rgba(229, 231, 235, 0.3);
+  --login-preview-bg: rgba(17, 24, 39, 0.18);
+  --login-preview-border: rgba(229, 231, 235, 0.24);
+
+  --layout-bg: var(--app-bg);
+  --surface: var(--app-surface);
+  --surface-border: var(--app-border);
+  --text-primary: var(--app-text);
+  --text-muted: var(--app-text-muted);
+}
+
+@mixin dark-theme {
+  color-scheme: dark;
+
+  --theme-brand-50: #ffe4e8;
+  --theme-brand-100: #fecdd6;
+  --theme-brand-200: #fda4af;
+  --theme-brand-300: #fb7185;
+  --theme-brand-400: #ef4444;
+  --theme-brand-500: #dc2626;
+  --theme-brand-600: #b91c1c;
+  --theme-brand-700: #991b1b;
+  --theme-brand-800: #7f1d1d;
+  --theme-brand-900: #571319;
+
+  --ig-primary-50: var(--theme-brand-50);
+  --ig-primary-100: var(--theme-brand-100);
+  --ig-primary-200: var(--theme-brand-200);
+  --ig-primary-300: var(--theme-brand-300);
+  --ig-primary-400: var(--theme-brand-400);
+  --ig-primary-500: var(--theme-brand-500);
+  --ig-primary-600: var(--theme-brand-600);
+  --ig-primary-700: var(--theme-brand-700);
+  --ig-primary-800: var(--theme-brand-800);
+  --ig-primary-900: var(--theme-brand-900);
+  --ig-primary-50-contrast: #14171b;
+  --ig-primary-100-contrast: #14171b;
+  --ig-primary-200-contrast: #14171b;
+  --ig-primary-300-contrast: #14171b;
+  --ig-primary-400-contrast: #fff4f5;
+  --ig-primary-500-contrast: #fff4f5;
+  --ig-primary-600-contrast: #fff4f5;
+  --ig-primary-700-contrast: #fff4f5;
+  --ig-primary-800-contrast: #fff4f5;
+  --ig-primary-900-contrast: #fff4f5;
+  --ig-radius-factor: 0;
+
+  --app-radius: 3px;
+  --app-bg: #111317;
+  --app-bg-alt: #181b20;
+  --app-surface: #1b1f24;
+  --app-surface-soft: #232830;
+  --app-text: #f3f4f6;
+  --app-text-muted: #b4bcc6;
+  --app-text-inverse: #fff8f8;
+  --app-border: #343b45;
+  --app-border-strong: #49515d;
+  --app-brand: #fb7185;
+  --app-brand-strong: #fda4af;
+  --app-brand-contrast: #14171b;
+  --app-shadow: 0 18px 36px rgba(0, 0, 0, 0.3);
+  --app-error: #fda4af;
+  --app-error-bg: rgba(127, 29, 29, 0.3);
+  --app-error-border: rgba(252, 165, 165, 0.35);
+
+  --nav-bg: #16191d;
+  --nav-text: #f3f4f6;
+  --nav-muted: #98a1ac;
+  --nav-hover: rgba(251, 113, 133, 0.18);
+  --nav-active-border: var(--app-brand);
+  --button-bg: var(--app-surface-soft);
+  --button-text: var(--app-text);
+  --button-border: var(--app-border);
+  --backdrop: rgba(0, 0, 0, 0.56);
+
+  --login-hero-overlay-start: rgba(10, 12, 15, 0.34);
+  --login-hero-overlay-end: rgba(87, 19, 25, 0.18);
+  --login-hero-text: #f3f4f6;
+  --login-hero-muted: #d4d8dd;
+  --login-glass-bg: rgba(17, 19, 23, 0.4);
+  --login-glass-border: rgba(212, 216, 221, 0.18);
+  --login-preview-bg: rgba(17, 19, 23, 0.38);
+  --login-preview-border: rgba(212, 216, 221, 0.14);
+
+  --layout-bg: var(--app-bg);
+  --surface: var(--app-surface);
+  --surface-border: var(--app-border);
+  --text-primary: var(--app-text);
+  --text-muted: var(--app-text-muted);
+}
+
+:root {
+  @include light-theme();
+}
+
+:root[data-theme='light'],
+[data-theme='light'] {
+  @include light-theme();
+}
+
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  @include dark-theme();
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-theme();
+  }
+}

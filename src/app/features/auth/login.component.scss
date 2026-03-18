@@ -1,18 +1,11 @@
 :host {
-  --surface: #ffffff;
-  --surface-soft: #f8fafc;
-  --text: #0f172a;
-  --muted: #475569;
-  --line: #dbe3ee;
-  --line-strong: #b7c6da;
-  --brand: #1d4ed8;
-  --error: #b91c1c;
   display: block;
   min-height: 100vh;
-  background-color: #eef3f9;
-  background-image: linear-gradient(120deg, rgba(17, 24, 39, 0.42), rgba(30, 64, 175, 0.2)), url('/images/auth/saas-bg.svg');
+  background-color: var(--layout-bg);
+  background-image: linear-gradient(120deg, var(--login-hero-overlay-start), var(--login-hero-overlay-end)), url('/images/auth/saas-bg.svg');
   background-size: cover;
   background-position: center;
+  color: var(--text-primary);
 }
 
 .login-page {
@@ -26,7 +19,7 @@
   display: grid;
   align-content: center;
   gap: 1.25rem;
-  color: #f8fafc;
+  color: var(--login-hero-text);
   animation: fade-up 360ms ease-out both;
 }
 
@@ -36,9 +29,9 @@
   gap: 0.75rem;
   max-width: fit-content;
   padding: 0.45rem 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  border-radius: 8px;
-  background: rgba(15, 23, 42, 0.18);
+  border: 1px solid var(--login-glass-border);
+  border-radius: var(--app-radius);
+  background: var(--login-glass-bg);
 }
 
 .logo-slot__image {
@@ -50,7 +43,7 @@
 .logo-slot__name {
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: #e2e8f0;
+  color: var(--login-hero-muted);
 }
 
 h1 {
@@ -63,15 +56,15 @@ h1 {
 p {
   margin: 0;
   max-width: 42ch;
-  color: #e2e8f0;
+  color: var(--login-hero-muted);
 }
 
 .image-placeholder {
   margin: 0.4rem 0 0;
-  border-radius: 10px;
-  border: 1px solid rgba(241, 245, 249, 0.34);
+  border-radius: var(--app-radius);
+  border: 1px solid var(--login-preview-border);
   overflow: hidden;
-  background: rgba(15, 23, 42, 0.16);
+  background: var(--login-preview-bg);
   backdrop-filter: blur(1px);
 }
 
@@ -84,10 +77,10 @@ p {
   margin: auto;
   width: min(30rem, calc(100% - 2rem));
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--app-radius);
   padding: 2rem;
-  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12);
+  box-shadow: var(--app-shadow);
   animation: fade-up 420ms ease-out 80ms both;
 }
 
@@ -97,12 +90,12 @@ p {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  color: #1e3a8a;
+  color: var(--app-brand-strong);
 }
 
 h2 {
   margin: 0.55rem 0 0;
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 form {
@@ -116,16 +109,16 @@ form {
 }
 
 .error {
-  color: var(--error);
+  color: var(--app-error);
   font-size: 0.78rem;
   margin: -0.2rem 0 0.2rem;
 }
 
 .error-banner {
-  color: var(--error);
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
+  color: var(--app-error);
+  background: var(--app-error-bg);
+  border: 1px solid var(--app-error-border);
+  border-radius: var(--app-radius);
   padding: 0.7rem 0.8rem;
   font-size: 0.88rem;
 }
@@ -133,7 +126,7 @@ form {
 .submit-btn {
   margin-top: 0.4rem;
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--app-radius);
 }
 
 .submit-btn[disabled] {

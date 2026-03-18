@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
       <button type="button" (click)="count.update((value) => value + 1)">Clicked {{ count() }} times</button>
     </section>
   `,
-  styles: [`.card{background:#fff;border:1px solid #e5e7eb;border-radius:1.5rem;padding:1.5rem}button{margin-top:1rem;border:1px solid #d1d5db;background:#111827;color:#fff;border-radius:.875rem;padding:.75rem 1rem;cursor:pointer}`],
+  styles: [`.card{background:var(--surface);border:1px solid var(--surface-border);border-radius:var(--app-radius);padding:1.5rem;color:var(--text-primary)}p{color:var(--text-muted)}button{margin-top:1rem;border:1px solid var(--app-brand);background:var(--app-brand);color:var(--app-brand-contrast);border-radius:var(--app-radius);padding:.75rem 1rem;cursor:pointer}`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleComponent {
