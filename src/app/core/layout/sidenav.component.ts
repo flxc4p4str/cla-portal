@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
+// import { MatIconModule } from '@angular/material/icon';
+import { IgxIconComponent } from '@infragistics/igniteui-angular/icon';
+import { IgxIconService } from '@infragistics/igniteui-angular/icon';
+import { github } from '@igniteui/material-icons-extended';
 import { NavItem } from '../config/nav-item.model';
 
 @Component({
   selector: 'app-sidenav',
-  imports: [RouterLink, RouterLinkActive],
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive, IgxIconComponent],
   template: `
     <aside class="backdrop" [class.visible]="mobileOpen()" (click)="closeMobile.emit()"></aside>
     <nav class="sidenav" [class.collapsed]="collapsed()" [class.mobile-open]="mobileOpen()">
@@ -22,6 +26,11 @@ import { NavItem } from '../config/nav-item.model';
       </div>
       @for (item of items(); track item.path) {
         <a class="menu-link" [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.path === '/home' }" (click)="closeMobile.emit()">
+          @if (item.icon) {
+            <!-- <span class="menu-icon material-symbols-outlined">{{ item.icon }}</span> -->
+            <!-- <mat-icon>{{ item.icon }}</mat-icon> -->
+            <!-- <igx-icon>estate</igx-icon> -->
+          }
           @if (!collapsed() || mobileOpen()) {<span>{{ item.menuText }}</span> }
         </a>
       }

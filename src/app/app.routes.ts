@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from './core/auth/auth.guard';
+import { Summary } from './features/summary/summary';
 
 export const appRoutes: Routes = [
   {
@@ -13,7 +14,7 @@ export const appRoutes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./core/layout/shell.component').then((m) => m.ShellComponent),
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: '', pathMatch: 'full', redirectTo: 'estate' },
       { path: 'home', loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent), data: { menuText: 'Home', icon: 'home' } },
       { path: 'example', loadComponent: () => import('./features/example/example.component').then((m) => m.ExampleComponent), data: { menuText: 'Example', icon: 'widgets' } },
       { path: 'api-test', loadComponent: () => import('./features/api-test/api-test.component').then((m) => m.ApiTestComponent), data: { menuText: 'API Test', icon: 'cloud' } },
@@ -27,7 +28,7 @@ export const appRoutes: Routes = [
         path: 'report-scheduler',
         canActivate: [authGuard],
         loadComponent: () => import('./features/report-scheduler/report-scheduler').then((m) => m.ReportScheduler),
-        data: { menuText: 'Report Scheduler', icon: 'widgets' },
+        data: { menuText: 'Report Scheduler', icon: 'WiFi' },
       },
       {
         path: 'timesheets',
@@ -41,6 +42,12 @@ export const appRoutes: Routes = [
         loadComponent: () => import('./features/retail-calendar/retail-calendar.component').then((m) => m.RetailCalendarComponent),
         data: { menuText: 'Retail Calendar', icon: 'widgets' },
       },
+      {
+        path: 'summary', 
+        canActivate: [authGuard], 
+        loadComponent: () => import('./features/summary/summary').then((m) => m.Summary),
+        data: { menuText: 'eComm Summary' },
+      }
     ],
   },
   { path: '**', redirectTo: '' },

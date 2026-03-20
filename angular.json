@@ -31,6 +31,7 @@
             ],
             "styles": [
               "src/styles.scss",
+                            "node_modules/@infragistics/igniteui-angular/styles/igniteui-angular.css",
               {
                 "input": "node_modules/@infragistics/igniteui-angular/styles/igniteui-fluent-light.css",
                 "bundleName": "igniteui-fluent-light",

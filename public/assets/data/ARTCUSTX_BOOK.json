@@ -1,0 +1,35 @@
+[
+  {
+    "TYPE": "BOOK",
+    "YP": "202601",
+    "CNT": 249,
+    "QTY": 640,
+    "AMT": 53471.84,
+    "CNT_OPEN": 56,
+    "CNT_PICK": 3,
+    "CNT_SHIP": 466,
+    "CNT_CANC": 1
+  },
+  {
+    "TYPE": "BOOK",
+    "YP": "202512",
+    "CNT": 266,
+    "QTY": 750,
+    "AMT": 61351.62,
+    "CNT_OPEN": 0,
+    "CNT_PICK": 0,
+    "CNT_SHIP": 603,
+    "CNT_CANC": 1
+  },
+  {
+    "TYPE": "BOOK",
+    "YP": "202511",
+    "CNT": 6,
+    "QTY": 10,
+    "AMT": 303.5,
+    "CNT_OPEN": 0,
+    "CNT_PICK": 0,
+    "CNT_SHIP": 10,
+    "CNT_CANC": 0
+  }
+]

@@ -1,0 +1,398 @@
+@if (!environment.production) {
+    <button (click)="getDataAfterClick()">Click to getData</button>                                  
+}  
+
+<div class="form-wrapper">
+
+    <div class="sample-wrapper">
+
+        <igx-tabs #summaryTabs style="min-width:600px; height:100%" (selectedIndexChange)="tabIndexChanged($event)"
+            (selectedIndexChanging)="tabIndexChanging($event)" [(selectedIndex)]="selectedTab">
+
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxPrefix igxTabHeaderIcon>add_shopping_cart</igx-icon>
+                    <span igxTabHeaderLabel>Open</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="grid__wrapper">
+                        <igx-grid #grdARTCUSTX_OPEN id="grdARTCUSTX_OPEN" [data]="ARTCUSTX_OPEN()" [rowHeight]="20"
+                            [height]="'200px'" [width]="'800px'" style="margin: 20px" ; [cellSelection]="'none'"
+                            [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
+                            (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                            @for (grdCol of grdColsARTCUSTX_OPEN(); track grdCol.FIELD) {
+                            <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                                [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                                [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                                [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                                [headerStyles]="grdHeaderStyles">
+                                @if (grdCol.FIELD === 'YP') {
+                                <ng-template igxCell let-val>
+                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+                                    <span [style.color]="val === CYP() ? 'green' : 'red'">
+                                        {{ ypMap[val] }}
+                                    </span>
+                                </ng-template>
+                                }
+                            </igx-column>
+                            }
+
+                            <igx-grid-toolbar class="total-row">
+                                <igx-grid-toolbar-title>Open Orders</igx-grid-toolbar-title>
+                                <igx-grid-toolbar-actions>
+                                   <button igxButton="outlined" igxRipple (click)="refresh('OPEN')">
+                                        Refresh
+                                    </button>
+                                    <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                </igx-grid-toolbar-actions>
+                            </igx-grid-toolbar>
+
+                            <!-- <igx-grid-footer>
+                                click on a row above to see the Orders
+                            </igx-grid-footer> -->
+                        </igx-grid>
+                    </div>                    
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxPrefix igxTabHeaderIcon>book_2</igx-icon>
+
+                    @if (!environment.production) {
+                        <span igxTabHeaderLabel>Booked {{testClass().value}}</span>                                
+                    } @else {
+                        <span igxTabHeaderLabel>Booking History</span>
+                    }  
+
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="grid__wrapper">
+                        <igx-grid #grdARTCUSTX_BOOK id="grdARTCUSTX_BOOK" [data]="ARTCUSTX_BOOK()" [rowHeight]="20"
+                            [height]="'200px'" [width]="'800px'" style="margin: 20px" ; [cellSelection]="'none'"
+                            [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
+                            [allowFiltering]="true" filterMode="excelStyleFilter"
+                            (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                            @for (grdCol of grdColsARTCUSTX_BOOK(); track grdCol.FIELD) {
+                            <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                                [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                                [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                                [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                                [headerStyles]="grdHeaderStyles">
+                                @if (grdCol.FIELD === 'YP') {
+                                <ng-template igxCell let-val>
+                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+                                    <span [style.color]="val === CYP() ? 'green' : 'red'">
+                                        {{ ypMap[val] }}
+                                    </span>
+                                </ng-template>
+                                }
+                            </igx-column>
+                            }
+
+                            <igx-grid-toolbar class="total-row">
+                                <igx-grid-toolbar-title>Booking History</igx-grid-toolbar-title>
+                                <igx-grid-toolbar-actions>
+
+                                    @if (!environment.production) {
+                                        <button igxButton="outlined" igxRipple (click)="test1()">
+                                            Test Signal
+                                        </button>                                    
+                                    }                                    
+
+                                    <button igxButton="outlined" igxRipple (click)="refresh('BOOK')">
+                                        Refresh RxJs
+                                    </button>
+                                    <button igxButton="outlined" igxRipple (click)="refresh2()">
+                                        Refresh httpR
+                                    </button>      
+
+                                    <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                </igx-grid-toolbar-actions>
+                            </igx-grid-toolbar>
+
+                            <!-- <igx-grid-footer>
+                                click on a row above to see the Orders
+                            </igx-grid-footer> -->
+                        </igx-grid>
+                    </div>
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxPrefix igxTabHeaderIcon>local_shipping</igx-icon>
+                    <span igxTabHeaderLabel>Shipped</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="grid__wrapper">
+                        <igx-grid #grdARTCUSTX_SHIP id="grdARTCUSTX_SHIP" [data]="ARTCUSTX_SHIP()" [rowHeight]="20"
+                            [height]="'200px'" [width]="'800px'" style="margin: 20px" ; [cellSelection]="'none'"
+                            [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
+                            (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                            @for (grdCol of grdColsARTCUSTX_SHIP(); track grdCol.FIELD) {
+                            <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                                [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                                [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                                [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                                [headerStyles]="grdHeaderStyles">
+                                @if (grdCol.FIELD === 'YP') {
+                                <ng-template igxCell let-val>
+                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+                                    <span [style.color]="val === CYP() ? 'green' : 'red'">
+                                        {{ ypMap[val] }}
+                                    </span>
+                                </ng-template>
+                                }
+                            </igx-column>
+                            }
+
+                            <igx-grid-toolbar class="total-row">
+                                <igx-grid-toolbar-title>Shipped Orders</igx-grid-toolbar-title>
+                                <igx-grid-toolbar-actions>                                
+                                   <button igxButton="outlined" igxRipple (click)="refresh('SHIP')">
+                                        Refresh
+                                    </button>
+                                    <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                </igx-grid-toolbar-actions>
+                            </igx-grid-toolbar>
+
+                            <!-- <igx-grid-footer>
+                                click on a row above to see the Orders
+                            </igx-grid-footer> -->
+                        </igx-grid>
+                    </div>                    
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxPrefix igxTabHeaderIcon>keyboard_return</igx-icon>
+                    <span igxTabHeaderLabel>Returns</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="grid__wrapper">
+                        <igx-grid #grdARTCUSTX_SHIP id="grdARTCUSTX_RTRN" [data]="ARTCUSTX_RTRN()" [rowHeight]="20"
+                            [height]="'200px'" [width]="'800px'" style="margin: 20px" ; [cellSelection]="'none'"
+                            [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
+                            (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                            @for (grdCol of grdColsARTCUSTX_RTRN(); track grdCol.FIELD) {
+                            <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                                [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                                [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                                [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                                [headerStyles]="grdHeaderStyles">
+                                @if (grdCol.FIELD === 'YP') {
+                                <ng-template igxCell let-val>
+                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+                                    <span [style.color]="val === CYP() ? 'green' : 'red'">
+                                        {{ ypMap[val] }}
+                                    </span>
+                                </ng-template>
+                                }
+                            </igx-column>
+                            }
+
+                            <igx-grid-toolbar class="total-row">
+                                <igx-grid-toolbar-title>Returned Orders</igx-grid-toolbar-title>
+                                <igx-grid-toolbar-actions>                                
+                                   <button igxButton="outlined" igxRipple (click)="refresh('RTRN')">
+                                        Refresh
+                                    </button>
+                                    <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                </igx-grid-toolbar-actions>
+                            </igx-grid-toolbar>
+
+                            <!-- <igx-grid-footer>
+                                click on a row above to see the Orders
+                            </igx-grid-footer> -->
+                        </igx-grid>
+                    </div>                          
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxPrefix igxTabHeaderIcon>paid</igx-icon>
+                    <span igxTabHeaderLabel>Payments</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="grid__wrapper">
+                        <igx-grid #grdARTCUSTX_PYMT id="grdARTCUSTX_PYMT" [data]="ARTCUSTX_PYMT()" [rowHeight]="20"
+                            [height]="'200px'" [width]="'1200px'" style="margin: 20px" ; [cellSelection]="'none'"
+                            [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
+                            (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                            @for (grdCol of grdColsARTCUSTX_PYMT(); track grdCol.FIELD) {
+                            <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                                [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                                [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                                [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                                [headerStyles]="grdHeaderStyles">
+                                @if (grdCol.FIELD === 'YP') {
+                                <ng-template igxCell let-val>
+                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+                                    <span [style.color]="val === CYP() ? 'green' : 'red'">
+                                        {{ ypMap[val] }}
+                                    </span>
+                                </ng-template>
+                                }
+                            </igx-column>
+                            }
+
+                            <igx-grid-toolbar class="total-row">
+                                <igx-grid-toolbar-title>Payments</igx-grid-toolbar-title>
+                                <igx-grid-toolbar-actions>                                
+                                   <button igxButton="outlined" igxRipple (click)="refresh('PYMT')">
+                                        Refresh
+                                    </button>
+                                    <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                </igx-grid-toolbar-actions>
+                            </igx-grid-toolbar>
+
+                            <!-- <igx-grid-footer>
+                                click on a row above to see the Orders
+                            </igx-grid-footer> -->
+                        </igx-grid>
+                    </div>                         
+                </igx-tab-content>
+            </igx-tab-item>
+
+            <igx-tab-item>
+                <igx-tab-header>
+                    <igx-icon igxPrefix igxTabHeaderIcon>forward</igx-icon>
+                    <span igxTabHeaderLabel>Roll Forward</span>
+                </igx-tab-header>
+                <igx-tab-content>
+                    <div class="grid__wrapper">
+                        <igx-grid #grdARTCUSTX_PYMT id="grdARTCUSTX_RF" [data]="ARTCUSTX_RF()" [rowHeight]="20"
+                            [height]="'200px'" [width]="'1500px'" style="margin: 20px" ; [cellSelection]="'none'"
+                            [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
+                            (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                            @for (grdCol of grdColsARTCUSTX_RF(); track grdCol.FIELD) {
+                            <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                                [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                                [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                                [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                                [headerStyles]="grdHeaderStyles">
+                                @if (grdCol.FIELD === 'YP') {
+                                <ng-template igxCell let-val>
+                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+                                    <span [style.color]="val === CYP() ? 'green' : 'red'">
+                                        {{ ypMap[val] }}
+                                    </span>
+                                </ng-template>
+                                }
+                            </igx-column>
+                            }
+
+                            <igx-grid-toolbar class="total-row">
+                                <igx-grid-toolbar-title>Roll Forward</igx-grid-toolbar-title>
+                                <igx-grid-toolbar-actions>                                
+                                   <button igxButton="outlined" igxRipple (click)="refresh('RF')">
+                                        Refresh
+                                    </button>
+                                    <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                </igx-grid-toolbar-actions>
+                            </igx-grid-toolbar>
+
+                            <!-- <igx-grid-footer>
+                                click on a row above to see the Orders
+                            </igx-grid-footer> -->
+                        </igx-grid>
+                    </div>                         
+                </igx-tab-content>
+            </igx-tab-item>
+        </igx-tabs>
+
+    </div>
+
+    @if (grdSOTORDR1_title) {
+
+    <div class="sample-wrapper">
+        <div class="grid__wrapper">
+            <igx-grid #grdSOTORDR1 id="grdSOTORDR1" [data]="SOTORDR1()" [rowHeight]="20" [height]="'350px'"
+                [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
+                [selectedRows]="selectedRows" [primaryKey]="'ORDR_NO'"
+                (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                @for (grdCol of grdColsSOTORDR1(); track grdCol.FIELD) {
+                <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
+                    [resizable]="true" [editable]="true" [hasSummary]="(grdCol['COLUMN_SUMMARY'] ? true : false)"
+                    [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                    [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                    [headerStyles]="grdHeaderStyles">
+
+                    @if (grdCol.FIELD === 'ORDR_STATUS') {
+                    <ng-template igxCell let-val>
+                        <!-- Use interpolation to access the mapped value from the component's map object -->
+                        <span [style.color]="val === 'O' ? 'green' : 'red'">
+                            {{ statusMap[val] }}
+                        </span>
+                    </ng-template>
+                    }
+
+                </igx-column>
+                }
+
+                <igx-grid-toolbar class="total-row">
+                    <!-- <igx-grid-toolbar-title>{{grdSOTORDR1_signal()}}</igx-grid-toolbar-title> -->
+                    <igx-grid-toolbar-title>{{grdSOTORDR1_title}}</igx-grid-toolbar-title>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                        <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>                        
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+
+                <!-- <igx-grid-footer>
+                    click on a row above to see the Order Details
+                                </igx-grid-footer> -->
+            </igx-grid>
+        </div>
+    </div>
+    }
+
+    @if (grdSOTORDR2_title) {
+    <div class="sample-wrapper">
+        <div class="grid__wrapper">
+            <igx-grid #grdSOTORDR2 id="grdSOTORDR2" [data]="SOTORDR2_ORDR()" [rowHeight]="20" [height]="'180px'"
+                [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
+                [selectedRows]="selectedRows" (rowSelectionChanging)="rowSelectionChanged($event)"
+                [hideRowSelectors]="hideRowSelectors">
+                <!-- <igx-column *ngFor="let each of datacolumns2" [sortable]="true" [field]="each.COLUMN_NAME"
+        [header]="each.COLUMN_CAPTION" [dataType]="each.COLUMN_TYPE" [pipeArgs]="each.COLUMN_FORMAT"
+        [hasSummary]="(each['COLUMN_SUMMARY'] ? true : false)" [summaries]="each.COLUMN_SUMMARY"
+        [width]="each.COLUMN_WIDTH" 
+        [summaryFormatter]="each.COLUMN_SUMMARY_FORMAT" 
+        resizable="true">
+    </igx-column> -->
+
+                <!-- [hasSummary]=!!grdCol['COLUMN_SUMMARY'] -->
+
+                @for (grdCol of grdColsSOTORDR2(); track grdCol.FIELD) {
+                <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
+                    [resizable]="true" [editable]="true" [summaries]=grdCol.COLUMN_SUMMARY
+                    [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT [pipeArgs]=grdCol.COLUMN_FORMAT
+                    class="column-header" [headerClasses]="'column-header'" [headerStyles]="grdHeaderStyles">
+                </igx-column>
+                }
+
+                <igx-grid-toolbar class="total-row">
+                    <!-- <igx-grid-toolbar-title>{{grdSOTORDR2_signal()}}</igx-grid-toolbar-title> -->
+                    <igx-grid-toolbar-title>{{grdSOTORDR2_title}}</igx-grid-toolbar-title>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+
+            </igx-grid>
+        </div>
+    </div>
+    }
+
+</div>

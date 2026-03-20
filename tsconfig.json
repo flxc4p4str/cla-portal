@@ -13,7 +13,14 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@abs/*": ["./src/app/abs/*"], // ["src/app/abs/*"],
+      // "@abs-base/*": ["src/app/abs/base/*"], //  ["src/app/abs/base/*"],
+      "@abs-environments/*": ["./src/environments/*"],
+      "@abs-services/*": ["./src/app/*"], // ["./src/app/abs/services/*"], // ["src/app/abs/services/*"],
+      // "@abs-components/*": ["src/app/abs/components/*"],
+  }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

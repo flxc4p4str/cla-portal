@@ -1,0 +1,32 @@
+[
+  {
+    "CUST_CODE": "SKINCOM",
+    "CUST_NAME": "SKIN Worldwide COM",
+    "OPEN_CNT": 28,
+    "OPEN_QTY": 67,
+    "OPEN_AMT": 5085.15,
+    "OPEN_MIN_DATE": 46052,
+    "OPEN_MAX_DATE": 46054,
+    "BOOK_CNT": 250,
+    "BOOK_QTY": 641,
+    "BOOK_AMT": 53696.84,
+    "BOOK_MIN_DATE": 46031,
+    "BOOK_MAX_DATE": 46054,
+    "BOOK_CNT_OPEN": 57,
+    "BOOK_CNT_PICK": 3,
+    "BOOK_CNT_SHIP": 466,
+    "BOOK_CNT_CANC": 1,
+    "SHIP_CNT": 452,
+    "SHIP_QTY": 1235,
+    "SHIP_AMT": 101338.24,
+    "SHIP_GRS": 133027.31,
+    "SHIP_DSC": 30238.72,
+    "RTRN_CNT": 9,
+    "RTRN_QTY": -14,
+    "RTRN_AMT": -1484.39,
+    "AR_OPEN_CNT": 492,
+    "AR_OPEN_AMT": 109604.31,
+    "AR_OVER_CNT": 5,
+    "AR_OVER_AMT": 941.28
+  }
+]
