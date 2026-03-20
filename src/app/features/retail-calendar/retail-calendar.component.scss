@@ -1,0 +1,240 @@
+:host {
+  display: block;
+}
+
+.retail-calendar-page {
+  display: grid;
+  gap: 1.25rem;
+  color: var(--text-primary);
+}
+
+.hero-card,
+.panel {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, white 8%), var(--surface));
+  border: 1px solid var(--surface-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+}
+
+.hero-card {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--app-brand);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+h1,
+h2,
+.hero-text,
+.panel-header p,
+.validation-error,
+.empty-state {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+.hero-text,
+.panel-header p,
+.empty-state {
+  color: var(--text-muted);
+}
+
+.year-form {
+  display: grid;
+  gap: 0.6rem;
+  min-width: min(100%, 16rem);
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+}
+
+.field span {
+  font-weight: 600;
+}
+
+input {
+  border: 1px solid var(--surface-border);
+  background: var(--app-surface-soft);
+  color: var(--text-primary);
+  padding: 0.8rem 0.9rem;
+}
+
+button {
+  border: 1px solid var(--app-brand);
+  background: var(--app-brand);
+  color: var(--app-brand-contrast);
+  padding: 0.8rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.validation-error,
+.error-box {
+  color: var(--app-error);
+}
+
+.error-box {
+  margin: 0 1.5rem 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--app-error-border);
+  background: var(--app-error-bg);
+  overflow: auto;
+}
+
+.panel-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.status-chip {
+  border: 1px solid color-mix(in srgb, var(--app-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--app-brand) 10%, transparent);
+  color: var(--app-brand);
+  border-radius: 999px;
+  padding: 0.28rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.calendar-scroll,
+.raw-scroll {
+  overflow: auto;
+}
+
+.calendar-table,
+.raw-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.calendar-table th,
+.calendar-table td,
+.raw-table th,
+.raw-table td {
+  border: 1px solid color-mix(in srgb, var(--surface-border) 88%, transparent);
+  text-align: center;
+}
+
+.calendar-table th,
+.raw-table th {
+  background: #1f7ae0;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.calendar-table th,
+.calendar-table td {
+  width: 2.2rem;
+  min-width: 2.2rem;
+  height: 2rem;
+  font-size: 0.82rem;
+}
+
+.calendar-table td {
+  background: color-mix(in srgb, var(--surface) 96%, #f4f8ff 4%);
+}
+
+.calendar-table .year-group,
+.calendar-table .week-group {
+  height: 2.05rem;
+  font-size: 0.95rem;
+}
+
+.sticky-col {
+  position: sticky;
+  z-index: 2;
+}
+
+.sticky-col-month {
+  left: 0;
+}
+
+.sticky-col-week {
+  left: 2.2rem;
+}
+
+.calendar-table th.sticky-col {
+  z-index: 4;
+}
+
+.month-cell {
+  background: color-mix(in srgb, #d8e6ff 70%, var(--surface) 30%);
+  color: #0b4c9f;
+  white-space: pre;
+}
+
+.week-cell {
+  background: color-mix(in srgb, #ebf3ff 78%, var(--surface) 22%);
+  color: #0b4c9f;
+}
+
+.calendar-table .sunday,
+.calendar-table td.sunday {
+  background: linear-gradient(180deg, #fff799, #ffe900);
+  color: #1f2328;
+}
+
+.spacer-row td {
+  height: 0.7rem;
+  color: transparent;
+  background: color-mix(in srgb, #dbeafe 45%, var(--surface) 55%);
+}
+
+.spacer-row .sticky-col {
+  background: color-mix(in srgb, #dbeafe 45%, var(--surface) 55%);
+}
+
+.raw-table th,
+.raw-table td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 0.84rem;
+}
+
+.raw-table td {
+  background: var(--surface);
+}
+
+.empty-state {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .hero-card {
+    grid-template-columns: 1fr;
+    display: grid;
+    align-items: start;
+  }
+
+  .year-form {
+    min-width: 0;
+  }
+}

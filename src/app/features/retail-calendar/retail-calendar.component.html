@@ -1,0 +1,115 @@
+<section class="retail-calendar-page">
+  <header class="hero-card">
+    <div class="hero-copy">
+      <p class="eyebrow">Retail Calendar</p>
+      <h1>5 Year Retail Calendar</h1>
+      <p class="hero-text">Derived from `GLTPARM3` using the same grouping and spacer-row rules as `ASFWCAL1`.</p>
+    </div>
+
+    <form class="year-form" (submit)="onSubmit($event)">
+      <label class="field">
+        <span>Starting Year</span>
+        <input
+          type="text"
+          inputmode="numeric"
+          maxlength="4"
+          [ngModel]="yearInput()"
+          (ngModelChange)="yearInput.set($event)"
+          name="startingYear"
+          placeholder="2024"
+        />
+      </label>
+      <button type="submit">Show Calendar</button>
+      @if (validationError()) {
+        <p class="validation-error">{{ validationError() }}</p>
+      }
+    </form>
+  </header>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Calendar View</h2>
+        <p>Sunday columns stay highlighted and blank divider rows are preserved.</p>
+      </div>
+      @if (resource.isLoading()) {
+        <span class="status-chip">Loading</span>
+      }
+    </div>
+
+    @if (errorText()) {
+      <pre class="error-box">{{ errorText() }}</pre>
+    } @else if (calendarRows().length) {
+      <div class="calendar-scroll">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th class="sticky-col sticky-col-month week-group" colspan="2"></th>
+              @for (year of calendarYears(); track year) {
+                <th class="year-group" colspan="7">{{ year }}</th>
+              }
+            </tr>
+            <tr>
+              <th class="sticky-col sticky-col-month">M</th>
+              <th class="sticky-col sticky-col-week">W</th>
+              @for (year of calendarYears(); track year) {
+                @for (weekday of weekdayHeaders; let dayIndex = $index; track weekday + dayIndex) {
+                  <th [class.sunday]="dayIndex === 6">{{ weekday }}</th>
+                }
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of calendarRows(); track row.lineNo) {
+              <tr [class.spacer-row]="row.spacer">
+                <td class="sticky-col sticky-col-month month-cell">{{ row.month }}</td>
+                <td class="sticky-col sticky-col-week week-cell">{{ row.weekNo }}</td>
+                @for (cell of row.cells; track cell.year) {
+                  @for (day of cell.days; let dayIndex = $index; track dayIndex) {
+                    <td [class.sunday]="dayIndex === 6">{{ day }}</td>
+                  }
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="empty-state">No calendar rows returned.</p>
+    }
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <h2>Raw GLTPARM3</h2>
+        <p>{{ rawRows().length }} rows returned for inspection.</p>
+      </div>
+    </div>
+
+    @if (rawColumns().length) {
+      <div class="raw-scroll">
+        <table class="raw-table">
+          <thead>
+            <tr>
+              @for (column of rawColumns(); track column) {
+                <th>{{ column }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rawRows(); track $index) {
+              <tr>
+                @for (column of rawColumns(); track column) {
+                  <td>{{ formatRawValue(row[column]) }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="empty-state">No raw `GLTPARM3` rows returned.</p>
+    }
+  </section>
+</section>

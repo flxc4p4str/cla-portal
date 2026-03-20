@@ -35,6 +35,12 @@ export const appRoutes: Routes = [
         loadComponent: () => import('./features/timesheets/timesheets').then((m) => m.Timesheets),
         data: { menuText: 'Timesheets', icon: 'widgets' },
       },
+      {
+        path: 'retail-calendar',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/retail-calendar/retail-calendar.component').then((m) => m.RetailCalendarComponent),
+        data: { menuText: 'Retail Calendar', icon: 'widgets' },
+      },
     ],
   },
   { path: '**', redirectTo: '' },
