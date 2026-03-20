@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } 
 import { Route, Router, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
+import { TokenRefreshDialogComponent } from '../auth/token-refresh-dialog.component';
 import { NavItem } from '../config/nav-item.model';
 import { HeaderComponent } from './header.component';
 import { SidenavComponent } from './sidenav.component';
@@ -11,7 +12,7 @@ type ThemeMode = 'light' | 'dark';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, HeaderComponent, SidenavComponent],
+  imports: [RouterOutlet, HeaderComponent, SidenavComponent, TokenRefreshDialogComponent],
   template: `
     <div class="shell" [attr.data-theme]="theme()">
       <app-header [username]="username()" (toggleNav)="toggleNav()" (logout)="onLogout()" />
@@ -26,6 +27,7 @@ type ThemeMode = 'light' | 'dark';
         />
         <main class="content"><router-outlet /></main>
       </div>
+      <app-token-refresh-dialog />
     </div>
   `,
   styles: [`.shell{min-height:100vh;background:var(--layout-bg);color:var(--text-primary);transition:background-color 180ms ease,color 180ms ease}.shell-body{display:flex;min-height:calc(100vh - 73px)}.content{flex:1;padding:1.5rem;color:var(--text-primary)}@media (max-width:900px){.content{padding:1rem}}`],

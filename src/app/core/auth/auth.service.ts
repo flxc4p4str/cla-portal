@@ -24,20 +24,14 @@ export class AuthService {
   readonly sessionNo = computed(() => this.sessionNoSignal());
 
   async login(request: LoginRequest): Promise<void> {
-    const response = await firstValueFrom(
-      this.http.post<LoginResponse>(`${environment.apiBaseUrl}/api/AS/login`, request)
-    );
-    const userName = response.USER_NAME?.trim() || response.USER_ID?.trim() || request.USER_ID.trim();
-
-    this.tokenStorage.setToken(response.BearerToken);
-    this.tokenStorage.setUserName(userName);
-    this.tokenStorage.setUserId(response.USER_ID || '');
-    this.tokenStorage.setSessionNo(response.SESSION_NO || '');
-    this.tokenSignal.set(response.BearerToken);
-    this.userNameSignal.set(userName);
-    this.userIdSignal.set(response.USER_ID || '');
-    this.sessionNoSignal.set(response.SESSION_NO || '');
+    const response = await this.authenticate(request);
+    this.applyAuthenticatedSession(response, request.USER_ID);
     await this.router.navigateByUrl('/home');
+  }
+
+  async refreshToken(request: LoginRequest): Promise<void> {
+    const response = await this.authenticate(request);
+    this.applyAuthenticatedSession(response, request.USER_ID);
   }
 
   async logout(): Promise<void> {
@@ -47,5 +41,24 @@ export class AuthService {
     this.userIdSignal.set('');
     this.sessionNoSignal.set('');
     await this.router.navigateByUrl('/login');
+  }
+
+  private async authenticate(request: LoginRequest): Promise<LoginResponse> {
+    return firstValueFrom(this.http.post<LoginResponse>(`${environment.apiBaseUrl}/api/AS/login`, request));
+  }
+
+  private applyAuthenticatedSession(response: LoginResponse, fallbackUserId: string): void {
+    const userId = response.USER_ID?.trim() || fallbackUserId.trim();
+    const userName = response.USER_NAME?.trim() || userId;
+    const sessionNo = response.SESSION_NO?.trim() || '';
+
+    this.tokenStorage.setToken(response.BearerToken);
+    this.tokenStorage.setUserName(userName);
+    this.tokenStorage.setUserId(userId);
+    this.tokenStorage.setSessionNo(sessionNo);
+    this.tokenSignal.set(response.BearerToken);
+    this.userNameSignal.set(userName);
+    this.userIdSignal.set(userId);
+    this.sessionNoSignal.set(sessionNo);
   }
 }
