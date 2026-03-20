@@ -1,17 +1,17 @@
 @if (!environment.production) {
-    <button (click)="getDataAfterClick()">Click to getData</button>                                  
+    <button class="summary-debug-button" type="button" (click)="getDataAfterClick()">Click to getData</button>
 }  
 
-<div class="form-wrapper">
+<div class="form-wrapper summary-page">
 
-    <div class="sample-wrapper">
+    <div class="sample-wrapper summary-panel summary-tabs-panel">
 
-        <igx-tabs #summaryTabs style="min-width:600px; height:100%" (selectedIndexChange)="tabIndexChanged($event)"
+        <igx-tabs class="summary-tabs" #summaryTabs style="min-width:600px; height:100%" (selectedIndexChange)="tabIndexChanged($event)"
             (selectedIndexChanging)="tabIndexChanging($event)" [(selectedIndex)]="selectedTab">
 
             <igx-tab-item>
                 <igx-tab-header>
-                    <igx-icon igxPrefix igxTabHeaderIcon>add_shopping_cart</igx-icon>
+                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>shopping_cart</igx-icon>
                     <span igxTabHeaderLabel>Open</span>
                 </igx-tab-header>
                 <igx-tab-content>
@@ -58,7 +58,7 @@
 
             <igx-tab-item>
                 <igx-tab-header>
-                    <igx-icon igxPrefix igxTabHeaderIcon>book_2</igx-icon>
+                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>book_2</igx-icon>
 
                     @if (!environment.production) {
                         <span igxTabHeaderLabel>Booked {{testClass().value}}</span>                                
@@ -123,7 +123,7 @@
 
             <igx-tab-item>
                 <igx-tab-header>
-                    <igx-icon igxPrefix igxTabHeaderIcon>local_shipping</igx-icon>
+                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>local_shipping</igx-icon>
                     <span igxTabHeaderLabel>Shipped</span>
                 </igx-tab-header>
                 <igx-tab-content>
@@ -170,7 +170,7 @@
 
             <igx-tab-item>
                 <igx-tab-header>
-                    <igx-icon igxPrefix igxTabHeaderIcon>keyboard_return</igx-icon>
+                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>keyboard_return</igx-icon>
                     <span igxTabHeaderLabel>Returns</span>
                 </igx-tab-header>
                 <igx-tab-content>
@@ -217,7 +217,7 @@
 
             <igx-tab-item>
                 <igx-tab-header>
-                    <igx-icon igxPrefix igxTabHeaderIcon>paid</igx-icon>
+                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>paid</igx-icon>
                     <span igxTabHeaderLabel>Payments</span>
                 </igx-tab-header>
                 <igx-tab-content>
@@ -264,7 +264,7 @@
 
             <igx-tab-item>
                 <igx-tab-header>
-                    <igx-icon igxPrefix igxTabHeaderIcon>forward</igx-icon>
+                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>forward</igx-icon>
                     <span igxTabHeaderLabel>Roll Forward</span>
                 </igx-tab-header>
                 <igx-tab-content>
@@ -314,7 +314,7 @@
 
     @if (grdSOTORDR1_title) {
 
-    <div class="sample-wrapper">
+    <div class="sample-wrapper summary-panel">
         <div class="grid__wrapper">
             <igx-grid #grdSOTORDR1 id="grdSOTORDR1" [data]="SOTORDR1()" [rowHeight]="20" [height]="'350px'"
                 [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
@@ -358,7 +358,7 @@
     }
 
     @if (grdSOTORDR2_title) {
-    <div class="sample-wrapper">
+    <div class="sample-wrapper summary-panel">
         <div class="grid__wrapper">
             <igx-grid #grdSOTORDR2 id="grdSOTORDR2" [data]="SOTORDR2_ORDR()" [rowHeight]="20" [height]="'180px'"
                 [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"

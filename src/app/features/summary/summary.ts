@@ -72,11 +72,9 @@ export class Summary implements OnInit, AfterViewInit {
   testClass = signal<TestClass>({key:'A', value: 0})
 
   grdHeaderStyles = {
-    background: 'lightblue',
-    // background: 'dodgerblue',
-    // color: (column: any) => (column.fieldName === 'ORDR_NO') ? 'red': 'inherit'
-    color: (column: any) => (column.field === 'ORDR_NO') ? 'red': 'inherit'
-    // color: 'black'
+    background: 'var(--app-surface-soft)',
+    borderColor: 'var(--surface-border)',
+    color: (column: any) => (column.field === 'ORDR_NO') ? 'var(--app-brand-strong)' : 'var(--text-primary)'
   }
 
     grdSOTORDR1_title: string = '';
@@ -617,5 +615,3 @@ function ExcelDateToJSDate(serial: number) {
 
    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
 }
-
-

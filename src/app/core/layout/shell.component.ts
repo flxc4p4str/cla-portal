@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { Route, Router, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -32,6 +33,7 @@ type ThemeMode = 'light' | 'dark';
 })
 export class ShellComponent {
   private readonly themeStorageKey = 'cla-portal-theme';
+  private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
@@ -41,6 +43,12 @@ export class ShellComponent {
   readonly isDarkTheme = computed(() => this.theme() === 'dark');
   readonly username = computed(() => this.authService.userName());
   readonly navItems = computed<NavItem[]>(() => this.readNavItems(this.router.config));
+
+  constructor() {
+    effect(() => {
+      this.applyIgniteTheme(this.theme());
+    });
+  }
 
   toggleNav(): void {
     if (window.innerWidth <= 900) {
@@ -80,6 +88,18 @@ export class ShellComponent {
     }
 
     window.localStorage.setItem(this.themeStorageKey, theme);
+  }
+
+  private applyIgniteTheme(theme: ThemeMode): void {
+    const lightTheme = this.document.getElementById('igniteui-theme-light');
+    const darkTheme = this.document.getElementById('igniteui-theme-dark');
+
+    if (!(lightTheme instanceof HTMLLinkElement) || !(darkTheme instanceof HTMLLinkElement)) {
+      return;
+    }
+
+    lightTheme.media = theme === 'light' ? 'all' : 'not all';
+    darkTheme.media = theme === 'dark' ? 'all' : 'not all';
   }
 
   private readNavItems(routes: readonly Route[]): NavItem[] {
