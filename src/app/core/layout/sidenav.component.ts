@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-
+// import { MatIconModule } from '@angular/material/icon';
+import { IgxIconComponent } from '@infragistics/igniteui-angular/icon';
+import { IgxIconService } from '@infragistics/igniteui-angular/icon';
+import { github } from '@igniteui/material-icons-extended';
 import { NavItem } from '../config/nav-item.model';
 
 @Component({
   selector: 'app-sidenav',
-  imports: [RouterLink, RouterLinkActive],
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive, IgxIconComponent],
   template: `
     <aside class="backdrop" [class.visible]="mobileOpen()" (click)="closeMobile.emit()"></aside>
     <nav class="sidenav" [class.collapsed]="collapsed()" [class.mobile-open]="mobileOpen()">

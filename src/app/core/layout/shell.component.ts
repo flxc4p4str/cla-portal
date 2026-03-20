@@ -83,14 +83,16 @@ export class ShellComponent {
   }
 
   private readNavItems(routes: readonly Route[]): NavItem[] {
+       console.log(routes)
     const shell = routes.find((route) => Array.isArray(route.children));
+    console.log(shell)
     const children = shell?.children ?? [];
-
+   console.log(children)
     return children
       .filter((route) => !!route.path && !!route.data?.['menuText'])
       .map((route) => ({
         path: `/${route.path ?? ''}`,
-        menuText: String(route.data?.['menuText']),
+        menuText: route.data?.['menuText'], // menuText: String(route.data?.['menuText']),
         icon: route.data?.['icon'] ? String(route.data['icon']) : undefined,
       }));
   }

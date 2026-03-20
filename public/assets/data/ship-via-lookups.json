@@ -1,0 +1,20 @@
+{
+  "carrierCodes": [
+    { "code": "FEDEX", "description": "Federal Express" },
+    { "code": "UPS", "description": "United Parcel Service" },
+    { "code": "USPS", "description": "United States Postal Service" },
+    { "code": "DHL", "description": "DHL Express" }
+  ],
+  "carrierProductCodes": [
+    { "code": "FXNDA", "description": "FedEx Next Day Air" },
+    { "code": "FX2DA", "description": "FedEx 2Day Air" },
+    { "code": "UPSG", "description": "UPS Ground" },
+    { "code": "DHLX", "description": "DHL Worldwide Express" }
+  ],
+  "carrierProductIntlCodes": [
+    { "code": "FXINTL", "description": "FedEx International Priority" },
+    { "code": "UPSWW", "description": "UPS Worldwide Saver" },
+    { "code": "DHLINT", "description": "DHL Express Worldwide" },
+    { "code": "USPSI", "description": "USPS Priority Mail International" }
+  ]
+}

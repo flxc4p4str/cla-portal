@@ -1,0 +1,80 @@
+[
+  {
+    "OPS_YYYYPP": "202501",
+    "PRD_END_DATE": 45688,
+    "LEGEND": "2025-01 (Jan'25)",
+    "OPS_YYYYMM": "202501"
+  },
+  {
+    "OPS_YYYYPP": "202502",
+    "PRD_END_DATE": 45716,
+    "LEGEND": "2025-02 (Feb'25)",
+    "OPS_YYYYMM": "202502"
+  },
+  {
+    "OPS_YYYYPP": "202503",
+    "PRD_END_DATE": 45747,
+    "LEGEND": "2025-03 (Mar'25)",
+    "OPS_YYYYMM": "202503"
+  },
+  {
+    "OPS_YYYYPP": "202504",
+    "PRD_END_DATE": 45777,
+    "LEGEND": "2025-04 (Apr'25)",
+    "OPS_YYYYMM": "202504"
+  },
+  {
+    "OPS_YYYYPP": "202505",
+    "PRD_END_DATE": 45808,
+    "LEGEND": "2025-05 (May'25)",
+    "OPS_YYYYMM": "202505"
+  },
+  {
+    "OPS_YYYYPP": "202506",
+    "PRD_END_DATE": 45838,
+    "LEGEND": "2025-06 (Jun'25)",
+    "OPS_YYYYMM": "202506"
+  },
+  {
+    "OPS_YYYYPP": "202507",
+    "PRD_END_DATE": 45869,
+    "LEGEND": "2025-07 (Jul'25)",
+    "OPS_YYYYMM": "202507"
+  },
+  {
+    "OPS_YYYYPP": "202508",
+    "PRD_END_DATE": 45900,
+    "LEGEND": "2025-08 (Aug'25)",
+    "OPS_YYYYMM": "202508"
+  },
+  {
+    "OPS_YYYYPP": "202509",
+    "PRD_END_DATE": 45930,
+    "LEGEND": "2025-09 (Sep'25)",
+    "OPS_YYYYMM": "202509"
+  },
+  {
+    "OPS_YYYYPP": "202510",
+    "PRD_END_DATE": 45961,
+    "LEGEND": "2025-10 (Oct'25)",
+    "OPS_YYYYMM": "202510"
+  },
+  {
+    "OPS_YYYYPP": "202511",
+    "PRD_END_DATE": 45991,
+    "LEGEND": "2025-11 (Nov'25)",
+    "OPS_YYYYMM": "202511"
+  },
+  {
+    "OPS_YYYYPP": "202512",
+    "PRD_END_DATE": 46022,
+    "LEGEND": "2025-12 (Dec'25)",
+    "OPS_YYYYMM": "202512"
+  },
+  {
+    "OPS_YYYYPP": "202601",
+    "PRD_END_DATE": 46053,
+    "LEGEND": "2026-01 (Jan'26)",
+    "OPS_YYYYMM": "202601"
+  }
+]
