@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
+import { UserAvatarComponent } from '../auth/user-avatar.component';
+
 @Component({
   selector: 'app-header',
+  imports: [UserAvatarComponent],
   template: `
     <header class="app-header">
       <div class="left">
@@ -18,6 +21,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       </div>
       <div class="right">
         <span class="welcome">Welcome{{ username() ? ', ' + username() : '' }}</span>
+        <app-user-avatar (logout)="logout.emit()" />
         <button type="button" class="secondary-button" (click)="logout.emit()">Logout</button>
       </div>
     </header>

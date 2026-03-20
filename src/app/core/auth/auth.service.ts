@@ -7,6 +7,24 @@ import { environment } from '../../../environments/environment';
 import { LoginRequest, LoginResponse } from './auth.models';
 import { TokenStorageService } from './token-storage.service';
 
+const DEFAULT_USER_EMAIL = 'rdw@absolution.com';
+
+function parseJwtExpiration(token: string): string | null {
+  const tokenParts = token.split('.');
+  if (tokenParts.length < 2) {
+    return null;
+  }
+
+  try {
+    const base64 = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payloadJson = atob(base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '='));
+    const payload = JSON.parse(payloadJson) as { exp?: number };
+    return typeof payload.exp === 'number' ? new Date(payload.exp * 1000).toISOString() : null;
+  } catch {
+    return null;
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -17,11 +35,17 @@ export class AuthService {
   private readonly userNameSignal = signal<string>(this.tokenStorage.getUserName() ?? '');
   private readonly userIdSignal = signal<string>(this.tokenStorage.getUserId() ?? '');
   private readonly sessionNoSignal = signal<string>(this.tokenStorage.getSessionNo() ?? '');
+  private readonly userEmailSignal = signal<string>(this.tokenStorage.getUserEmail() ?? DEFAULT_USER_EMAIL);
+  private readonly securityCodesSignal = signal<string[]>(this.tokenStorage.getSecurityCodes());
+  private readonly tokenExpiresAtSignal = signal<string>(this.tokenStorage.getExpiresUtc() ?? '');
   readonly token = computed(() => this.tokenSignal());
   readonly isAuthenticated = computed(() => !!this.tokenSignal());
   readonly userName = computed(() => this.userNameSignal());
   readonly userId = computed(() => this.userIdSignal());
   readonly sessionNo = computed(() => this.sessionNoSignal());
+  readonly userEmail = computed(() => this.userEmailSignal() || DEFAULT_USER_EMAIL);
+  readonly securityCodes = computed(() => this.securityCodesSignal());
+  readonly tokenExpiresAt = computed(() => this.tokenExpiresAtSignal());
 
   async login(request: LoginRequest): Promise<void> {
     const response = await this.authenticate(request);
@@ -40,6 +64,9 @@ export class AuthService {
     this.userNameSignal.set('');
     this.userIdSignal.set('');
     this.sessionNoSignal.set('');
+    this.userEmailSignal.set(DEFAULT_USER_EMAIL);
+    this.securityCodesSignal.set([]);
+    this.tokenExpiresAtSignal.set('');
     await this.router.navigateByUrl('/login');
   }
 
@@ -51,14 +78,23 @@ export class AuthService {
     const userId = response.USER_ID?.trim() || fallbackUserId.trim();
     const userName = response.USER_NAME?.trim() || userId;
     const sessionNo = response.SESSION_NO?.trim() || '';
+    const userEmail = response.USER_EMAIL?.trim() || DEFAULT_USER_EMAIL;
+    const securityCodes = response.SECURITY_CODEs?.filter((code): code is string => !!code?.trim()).map((code) => code.trim()) ?? [];
+    const expiresUtc = response.expiresUtc?.trim() || parseJwtExpiration(response.BearerToken) || '';
 
     this.tokenStorage.setToken(response.BearerToken);
     this.tokenStorage.setUserName(userName);
     this.tokenStorage.setUserId(userId);
     this.tokenStorage.setSessionNo(sessionNo);
+    this.tokenStorage.setUserEmail(userEmail);
+    this.tokenStorage.setSecurityCodes(securityCodes);
+    this.tokenStorage.setExpiresUtc(expiresUtc);
     this.tokenSignal.set(response.BearerToken);
     this.userNameSignal.set(userName);
     this.userIdSignal.set(userId);
     this.sessionNoSignal.set(sessionNo);
+    this.userEmailSignal.set(userEmail);
+    this.securityCodesSignal.set(securityCodes);
+    this.tokenExpiresAtSignal.set(expiresUtc);
   }
 }
