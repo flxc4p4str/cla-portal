@@ -9,7 +9,7 @@ import { NavItem } from '../config/nav-item.model';
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, IgxIconComponent],
+  imports: [RouterLink, RouterLinkActive],
   template: `
     <aside class="backdrop" [class.visible]="mobileOpen()" (click)="closeMobile.emit()"></aside>
     <nav class="sidenav" [class.collapsed]="collapsed()" [class.mobile-open]="mobileOpen()">
