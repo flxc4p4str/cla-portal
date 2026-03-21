@@ -86,7 +86,8 @@ export class TokenRefreshDialogComponent {
   readonly password = signal('');
   readonly validationMessage = signal('');
 
-  constructor() {
+  // constructor(refreshFlow: TokenRefreshFlowService  ) {
+  constructor() {    
     effect(() => {
       if (this.refreshFlow.isOpen()) {
         this.password.set('');

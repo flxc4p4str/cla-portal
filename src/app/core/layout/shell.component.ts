@@ -14,7 +14,7 @@ type ThemeMode = 'light' | 'dark';
   selector: 'app-shell',
   imports: [RouterOutlet, HeaderComponent, SidenavComponent, TokenRefreshDialogComponent],
   template: `
-    <div class="shell" [attr.data-theme]="theme()">
+    <div class="shell" [attr.data-theme]="theme()" [attr.walter]="'z'+theme()" rob='mandy' darrin [attr.dana]="'lynne'">
       <app-header [username]="username()" (toggleNav)="toggleNav()" (logout)="onLogout()" />
       <div class="shell-body">
         <app-sidenav
