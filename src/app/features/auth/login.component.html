@@ -56,6 +56,7 @@
 
       @if (errorMessage()) {
         <div class="error-banner">{{ errorMessage() }}</div>
+        <!-- <div>{{ errorMessage() }}</div>         -->
       }
 
       <button type="submit" igxButton="contained" class="submit-btn" [disabled]="isSubmitting()">

@@ -48,9 +48,17 @@ export class AuthService {
   readonly tokenExpiresAt = computed(() => this.tokenExpiresAtSignal());
 
   async login(request: LoginRequest): Promise<void> {
+    console.log('Login 1 successful, navigating to home page...');
     const response = await this.authenticate(request);
+    console.log('Login 2 successful,',response);
+    if (response.USER_ID === 'wjz2') {
+      throw new Error('Bad Boy: ' + response.USER_NAME);
+    }
     this.applyAuthenticatedSession(response, request.USER_ID);
-    await this.router.navigateByUrl('/home');
+    console.log('Login 3 successful, navigating to home page...');
+    // await this.router.navigateByUrl('/example'); // navigate to example page after login for testing purposes
+    console.log('Login 4 successful, navigating to home page...');
+    await this.router.navigateByUrl('/home');    
   }
 
   async refreshToken(request: LoginRequest): Promise<void> {

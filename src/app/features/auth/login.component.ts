@@ -29,6 +29,7 @@ export class LoginComponent {
 
   constructor() {
     if (this.authService.isAuthenticated()) {
+      // void this.router.navigateByUrl('/api-test'); // navigate to api-test page if it turns out that the user is already authenticated
       void this.router.navigateByUrl('/home');
     }
   }
@@ -46,8 +47,10 @@ export class LoginComponent {
     this.isSubmitting.set(true);
     void this.authService
       .login(credentials)
-      .catch(() => {
-        this.errorMessage.set('Login failed. Check your API endpoint and credentials.');
+      .catch((e:any) => {
+        // this.errorMessage.set('Login failed. Check your API endpoint and credentials.');
+        console.log(e)
+        this.errorMessage.set(e.error || (e.message || 'Login failed. Check your API endpoint and credentials.'));        
       })
       .finally(() => {
         this.isSubmitting.set(false);

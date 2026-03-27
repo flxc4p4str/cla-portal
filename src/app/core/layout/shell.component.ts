@@ -7,6 +7,7 @@ import { TokenRefreshDialogComponent } from '../auth/token-refresh-dialog.compon
 import { NavItem } from '../config/nav-item.model';
 import { HeaderComponent } from './header.component';
 import { SidenavComponent } from './sidenav.component';
+import { appRoutes } from '@abs-services/app.routes';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -44,7 +45,8 @@ export class ShellComponent {
   readonly theme = signal<ThemeMode>(this.readTheme());
   readonly isDarkTheme = computed(() => this.theme() === 'dark');
   readonly username = computed(() => this.authService.userName());
-  readonly navItems = computed<NavItem[]>(() => this.readNavItems(this.router.config));
+  // readonly navItems = computed<NavItem[]>(() => this.readNavItems(this.router.config));
+  readonly navItems = computed<NavItem[]>(() => this.readNavItems(appRoutes));
 
   constructor() {
     effect(() => {
