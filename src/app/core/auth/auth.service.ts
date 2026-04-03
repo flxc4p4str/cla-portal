@@ -26,6 +26,7 @@ function parseJwtExpiration(token: string): string | null {
 }
 
 @Injectable({ providedIn: 'root' })
+// @Injectable()
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);

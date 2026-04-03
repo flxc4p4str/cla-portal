@@ -14,9 +14,10 @@ type ThemeMode = 'light' | 'dark';
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, HeaderComponent, SidenavComponent, TokenRefreshDialogComponent],
+  // providers: [AuthService],
   template: `
     <div class="shell" [attr.data-theme]="theme()" [attr.walter]="'z'+theme()" rob='mandy' darrin [attr.dana]="'lynne'">
-      <app-header [username]="username()" (toggleNav)="toggleNav()" (logout)="onLogout()" />
+      <app-header [username]="authService.userName()" (toggleNav)="toggleNav()" (logout)="onLogout()" />
       <div class="shell-body">
         <app-sidenav
           [items]="navItems()"
@@ -38,13 +39,15 @@ export class ShellComponent {
   private readonly themeStorageKey = 'cla-portal-theme';
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
+  // private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
 
   readonly navCollapsed = signal(false);
   readonly mobileOpen = signal(false);
   readonly theme = signal<ThemeMode>(this.readTheme());
   readonly isDarkTheme = computed(() => this.theme() === 'dark');
   readonly username = computed(() => this.authService.userName());
+  // readonly username = signal(this.authService.userName() + "X");
   // readonly navItems = computed<NavItem[]>(() => this.readNavItems(this.router.config));
   readonly navItems = computed<NavItem[]>(() => this.readNavItems(appRoutes));
 
