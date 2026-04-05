@@ -257,26 +257,33 @@ export class Summary implements OnInit, AfterViewInit {
     // this.dataSignal.set(this.dataSignal()+"1"); // successive calls do not cause successive http.gets
     // this.dataSignal.update((value) => value + "1") // this does trigger successive http.get calls, but the value becomes "011", "0111", etc. which is not ideal;
     
+    console.log(this.dataSignalObject().firstname)
+    // this.dataSignalObject.set ( {...this.dataSignalObject(), firstname: "Jane", lastname: "Smith" })
+    this.dataSignalObject.set ( {...this.dataSignalObject()})
     // this.dataSignalObject().firstname = "Jane";
-    // let newObject = this.dataSignalObject()
+    // this.dataSignalObject().firstname = "Jane";
+
+    console.log(this.dataSignalObject().firstname)
+
+    // // let newObject = this.dataSignalObject()
     
-    // let newObject = { ...this.dataSignalObject() }
+    // // let newObject = { ...this.dataSignalObject() }
 
-    // let newObject = Object.assign(this.dataSignalObject())
-    let newObject = Object.assign({}, this.dataSignalObject())
+    // // let newObject = Object.assign(this.dataSignalObject())
+    // let newObject = Object.assign({}, this.dataSignalObject())
 
-    newObject.firstname = "Jane";
+    // newObject.firstname = "Jane";
 
-    console.log('before')
-    console.log('newObject: ' + JSON.stringify(newObject)); 
-    console.log('oldObject: ' + JSON.stringify(this.dataSignalObject())); 
+    // console.log('before')
+    // console.log('newObject: ' + JSON.stringify(newObject)); 
+    // console.log('oldObject: ' + JSON.stringify(this.dataSignalObject())); 
 
-    this.dataSignalObject.set(newObject)
-    // this.dataSignalObject.set(this.dataSignalObject())
+    // this.dataSignalObject.set(newObject)
+    // // this.dataSignalObject.set(this.dataSignalObject())
  
-    console.log('after')
-    console.log('newObject: ' + JSON.stringify(newObject)); 
-    console.log('oldObject: ' + JSON.stringify(this.dataSignalObject())); 
+    // console.log('after')
+    // console.log('newObject: ' + JSON.stringify(newObject)); 
+    // console.log('oldObject: ' + JSON.stringify(this.dataSignalObject())); 
 
 
 

@@ -30,6 +30,8 @@ export class LabMonitor implements OnInit, AfterViewInit {
 
   protected readonly title = signal('Lab Monitor2');
   // private cd = inject(ChangeDetectorRef);
+  
+  private intervalId: any; 
 
   selmachines = signal<DETMACH2[]>([]);
   // selmachines: DETMACH2[] = [];
@@ -141,7 +143,7 @@ export class LabMonitor implements OnInit, AfterViewInit {
 
     this.signalRService_DETJOBM4s$ = new BehaviorSubject<DETJOBM4[]>([])
 
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
 
       // if this.inProcess = true then exit this routine
 
@@ -263,6 +265,13 @@ export class LabMonitor implements OnInit, AfterViewInit {
     console.log('before')
     this.readJsonFile();
     console.log('after')
+  }
+
+
+  ngOnDestroy() { 
+    if (this.intervalId) { 
+      clearInterval(this.intervalId); // Stops the timer 
+    } 
   }
 
   iSTAT: number = -1
