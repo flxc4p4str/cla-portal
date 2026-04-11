@@ -104,14 +104,16 @@ export class Summary implements OnInit, AfterViewInit {
   // data = httpResource<ARTCUSTX_ALL>(() => `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary`, { injector: inject(Injector) })
   // dataResultSignal = signal<ARTCUSTX_ALL>({} as ARTCUSTX_ALL)
 
+  darrin = signal<number>(0)
   data = httpResource<ARTCUSTX_ALL>(() => {
     // console.log('httpResource function called with dataSignal value: ' + this.dataSignal());
-    let obj = this.dataSignalObject();
-    // console.log('httpResource function called with dataSignalObject value: ' + JSON.stringify(this.dataSignalObject()));
+ //   let obj = this.dataSignalObject();
+ let darrin2 = this.darrin()
+   //  console.log('httpResource function called with dataSignalObject value: ' + JSON.stringify(this.dataSignalObject()));
     console.log('httpResource function called')
-    if (this.initializing) {
-      return undefined; // this prevents the httpResource from firing on initialization, but allows it to fire on subsequent calls to refresh2 which updates the dataSignal. Note that the httpResource does not fire when dataSignal is updated if we do not include this check for initializing, which is why we need to set dataSignal to '0' initially and then update it in refresh2. This is a bit of a hack, but it works. A better solution would be to have a separate signal that tracks whether we are initializing or not, and use that signal in the httpResource instead of dataSignal. That way we could avoid using a hacky value like '0' in dataSignal.
-    }
+   if (this.initializing) {
+     return undefined; // this prevents the httpResource from firing on initialization, but allows it to fire on subsequent calls to refresh2 which updates the dataSignal. Note that the httpResource does not fire when dataSignal is updated if we do not include this check for initializing, which is why we need to set dataSignal to '0' initially and then update it in refresh2. This is a bit of a hack, but it works. A better solution would be to have a separate signal that tracks whether we are initializing or not, and use that signal in the httpResource instead of dataSignal. That way we could avoid using a hacky value like '0' in dataSignal.
+   }
     return {
       // url: `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary/?value=${this.dataSignal()}`,
       url: `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary/`,   
@@ -202,7 +204,7 @@ export class Summary implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     // console.log('before')
-    this.readJsonFile();
+    //this.readJsonFile();
     // console.log('after')
     // this.refresh2() // controlled Fill_Records, used if we configure httpResource to not fire on initialization (see data signal and initializing boolean)
 
@@ -249,7 +251,7 @@ export class Summary implements OnInit, AfterViewInit {
   refresh2() {
     this.initializing = false;
 
-    console.log('Now Refreshing data using httpResource')
+    //console.log('Now Refreshing data using httpResource')
 
     // let data = httpResource<ARTCUSTX_ALL>(() => `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary/?value=${this.dataSignal()}`, { injector: inject(Injector) })
     // let data = httpResource<ARTCUSTX_ALL>(() => `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary/?value=${this.dataSignal()}`, { injector: this.injector })
@@ -257,13 +259,23 @@ export class Summary implements OnInit, AfterViewInit {
     // this.dataSignal.set(this.dataSignal()+"1"); // successive calls do not cause successive http.gets
     // this.dataSignal.update((value) => value + "1") // this does trigger successive http.get calls, but the value becomes "011", "0111", etc. which is not ideal;
     
-    console.log(this.dataSignalObject().firstname)
+    //console.log(this.dataSignalObject().firstname)
     // this.dataSignalObject.set ( {...this.dataSignalObject(), firstname: "Jane", lastname: "Smith" })
     this.dataSignalObject.set ( {...this.dataSignalObject()})
+   // this.darrin.set (1)
+    this.darrin.update ((oldvalue) => {
+      let n = oldvalue +1;
+      return n
+    }
+  )
+
+    //this.darrin.update ((oldvalue:number) => +((oldvalue++).toString()))
+
+
     // this.dataSignalObject().firstname = "Jane";
     // this.dataSignalObject().firstname = "Jane";
 
-    console.log(this.dataSignalObject().firstname)
+    //console.log(this.dataSignalObject().firstname)
 
     // // let newObject = this.dataSignalObject()
     
@@ -290,7 +302,7 @@ export class Summary implements OnInit, AfterViewInit {
     // this.dataSignalObject.update((value) => ({...value, firstname: "Jane"})) // this triggers successive http.get calls, and the value remains an object with firstname and lastname properties, which is ideal.  
 
         
-    console.log('data from httpResource', this.data);
+    //console.log('data from httpResource', this.data);
     // console.log('data from httpResource', data);
   }
 
