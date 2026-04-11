@@ -85,7 +85,14 @@
 // .footer-controls {
 //   margin-right: 10px;
 // }
-
+// button {
+//   border: 1px solid var(--app-brand);
+//   background: var(--app-brand);
+//   color: var(--app-brand-contrast);
+//   padding: 0.8rem 1rem;
+//   font-weight: 700;
+//   cursor: pointer;
+// }
 .lab-monitor {
 display: flex;
 height:800px;

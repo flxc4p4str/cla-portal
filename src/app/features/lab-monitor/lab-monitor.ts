@@ -8,8 +8,8 @@ import { Component, signal, OnInit, AfterViewInit, ChangeDetectionStrategy, Chan
 import { HttpClient, httpResource } from '@angular/common/http';
 import { filter, map } from 'rxjs/operators';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent } from '@infragistics/igniteui-angular';
-
+import { IgxButtonDirective, IgxLabelDirective, IgxRippleDirective, IgxSelectComponent, IgxSelectItemComponent, IgxIconComponent, IgxTooltipTargetDirective, IgxTooltipDirective } from '@infragistics/igniteui-angular';
+// import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 // import { DETMACH2 } from './app.model';
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -18,7 +18,9 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lab-monitor',
-  imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, CommonModule, CdkDrag, FormsModule],
+  imports: [IgxButtonDirective, IgxRippleDirective, IgxSelectComponent, IgxSelectItemComponent, 
+    IgxLabelDirective, CommonModule, CdkDrag, FormsModule, IgxIconComponent, IgxTooltipDirective, 
+    IgxTooltipTargetDirective],
 
   // imports: [IGX_SELECT_DIRECTIVES, FormsModule]
   /* or imports: [IgxSelectComponent, IgxSelectItemComponent, IgxLabelDirective, FormsModule] */
@@ -528,8 +530,8 @@ export class LabMonitor implements OnInit, AfterViewInit {
 
       n += 1
       console.log('n after: ', { n })
-
-      this.machines[0].MACHINE_ID = "m001"
+    // this.machines[0].MACHINE_ID = "m001"
+      // this.machines[0].MACHINE_ID = "DRC"
       console.log('machines (after):', this.machines)
 
       // the next block of code is important to understand and to get to work
@@ -581,6 +583,22 @@ export class LabMonitor implements OnInit, AfterViewInit {
     // // console.log(this.machines);
   }
 
+    savemachines() {
+    // // for (const machineToAdd of this.dst['DETMACH2s']) {
+    // //   if (['GEN', 'TRC', 'POL', 'EDG'].includes(machineToAdd.MACHINE_DEV)) {
+    // //     this.addMachine2Machines(machineToAdd);
+    // //   }
+    // // }
+
+    // for (const DETMACH0 of this.dst['DETMACH0s']) {
+    //   if (['GEN', 'TRC', 'POL', 'EDG'].includes(DETMACH0.MACHINE_DEV)) {
+    //     for (const machineToAdd of this.dst['DETMACH2s'].filter(x => x.MACHINE_DEV === DETMACH0.MACHINE_DEV)) {
+    //       this.addMachine2Machines(machineToAdd, DETMACH0.MACHINE_DEV_IMAGE);
+    //     }
+    //   }
+    // }
+
+  }
   btnClicked(event: MouseEvent) {
     console.log('Btn clicked', event);
   }

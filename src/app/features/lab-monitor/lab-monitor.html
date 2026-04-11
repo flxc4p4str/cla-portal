@@ -6,13 +6,13 @@
 
 <!-- <button (click)="btnClicked($event)">Create DETJOBM4 as JSON</button> -->
 
-        <!-- @for(Dev of filteredDevices(); track Dev) {
+<!-- @for(Dev of filteredDevices(); track Dev) {
         <div  (click)="loadMachinesByDev(Dev.MACHINE_DEV)">
           DeviceFD {{ Dev.MACHINE_DEV}}, {{Dev.MACHINE_DEV_DESC}}</div>
         } -->
 
 <!-- <select class="ship-list-select" [(ngModel)]="selectedDev"> -->
-      <!-- <select class="ship-list-select" >
+<!-- <select class="ship-list-select" >
         @for(Dev of filteredDevices(); track Dev) {
         <option  (click)="loadMachinesByDev(Dev.MACHINE_DEV)" 
         value="{{Dev.MACHINE_DEV}}" 
@@ -26,63 +26,79 @@
 <div style="width:100%; display:flex; flex-direction: row; flex-basis: 400px; justify-content: space-between;">
 
   <div style="max-width: 400px;">
-      <igx-select [(ngModel)]="selectedDev">
-        <label igxLabel>Select a Device Type to Pick a Machine</label>
-        @for(Dev of filteredDevices(); track Dev) {
-          <igx-select-item (click)="loadMachinesByDev(Dev.MACHINE_DEV)" [value]="Dev.MACHINE_DEV"> 
-            Device {{ Dev.MACHINE_DEV}}, {{Dev.MACHINE_DEV_DESC}}
-          </igx-select-item>    
-        }
-      </igx-select>
-      @if (selmachines().length > 0) {
-        <div>
-          <img class="lab-machine-selected" src="assets/images/MACHINE_DEV/{{machine_dev()}}.jpg" />
-          <!-- {{ selectedDETMACH2fc }} -->
-          <!-- {{ selectedDETMACH2fc | json}} -->
-        </div>
+    <igx-select [(ngModel)]="selectedDev">
+      <label igxLabel>Select a Device Type to Pick a Machine</label>
+      @for(Dev of filteredDevices(); track Dev) {
+      <igx-select-item (click)="loadMachinesByDev(Dev.MACHINE_DEV)" [value]="Dev.MACHINE_DEV">
+        Device {{ Dev.MACHINE_DEV}}, {{Dev.MACHINE_DEV_DESC}}
+      </igx-select-item>
       }
+    </igx-select>
+    @if (selmachines().length > 0) {
+    <div>
+      <img class="lab-machine-selected" src="assets/images/MACHINE_DEV/{{machine_dev()}}.jpg" />
+      <!-- {{ selectedDETMACH2fc }} -->
+      <!-- {{ selectedDETMACH2fc | json}} -->
+    </div>
+    }
   </div>
   <!-- <label *ngIf="selmachines().length === 0 ">Select a device type to select a machine:</label> -->
 
   @if (selmachines().length > 0) {
-    <div>
-      <!-- <label for="cars">Choose a {{ machine_dev }} machine:</label>
+  <div>
+    <!-- <label for="cars">Choose a {{ machine_dev }} machine:</label>
       <select id="cars" name="cars" (change)="onChange($event)">>
         <option *ngFor="let selmachine of selmachines()" [value]="selmachine.MACHINE_ID">{{selmachine.MACHINE_DESC}}</option>
       </select> -->
 
-      <div style="max-width: 400px;">
-          <igx-select [(ngModel)]="selectedDev">
-            <label igxLabel>Choose a {{ machine_dev() }} machine</label>
-            @for(selmachine of selmachines(); track selmachine) {
-              <igx-select-item [value]="selmachine.MACHINE_ID" (click)="set_selectedDETMACH2fc(selmachine)"> 
-                {{ selmachine.MACHINE_ID}}, {{selmachine.MACHINE_DESC}}
-              </igx-select-item>    
-            }
-          </igx-select>
-      </div>
-
-      <button mat-raised-button color="primary" (click)="addMachine()" class="footer-controls">
-        Add Machine
-      </button>
-
-      <button mat-raised-button color="secondary" (click)="addAllMachines()" class="footer-controls">
-        Add All Machines
-      </button>
+    <div style="max-width: 400px;">
+      <igx-select [(ngModel)]="selectedDev">
+        <label igxLabel>Choose a {{ machine_dev() }} machine</label>
+        @for(selmachine of selmachines(); track selmachine) {
+        <igx-select-item [value]="selmachine.MACHINE_ID" (click)="set_selectedDETMACH2fc(selmachine)">
+          {{ selmachine.MACHINE_ID}}, {{selmachine.MACHINE_DESC}}
+        </igx-select-item>
+        }
+      </igx-select>
     </div>
+
+    <button igxButton="outlined" igxRipple (click)="addMachine()" class="footer-controls">
+      <span>Add</span>
+      <igx-icon family="material">add</igx-icon>
+    </button>
+
+    <button igxButton="outlined" igxRipple (click)="savemachines()">
+      <span>Save</span>
+      <igx-icon family="material">save_as</igx-icon>
+    </button>
+   
+    <button igxButton="outlined" igxRipple (click)="addAllMachines()" [igxTooltipTarget]="ttRefaddall">
+      <span>Add All</span>
+      <igx-icon family="material">playlist_add</igx-icon>
+    </button>
+    <div #ttRefaddall="tooltip" igxTooltip>
+      Click this button to add all machines of the selected device type to the lab map.
+    </div>
+
+  </div>
+
+
   }
 
   @if (selmachines().length > 0) {
-    <div>
-      <button mat-raised-button color="primary" (click)="pingMachine(0, $event)" class="footer-controls">
-        ping Machine 0
-      </button>
-      <button mat-raised-button color="primary" (click)="removeSelected()" class="footer-controls">
-        remove selected attribute from all machines
-      </button>
-    </div>    
-  }
+  <div>
+> -->
+    <button igxButton="outlined" igxRipple (click)="pingMachine(0, $event)">
+      <span>ping Machine 0</span>
+      <igx-icon family="material">network_ping</igx-icon>
+    </button>
 
+    <button igxButton="outlined" igxRipple (click)="removeSelected()">
+      <span>remove selected attribute from all machines</span>
+      <igx-icon family="material">delete</igx-icon>
+    </button>
+  </div>
+  }
 </div>
 
 
@@ -97,10 +113,10 @@
 
     <div class="lab-machine" [ngClass]="{'selected': machine.selected()}" *ngFor="let machine of machines"
       [style.top.px]="machine.initialPosition.y" [style.left.px]="machine.initialPosition.x"
-      (click)="selectMachine(machine, $event)"
-      cdkDragBoundary=".example-boundary" (cdkDragEnded)="dragEnd($event, machine)" cdkDrag>
+      (click)="selectMachine(machine, $event)" cdkDragBoundary=".example-boundary"
+      (cdkDragEnded)="dragEnd($event, machine)" cdkDrag>
       <div class="ring"></div>
-      <div class="machine-image" >
+      <div class="machine-image">
         <img class="lab-machine-image" [src]="machine.machineImageUrl">
       </div>
     </div>
@@ -113,20 +129,20 @@
     Details Pane
 
     @if(selectedDETMACH2() && selectedDETMACH2()?.machineImageUrl) {
-       <div>
-         <img class="lab-machine-image" [src]="selectedDETMACH2()?.machineImageUrl">
-       </div>
+    <div>
+      <img class="lab-machine-image" [src]="selectedDETMACH2()?.machineImageUrl">
+    </div>
 
-      <!-- <img *ngIf="selectedDETMACH2()" 
+    <!-- <img *ngIf="selectedDETMACH2()" 
         class="lab-machine-image" 
         style="align-self: center; margin-top: 10px;"
         [src]="selectedDETMACH2()?.machineImageUrl"> -->
-      <br />
-      {{selectedDETMACH2()?.MACHINE_ID}}
-      <br />
-      {{selectedDETMACH2()?.MACHINE_DESC}}
-      <hr />       
-    } 
+    <br />
+    {{selectedDETMACH2()?.MACHINE_ID}}
+    <br />
+    {{selectedDETMACH2()?.MACHINE_DESC}}
+    <hr />
+    }
 
 
     <!-- <ul *ngIf="selectedDETMACH2 && selectedDETMACH2['DETJOBM4sList']">
@@ -136,11 +152,11 @@
     </ul> -->
 
     @if(selectedDETMACH2() && selectedDETMACH2()?.DETJOBM4sList) {
-      <ul>
-        <li *ngFor="let D of selectedDETMACH2()?.DETJOBM4sList">
-          {{D.JOB_NO}} {{D.INIT_DATE}}
-        </li>
-      </ul>
+    <ul>
+      <li *ngFor="let D of selectedDETMACH2()?.DETJOBM4sList">
+        {{D.JOB_NO}} {{D.INIT_DATE}}
+      </li>
+    </ul>
     }
 
 
@@ -149,4 +165,3 @@
 </div>
 
 <!-- <button (click)="btnClicked($event)">Create Load Excel into JSON</button> -->
-
