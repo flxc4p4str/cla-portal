@@ -10,7 +10,8 @@
     "test": "ng test",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "rdw": "ng serve -o --port 4277"
+    "rdw": "ng serve -o --port 4277",
+    "dgj": "ng serve -o --port 4278"
   },
   "private": true,
   "packageManager": "npm@11.6.2",
