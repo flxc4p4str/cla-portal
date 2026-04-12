@@ -19,6 +19,7 @@ const cors = require('cors');
 
 app.use(cors({origin: true}));
 
+// http://localhost:9001/api/DETMACH0 - note that this server does not support https
 app.route('/api/DETMACH0').get(getAllDETMACH0);
 app.route('/api/DETMACH2').get(getAllDETMACH2);
 
