@@ -133,7 +133,7 @@ export const grdColsARTCUSTX_BOOK = signal<grdCol[]>([
     {FIELD: 'ORDR_UNIT_DISC', HEADER: 'Disc', WIDTH: "80", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
     {FIELD: 'ORDR_UNIT_PRICE', HEADER: 'Net Prc', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
     
-    {FIELD: 'ORDR_QTY', HEADER: 'Qty', WIDTH: "80", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+    {FIELD: 'ORDR_QTY', HEADER: 'Qty', WIDTH: "80", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
     {FIELD: 'ORDR_QTY_OPEN', HEADER: '#Open', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
     {FIELD: 'ORDR_QTY_PICK', HEADER: '#Pick', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
     {FIELD: 'ORDR_QTY_SHIP', HEADER: '#Ship', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},

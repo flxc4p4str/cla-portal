@@ -82,6 +82,8 @@ export class Summary implements OnInit, AfterViewInit {
     grdSOTORDR2_title: string = '';
     grdSOTORDR2_signal = signal('')
 
+    
+
     public statusMap: { [key: string]: string } = {
       'O': 'Open',
       'P': 'Shipped',
@@ -419,37 +421,37 @@ export class Summary implements OnInit, AfterViewInit {
       });
 
     // console.log ('3 started SOTORDR1')
-    this.http.get<SOTORDR1[]>('assets/data/SOTORDR1.json')
-      .pipe(
-        // Map the array of objects to an array of strings (e.g., the 'name' property)
-        // map(data => data.map(item => item.name)) 
-        // map((x) => {x.PRD_END_DATE = ExcelDateToJSDate(x.PRD_END_DATE)}
-      )
-      .subscribe(result => {
-        // console.log ('3 completed SOTORDR1')
+    // this.http.get<SOTORDR1[]>('assets/data/SOTORDR1.json')
+    //   .pipe(
+    //     // Map the array of objects to an array of strings (e.g., the 'name' property)
+    //     // map(data => data.map(item => item.name)) 
+    //     // map((x) => {x.PRD_END_DATE = ExcelDateToJSDate(x.PRD_END_DATE)}
+    //   )
+    //   .subscribe(result => {
+    //     // console.log ('3 completed SOTORDR1')
 
-        for (let i = 0; i < result.length; i++) {
-          let x:SOTORDR1 = result[i]
-          let n:number = +(x.ORDR_DATE.toString());
-          x.ORDR_DATE = ExcelDateToJSDate(n)
-          let n2:number = +(x.INIT_DATE.toString());
-          x.INIT_DATE = ExcelDateToJSDate(n2)
-        }
+    //     for (let i = 0; i < result.length; i++) {
+    //       let x:SOTORDR1 = result[i]
+    //       let n:number = +(x.ORDR_DATE.toString());
+    //       x.ORDR_DATE = ExcelDateToJSDate(n)
+    //       let n2:number = +(x.INIT_DATE.toString());
+    //       x.INIT_DATE = ExcelDateToJSDate(n2)
+    //     }
 
-        this.SOTORDR1.set(result);        
-        // console.log (this.SOTORDR1()); 
-      });
+    //     this.SOTORDR1.set(result);        
+    //     // console.log (this.SOTORDR1()); 
+    //   });
         
     // console.log ('4 started SOTORDR2')
-    this.http.get<SOTORDR2[]>('assets/data/SOTORDR2.json')
-      .pipe(
-      )
-      .subscribe(result => {
-        // console.log ('4 completed SOTORDR2')
-        this.SOTORDR2.set(result);
-        result[0].ORDR_QTY = -1;
-        // console.log (this.SOTORDR2()); 
-      });
+    // this.http.get<SOTORDR2[]>('assets/data/SOTORDR2.json')
+    //   .pipe(
+    //   )
+    //   .subscribe(result => {
+    //     // console.log ('4 completed SOTORDR2')
+    //     this.SOTORDR2.set(result);
+    //     result[0].ORDR_QTY = -1;
+    //     // console.log (this.SOTORDR2()); 
+    //   });
   }
 
 
@@ -489,7 +491,63 @@ export class Summary implements OnInit, AfterViewInit {
         }
 
         this.SOTORDR1.set(result);        
-        console.log(this.SOTORDR1()); 
+       console.log(this.SOTORDR1()); 
+      });
+        
+    // console.log('2 started SOTORDR2 for ' + YP)
+    // this.http.get<SOTORDR2[]>(`assets/data/SOTORDR2_BOOK_${YP}.json`)
+    //   .pipe(
+    //   )
+    //   .subscribe(result => {
+    //     console.log('2 completed SOTORDR2 for ' + YP)
+    //     this.SOTORDR2.set(result);
+    //     result[0].ORDR_QTY = -1;
+    //     console.log(this.SOTORDR2); 
+    //   });
+
+    //https://absapi.absolution1.com/api/VAN/EC/Get_Order_Details/0008021932
+    // this.getOrderDetails(ORDR_NO);
+    //       this.SOTORDR2_ORDR.set(this.SOTORDR2().filter(x => x.ORDR_NO === ORDR_NO))
+    
+    
+  }
+
+  getOrderDetails(Order: string) {
+     
+    console.log('1 started SOTORDR2 for ' + Order)
+    // this.http.get<SOTORDR1[]>(`assets/data/SOTORDR1_BOOK_${YP}.json`)
+    // let body = {'TYPE': 'BOOK', 'YP': YP}
+    // this.http.post<SOTORDR1[]>(`https://absapi.absolution1.com/api/VAN/EC/Get_Orders/BOOK/${YP}`, body)
+    // this.http.get<any>(`https://absapi.absolution1.com/api/VAN/EC/Get_Order_Details/${Order}`)    
+    this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Order_Details/${Order}`)    
+      .pipe(
+      )
+      .subscribe(result => {
+        console.log({result})
+        console.log('1 completed SOTORDR2 for ' + Order)
+
+        result = result['SOTORDR2s']
+
+        let ORDR_NO: string = '';
+        for (let i = 0; i < result.length; i++) {
+          try {
+            let x:SOTORDR2 = result[i]
+            ORDR_NO = x.ORDR_NO;
+            // let n:number = +(x.ORDR_DATE.toString());
+            // x.ORDR_DATE = ExcelDateToJSDate(n)
+            // let n2:number = +(x.INIT_DATE.toString());
+            // x.INIT_DATE = ExcelDateToJSDate(n2)
+          } catch (error: any) {
+            console.error({ORDR_NO})
+            // Code to handle the error
+            console.error("An error occurred:", error.message);
+            // Output the specific name of the error
+            console.error("Error name:", error.name);
+          }
+        }
+
+        this.SOTORDR2_ORDR.set(result);        
+        console.log(this.SOTORDR2_ORDR()); 
       });
         
     // console.log('2 started SOTORDR2 for ' + YP)
@@ -506,7 +564,6 @@ export class Summary implements OnInit, AfterViewInit {
     //https://absapi.absolution1.com/api/VAN/EC/Get_Order_Details/0008021932
     
   }
-
 
 
 
@@ -544,8 +601,8 @@ export class Summary implements OnInit, AfterViewInit {
           let ORDR_NO: string = this.selectedRowObjects[0]['ORDR_NO']
           let title: string =  'Order Details for Order ' + ORDR_NO;
           this.grdSOTORDR2_title = title;
-          // this.grdSOTORDR2_signal.set(title)
-          // this.getOrderDetails(ORDR_NO);
+         //  this.grdSOTORDR2_signal.set(title)
+           this.getOrderDetails(ORDR_NO);
           this.SOTORDR2_ORDR.set(this.SOTORDR2().filter(x => x.ORDR_NO === ORDR_NO))
           console.log(this.SOTORDR2_ORDR())
           console.log({ORDR_NO})

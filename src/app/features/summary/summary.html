@@ -324,8 +324,8 @@
                 @for (grdCol of grdColsSOTORDR1(); track grdCol.FIELD) {
                 <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
                     [resizable]="true" [editable]="true" [hasSummary]="(grdCol['COLUMN_SUMMARY'] ? true : false)"
-                    [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
-                    [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                   [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                     [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
                     [headerStyles]="grdHeaderStyles">
 
                     @if (grdCol.FIELD === 'ORDR_STATUS') {
@@ -360,6 +360,7 @@
     @if (grdSOTORDR2_title) {
     <div class="sample-wrapper summary-panel">
         <div class="grid__wrapper">
+  
             <igx-grid #grdSOTORDR2 id="grdSOTORDR2" [data]="SOTORDR2_ORDR()" [rowHeight]="20" [height]="'180px'"
                 [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
                 [selectedRows]="selectedRows" (rowSelectionChanging)="rowSelectionChanged($event)"
@@ -376,12 +377,13 @@
 
                 @for (grdCol of grdColsSOTORDR2(); track grdCol.FIELD) {
                 <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
-                    [resizable]="true" [editable]="true" [summaries]=grdCol.COLUMN_SUMMARY
+                      [resizable]="true" [editable]="true" [summaries]=grdCol.COLUMN_SUMMARY
                     [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT [pipeArgs]=grdCol.COLUMN_FORMAT
                     class="column-header" [headerClasses]="'column-header'" [headerStyles]="grdHeaderStyles">
                 </igx-column>
                 }
 
+                
                 <igx-grid-toolbar class="total-row">
                     <!-- <igx-grid-toolbar-title>{{grdSOTORDR2_signal()}}</igx-grid-toolbar-title> -->
                     <igx-grid-toolbar-title>{{grdSOTORDR2_title}}</igx-grid-toolbar-title>
