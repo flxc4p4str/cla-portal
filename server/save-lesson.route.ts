@@ -11,17 +11,17 @@ export function saveLesson(req: Request, res: Response) {
   console.log("Saving lesson changes", id, JSON.stringify(changes));
 
   const newLesson = {
-    ...(LESSONS[id]),
+    ...(LESSONS[+id]),
     ...changes
   };
 
-  LESSONS[id] = newLesson;
+  LESSONS[+id] = newLesson;
 
   console.log("new lesson version", newLesson);
 
   setTimeout(() => {
 
-    res.status(200).json(LESSONS[id]);
+    res.status(200).json(LESSONS[+id]);
 
   }, 1500);
 

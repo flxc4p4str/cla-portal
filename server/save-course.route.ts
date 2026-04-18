@@ -18,17 +18,17 @@ export function saveCourse(req: Request, res: Response) {
   console.log("Saving course changes", id, JSON.stringify(changes));
 
   const newCourse = {
-    ...COURSES[id],
+    ...COURSES[+id],
     ...changes
   };
 
-  COURSES[id] = newCourse;
+  COURSES[+id] = newCourse;
 
   console.log("new course version", newCourse);
 
   setTimeout(() => {
 
-    res.status(200).json(COURSES[id]);
+    res.status(200).json(COURSES[+id]);
 
   }, 1500);
 

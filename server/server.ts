@@ -1,5 +1,4 @@
-
-import * as express from 'express';
+// import * as express from 'express';
 import {Application} from "express";
 import {getAllCourses, getCourseById, getAllDETMACH0, getAllDETMACH2} from "./get-courses.route";
 import {searchLessons} from "./search-lessons.route";
@@ -11,6 +10,7 @@ import {saveLesson} from "./save-lesson.route";
 
 const bodyParser = require('body-parser');
 
+const express = require('express');
 const app: Application = express();
 
 app.use(bodyParser.json());
@@ -40,5 +40,12 @@ app.route('/api/lessons/:id').put(saveLesson);
 app.route('/api/login').post(loginUser);
 
 const httpServer = app.listen(9001, () => {
-  console.log("HTTP REST API Server running at http://localhost:" + httpServer.address()["port"]);
+  const addr = httpServer.address();
+  const port = typeof addr === 'string' ? addr : addr?.port.toString();
+  const addrIP = typeof addr === 'string' ? addr : addr?.address.toString();
+  console.log({addr}, {addrIP}, {port});  
+
+  // console.log("HTTP REST API Server running at http://localhost:" + httpServer.address()); // + httpServer.address()["port"]);
+  // console.log("HTTP REST API Server running at http://localhost:" + addrIP, port);
+  console.log("HTTP REST API Server running at http://localhost:" + port);
 });
