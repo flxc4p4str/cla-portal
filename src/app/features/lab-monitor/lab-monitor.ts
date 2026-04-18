@@ -714,6 +714,10 @@ export class DETMACH2 {
   // machineStatus: string;
   // currentJobNo: string;
   DETJOBM4sList: DETJOBM4[] = [];
+
+  // clearValues() {
+  //   console.log('in clearValues')
+  // }
 }
 
 export class DETMACH0 {
@@ -744,4 +748,14 @@ export class DETJOBM4 {
 export class DETJOBM4pings {
   MACHINE_ID!: string;
   STATS!: DETJOBM4[];
+}
+
+export interface intDETJOBM4pings {
+  MACHINE_ID: string,
+  STATS: DETJOBM4[]
+}
+
+export type typDETJOBM4pings = {
+  MACHINE_ID: string,
+  STATS: DETJOBM4[]
 }
