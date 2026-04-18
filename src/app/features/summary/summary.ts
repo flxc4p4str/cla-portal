@@ -123,7 +123,7 @@ export class Summary implements OnInit, AfterViewInit {
       body: { TEST: 'HI MOM' }
     };
   }, { injector: inject(Injector) }
-)
+  )
 
 
       // private readonly x =  httpResource<httpResp>(
