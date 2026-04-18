@@ -38,6 +38,10 @@ export class LabMonitor implements OnInit, AfterViewInit {
   selmachines = signal<DETMACH2[]>([]);
   // selmachines: DETMACH2[] = [];
 
+
+  lab_code = signal('');
+  selectedLab: string = '';
+
   machine_dev = signal('');
   selectedDETMACH2fc!: DETMACH2;
   showDetailsPane = false;
@@ -82,7 +86,7 @@ export class LabMonitor implements OnInit, AfterViewInit {
   statsByMachine = signal<DETJOBM4pings[]>([])
 
   DETMACH0_DEV: DETMACH0[] = [];
-  devices: DETMACH0[] = []
+  // devices: DETMACH0[] = []
 
   devicesResource = httpResource<DETMACH0[]>(() => 'assets/data/DETMACH0.json', { defaultValue: [] });
   devicesSignal = this.devicesResource.value;
@@ -95,6 +99,23 @@ export class LabMonitor implements OnInit, AfterViewInit {
       || device.MACHINE_DEV === 'EDG'
       || device.MACHINE_DEV === 'POL'
       || device.MACHINE_DEV === 'TRC'
+    );
+  });
+
+  DETLABM1_DEV: DETLABM1[] = [];
+  Labs: DETLABM1[] = []
+
+  LabResource = httpResource<DETLABM1[]>(() => 'assets/data/DETLABM1.json', { defaultValue: [] });
+  LabSignal = this.LabResource.value;
+
+  // filtered labs
+  filteredLabs = computed(() => {
+    // Use the standard JavaScript array filter method
+    return this.LabSignal().filter(Lab =>
+      Lab.LAB_CODE === 'HAW'
+      || Lab.LAB_CODE === 'ERL'
+      || Lab.LAB_CODE === 'STL'
+      || Lab.LAB_CODE === 'PIT'
     );
   });
 
@@ -347,26 +368,50 @@ export class LabMonitor implements OnInit, AfterViewInit {
 
     console.log('3 started DETMACH0')
     // this.http.post<DETMACH0[]>(someurl,somebody)
-    this.http.get<DETMACH0[]>('assets/data/DETMACH0.json')
+    // this.http.get<DETMACH0[]>('assets/data/DETMACH0.json')
+    //   .pipe(
+    //     // filter((device: DETMACH0) => (device.MACHINE_DEV === 'GEN'))
+    //     map((arr: DETMACH0[]) =>
+    //     (arr.filter(device => device.MACHINE_DEV === 'GEN'
+    //       || device.MACHINE_DEV === 'EDG'
+    //     )))
+    //   )
+    //   .subscribe(result => {
+    //     console.log('3 completed DETMACH0')
+    //     console.log('devices', result);
+    //     // this.devices = result
+    //     this.devices = result.filter((device: DETMACH0) =>
+    //       device.MACHINE_DEV === 'GEN'
+    //       || device.MACHINE_DEV === 'EDG'
+    //       || device.MACHINE_DEV === 'POL'
+    //       || device.MACHINE_DEV === 'TRC');
+    //     console.log(this.devices);
+    //   });
+    // // this.cd.detectChanges();
+
+ console.log('4 started DETLABM1')
+    // this.http.post<DETLABM1[]>(someurl,somebody)
+    this.http.get<DETLABM1[]>('assets/data/DETLABM1.json')
       .pipe(
-        // filter((device: DETMACH0) => (device.MACHINE_DEV === 'GEN'))
-        map((arr: DETMACH0[]) =>
-        (arr.filter(device => device.MACHINE_DEV === 'GEN'
-          || device.MACHINE_DEV === 'EDG'
-        )))
-      )
+     
+        )
+      
       .subscribe(result => {
-        console.log('3 completed DETMACH0')
-        console.log('devices', result);
-        // this.devices = result
-        this.devices = result.filter((device: DETMACH0) =>
-          device.MACHINE_DEV === 'GEN'
-          || device.MACHINE_DEV === 'EDG'
-          || device.MACHINE_DEV === 'POL'
-          || device.MACHINE_DEV === 'TRC');
-        console.log(this.devices);
+        console.log('4 completed DETLABM1')
+        console.log('Labs', result);
+         this.Labs = result
+        console.log(this.Labs);
       });
     // this.cd.detectChanges();
+
+
+
+
+
+
+
+
+
   }
 
   onChange(event: Event): void {
@@ -391,13 +436,21 @@ export class LabMonitor implements OnInit, AfterViewInit {
     this.machine_dev.set(dev);
 
     // this.selmachines = this.allmachines.filter(machine => machine.MACHINE_DEV === dev);
-    this.selmachines.set(this.allmachines.filter(machine => machine.MACHINE_DEV === dev));
+    this.selmachines.set(this.allmachines.filter
+    (machine => machine.MACHINE_DEV === dev ));
+    // (machine => machine.MACHINE_DEV === dev && machine.LAB_CODE === this.lab_code()));
     console.log('Filtered machines:', this.selmachines());
 
     // need to get the value currently loaded in the select and call set_selectedDETMACH2fc
     // let m:DETMACH2 = this.selmachines[0]  
     let m: DETMACH2 = this.selmachines()[0];
     this.set_selectedDETMACH2fc(m)
+  }
+
+  loadLab(labCode: string) {
+    console.log('Selected Lab:', labCode);
+    // this.machine_dev = dev;
+    this.lab_code.set(labCode);
   }
 
   mapClicked(event: MouseEvent) {
@@ -669,7 +722,11 @@ export class DETMACH0 {
   MACHINE_DEV_IMAGE!: string;
 }
 
-
+export class DETLABM1 {
+  LAB_CODE!: string;
+  LAB_NAME!: string;
+  LAB_STATUS!: string;
+}
 
 export interface Statistics {
   data: [],

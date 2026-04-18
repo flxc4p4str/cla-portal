@@ -26,6 +26,18 @@
 <div style="width:100%; display:flex; flex-direction: row; flex-basis: 400px; justify-content: space-between;">
 
   <div style="max-width: 400px;">
+    <igx-select [(ngModel)]="selectedLab">
+      <label igxLabel>Select a Lab to view</label>
+      @for(Lab of filteredLabs(); track Lab) {
+      <igx-select-item (click)="loadLab(Lab.LAB_CODE)" [value]="Lab.LAB_CODE">
+        Lab {{Lab.LAB_CODE}}, {{Lab.LAB_NAME}}
+      </igx-select-item>
+      }
+    </igx-select>
+
+  </div>
+
+  <div style="max-width: 400px;">
     <igx-select [(ngModel)]="selectedDev">
       <label igxLabel>Select a Device Type to Pick a Machine</label>
       @for(Dev of filteredDevices(); track Dev) {

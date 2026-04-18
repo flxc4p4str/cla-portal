@@ -1,0 +1,22 @@
+[
+  {
+    "LAB_CODE": "ERL",
+    "LAB_NAME": "ABB Labs KTY",
+    "LAB_STATUS": "A"
+  },
+  {
+    "LAB_CODE": "HAW",
+    "LAB_NAME": "ABB Labs HAW",
+    "LAB_STATUS": "A"
+  },
+  {
+    "LAB_CODE": "PIT",
+    "LAB_NAME": "ABB Labs PIT",
+    "LAB_STATUS": "A"
+  },
+  {
+    "LAB_CODE": "STL",
+    "LAB_NAME": "ABB Labs STL",
+    "LAB_STATUS": "A"
+  }
+]
