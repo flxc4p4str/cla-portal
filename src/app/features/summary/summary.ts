@@ -345,24 +345,24 @@ export class Summary implements OnInit, AfterViewInit {
       });
      
 
-    this.http.get<ARTCUSTX_OPEN[]>('assets/data/ARTCUSTX_OPEN.json')
-      .pipe(
+    // this.http.get<ARTCUSTX_OPEN[]>('assets/data/ARTCUSTX_OPEN.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        console.log('2A completed ARTCUSTX_OPEN')   
+    //   )
+    //   .subscribe(result => {
+    //     console.log('2A completed ARTCUSTX_OPEN')   
                 
-        for (let i = 0; i < result.length; i++) {
-          let x:ARTCUSTX_OPEN = result[i]
-          let n:number = +(x.MIN_DATE.toString());
-          x.MIN_DATE = ExcelDateToJSDate(n)
-          let n2:number = +(x.MAX_DATE.toString());
-          x.MAX_DATE = ExcelDateToJSDate(n2)
-        }
+    //     for (let i = 0; i < result.length; i++) {
+    //       let x:ARTCUSTX_OPEN = result[i]
+    //       let n:number = +(x.MIN_DATE.toString());
+    //       x.MIN_DATE = ExcelDateToJSDate(n)
+    //       let n2:number = +(x.MAX_DATE.toString());
+    //       x.MAX_DATE = ExcelDateToJSDate(n2)
+    //     }
 
-        this.ARTCUSTX_OPEN.set(result);
-        // console.log(this.ARTCUSTX_OPEN()); 
-      });
+    //     this.ARTCUSTX_OPEN.set(result);
+    //     // console.log(this.ARTCUSTX_OPEN()); 
+    //   });
 
     // console.log('2B started ARTCUSTX_BOOK')
     // this.http.get<ARTCUSTX_BOOK[]>('assets/data/ARTCUSTX_BOOK.json')
@@ -587,6 +587,15 @@ export class Summary implements OnInit, AfterViewInit {
         this.selectedRowObjects = event.newSelection;
         console.log('selectedRowObjects', this.selectedRowObjects);
         console.log(event);
+
+        if (event.owner.id === 'grdARTCUSTX_OPEN') {
+          let YP: string = this.selectedRowObjects[0]['YP']
+          let title: string =  ' Open Orders';
+          this.grdSOTORDR1_title = title;
+          // this.grdSOTORDR1_signal.set(title)
+          this.getOrders(YP,'OPEN');
+          this.grdSOTORDR2_title = '';
+        }
 
         if (event.owner.id === 'grdARTCUSTX_BOOK') {
           let YP: string = this.selectedRowObjects[0]['YP']
