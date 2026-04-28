@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { IgxGridModule, IgxTabsModule } from '@infragistics/igniteui-angular';
 import { CustomerInquiryMockService } from './services/customer-inquiry-mock.service';
+import { CustomerInquiryNameAddressComponent } from './tabs/name-address/customer-inquiry-name-address.component';
 
 @Component({
   selector: 'app-customer-inquiry',
   standalone: true,
-  imports: [IgxTabsModule, IgxGridModule],
+  imports: [IgxTabsModule, IgxGridModule, CustomerInquiryNameAddressComponent],
   template: `
     <h2>Customer Inquiry</h2>
 
@@ -17,7 +18,12 @@ import { CustomerInquiryMockService } from './services/customer-inquiry-mock.ser
       <igx-tab-item>
         <igx-tab-header>Name & Address</igx-tab-header>
         <igx-tab-content>
-          <igx-grid [data]="shipTos()" autoGenerate="true" (rowSelectionChanging)="selectShipTo($event.newSelection[0])"></igx-grid>
+              <app-customer-inquiry-name-address
+      [customer]="customer()"
+      [shipTos]="shipTos()"
+      [selectedShipTo]="selectedShipTo()"
+      (selectedShipToChange)="selectedShipTo.set($event)"
+    />
         </igx-tab-content>
       </igx-tab-item>
 
