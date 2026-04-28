@@ -5,11 +5,13 @@ import { CustomerInquiryMockService } from './services/customer-inquiry-mock.ser
 import {
   CustomerInquiryFreightContract,
   CustomerInquiryLog,
+  CustomerInquiryLabJob,
   CustomerInquiryShipTo,
 } from './data/customer-inquiry.models';
 import { CustomerInquiryNameAddressComponent } from './tabs/name-address/customer-inquiry-name-address.component';
 import { CustomerInquiryPricingContractsComponent } from './tabs/pricing-contracts/customer-inquiry-pricing-contracts.component';
 import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.component';
+import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.component';
 
 @Component({
   selector: 'app-customer-inquiry',
@@ -20,6 +22,7 @@ import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.com
     CustomerInquiryNameAddressComponent,
     CustomerInquiryPricingContractsComponent,
     CustomerInquiryLogComponent,
+    CustomerInquiryLabComponent,
   ],
   template: `
     <h2>Customer Inquiry</h2>
@@ -71,7 +74,13 @@ import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.com
       <igx-tab-item>
         <igx-tab-header>Lab</igx-tab-header>
         <igx-tab-content>
-          <igx-grid [data]="jobs()" [autoGenerate]="true"></igx-grid>
+          <app-customer-inquiry-lab
+  [jobs]="jobs()"
+  [charges]="data.jobCharges"
+  [credits]="data.jobCredits"
+  [selectedJob]="selectedJob()"
+  (selectedJobChange)="selectedJob.set($event)"
+/>
         </igx-tab-content>
       </igx-tab-item>
     </igx-tabs>
@@ -80,7 +89,7 @@ import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.com
 })
 export class CustomerInquiryComponent {
   private readonly svc = inject(CustomerInquiryMockService);
-  private readonly data = this.svc.getCustomerInquiry();
+  readonly data = this.svc.getCustomerInquiry();
 
   readonly customer = signal(this.data.customer);
   readonly shipTos = signal(this.data.shipTos);
@@ -93,4 +102,5 @@ export class CustomerInquiryComponent {
     this.data.freightContracts.at(0) ?? null,
   );
   readonly selectedLog = signal<CustomerInquiryLog | null>(this.data.logs.at(0) ?? null);
+  readonly selectedJob = signal<CustomerInquiryLabJob | null>(this.data.labJobs.at(0) ?? null);
 }
