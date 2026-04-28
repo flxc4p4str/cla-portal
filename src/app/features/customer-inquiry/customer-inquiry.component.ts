@@ -1,69 +1,96 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { IgxGridModule, IgxTabsModule } from '@infragistics/igniteui-angular';
+
 import { CustomerInquiryMockService } from './services/customer-inquiry-mock.service';
+import {
+  CustomerInquiryFreightContract,
+  CustomerInquiryLog,
+  CustomerInquiryShipTo,
+} from './data/customer-inquiry.models';
 import { CustomerInquiryNameAddressComponent } from './tabs/name-address/customer-inquiry-name-address.component';
+import { CustomerInquiryPricingContractsComponent } from './tabs/pricing-contracts/customer-inquiry-pricing-contracts.component';
+import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.component';
 
 @Component({
   selector: 'app-customer-inquiry',
   standalone: true,
-  imports: [IgxTabsModule, IgxGridModule, CustomerInquiryNameAddressComponent],
+  imports: [
+    IgxTabsModule,
+    IgxGridModule,
+    CustomerInquiryNameAddressComponent,
+    CustomerInquiryPricingContractsComponent,
+    CustomerInquiryLogComponent,
+  ],
   template: `
     <h2>Customer Inquiry</h2>
 
     <div>
       <strong>{{ customer().custCode }} - {{ customer().custName }}</strong>
+      @if (selectedShipTo(); as shipTo) {
+        <span> | Ship To: {{ shipTo.shipToNo }} - {{ shipTo.name }}</span>
+      }
     </div>
 
     <igx-tabs>
       <igx-tab-item>
         <igx-tab-header>Name & Address</igx-tab-header>
         <igx-tab-content>
-              <app-customer-inquiry-name-address
-      [customer]="customer()"
-      [shipTos]="shipTos()"
-      [selectedShipTo]="selectedShipTo()"
-      (selectedShipToChange)="selectedShipTo.set($event)"
-    />
+          <app-customer-inquiry-name-address
+            [customer]="customer()"
+            [shipTos]="shipTos()"
+            [selectedShipTo]="selectedShipTo()"
+            (selectedShipToChange)="selectedShipTo.set($event)"
+          />
         </igx-tab-content>
       </igx-tab-item>
 
       <igx-tab-item>
         <igx-tab-header>Log</igx-tab-header>
         <igx-tab-content>
-          <igx-grid [data]="logs()" autoGenerate="true"></igx-grid>
+          <app-customer-inquiry-log
+            [customer]="customer()"
+            [shipTos]="shipTos()"
+            [logs]="logs()"
+            [selectedLog]="selectedLog()"
+            (selectedLogChange)="selectedLog.set($event)"
+          />
         </igx-tab-content>
       </igx-tab-item>
 
       <igx-tab-item>
         <igx-tab-header>Pricing & Contracts</igx-tab-header>
         <igx-tab-content>
-          <igx-grid [data]="contracts()" autoGenerate="true"></igx-grid>
+          <app-customer-inquiry-pricing-contracts
+            [freightContracts]="contracts()"
+            [selectedContract]="selectedContract()"
+            (selectedContractChange)="selectedContract.set($event)"
+          />
         </igx-tab-content>
       </igx-tab-item>
 
       <igx-tab-item>
         <igx-tab-header>Lab</igx-tab-header>
         <igx-tab-content>
-          <igx-grid [data]="jobs()" autoGenerate="true"></igx-grid>
+          <igx-grid [data]="jobs()" [autoGenerate]="true"></igx-grid>
         </igx-tab-content>
       </igx-tab-item>
     </igx-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerInquiryComponent {
-  private svc = inject(CustomerInquiryMockService);
-  private data = this.svc.getCustomerInquiry();
+  private readonly svc = inject(CustomerInquiryMockService);
+  private readonly data = this.svc.getCustomerInquiry();
 
-  customer = signal(this.data.customer);
-  shipTos = signal(this.data.shipTos);
-  logs = signal(this.data.logs);
-  contracts = signal(this.data.freightContracts);
-  jobs = signal(this.data.labJobs);
+  readonly customer = signal(this.data.customer);
+  readonly shipTos = signal(this.data.shipTos);
+  readonly logs = signal(this.data.logs);
+  readonly contracts = signal(this.data.freightContracts);
+  readonly jobs = signal(this.data.labJobs);
 
-  selectedShipTo = signal<any>(null);
-
-  selectShipTo(row: any) {
-    this.selectedShipTo.set(row);
-  }
+  readonly selectedShipTo = signal<CustomerInquiryShipTo | null>(this.data.shipTos.at(0) ?? null);
+  readonly selectedContract = signal<CustomerInquiryFreightContract | null>(
+    this.data.freightContracts.at(0) ?? null,
+  );
+  readonly selectedLog = signal<CustomerInquiryLog | null>(this.data.logs.at(0) ?? null);
 }
