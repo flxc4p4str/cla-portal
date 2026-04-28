@@ -53,7 +53,14 @@ export const appRoutes: Routes = [
         canActivate: [authGuard], 
         loadComponent: () => import('./features/lab-monitor/lab-monitor').then((m) => m.LabMonitor),
         data: { menuText: 'Lab Monitor' },
-      }
+      },
+      {
+  path: 'customer-inquiry',
+  canActivate: [authGuard],
+  loadComponent: () => import('./features/customer-inquiry/customer-inquiry.component')
+    .then(m => m.CustomerInquiryComponent),
+  data: { menuText: 'Customer Inquiry', icon: 'widgets' }
+}
     ],
   },
   { path: '**', redirectTo: '' },
