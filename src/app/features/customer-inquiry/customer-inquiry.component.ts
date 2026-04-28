@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { IgxTabsModule, IgxGridModule } from '@infragistics/igniteui-angular';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { IgxGridModule, IgxTabsModule } from '@infragistics/igniteui-angular';
+import { CustomerInquiryMockService } from './services/customer-inquiry-mock.service';
 
 @Component({
   selector: 'app-customer-inquiry',
@@ -8,12 +9,15 @@ import { IgxTabsModule, IgxGridModule } from '@infragistics/igniteui-angular';
   template: `
     <h2>Customer Inquiry</h2>
 
+    <div>
+      <strong>{{ customer().custCode }} - {{ customer().custName }}</strong>
+    </div>
+
     <igx-tabs>
       <igx-tab-item>
         <igx-tab-header>Name & Address</igx-tab-header>
         <igx-tab-content>
-          <p>Customer info goes here</p>
-          <igx-grid [data]="shipTos()" autoGenerate="true"></igx-grid>
+          <igx-grid [data]="shipTos()" autoGenerate="true" (rowSelectionChanging)="selectShipTo($event.newSelection[0])"></igx-grid>
         </igx-tab-content>
       </igx-tab-item>
 
@@ -37,18 +41,23 @@ import { IgxTabsModule, IgxGridModule } from '@infragistics/igniteui-angular';
           <igx-grid [data]="jobs()" autoGenerate="true"></igx-grid>
         </igx-tab-content>
       </igx-tab-item>
-
-      <igx-tab-item>
-        <igx-tab-header>Info</igx-tab-header>
-        <igx-tab-content>Placeholder</igx-tab-content>
-      </igx-tab-item>
     </igx-tabs>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerInquiryComponent {
-  shipTos = signal([{ shipToNo: '0012', name: 'Sample ShipTo' }]);
-  logs = signal([{ date: '2024-01-01', notes: 'Sample log' }]);
-  contracts = signal([{ contractNo: 1, amount: 25 }]);
-  jobs = signal([{ jobNo: 'J123', status: 'Open' }]);
+  private svc = inject(CustomerInquiryMockService);
+  private data = this.svc.getCustomerInquiry();
+
+  customer = signal(this.data.customer);
+  shipTos = signal(this.data.shipTos);
+  logs = signal(this.data.logs);
+  contracts = signal(this.data.freightContracts);
+  jobs = signal(this.data.labJobs);
+
+  selectedShipTo = signal<any>(null);
+
+  selectShipTo(row: any) {
+    this.selectedShipTo.set(row);
+  }
 }
