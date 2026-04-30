@@ -55,12 +55,18 @@ export const appRoutes: Routes = [
         data: { menuText: 'Lab Monitor' },
       },
       {
-  path: 'customer-inquiry',
-  canActivate: [authGuard],
-  loadComponent: () => import('./features/customer-inquiry/customer-inquiry.component')
-    .then(m => m.CustomerInquiryComponent),
-  data: { menuText: 'Customer Inquiry', icon: 'widgets' }
-}
+        path: 'customer-inquiry/:custCode/:shipToNo',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/customer-inquiry/customer-inquiry.component')
+          .then((m) => m.CustomerInquiryComponent),
+      },
+      {
+        path: 'customer-inquiry',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/customer-inquiry/customer-inquiry.component')
+          .then((m) => m.CustomerInquiryComponent),
+        data: { menuText: 'Customer Inquiry', icon: 'widgets' },
+      }
     ],
   },
   { path: '**', redirectTo: '' },

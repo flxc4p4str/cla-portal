@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { IgxCheckboxModule, IgxGridModule, IgxInputGroupModule } from '@infragistics/igniteui-angular';
+import { IgxCheckboxModule, IgxGridModule, IgxInputGroupModule, IgxTabsModule } from '@infragistics/igniteui-angular';
 
-import { CustomerInquiryCustomer, CustomerInquiryShipTo } from '../../data/customer-inquiry.models';
+import {
+  CustomerInquiryContact,
+  CustomerInquiryCustomer,
+  CustomerInquiryKeyedComment,
+  CustomerInquiryLabAuthorization,
+  CustomerInquiryShipTo,
+  CustomerInquirySmsContact,
+} from '../../data/customer-inquiry.models';
 
 interface ShipToSelectionEvent {
   newSelection: CustomerInquiryShipTo[];
@@ -10,7 +17,7 @@ interface ShipToSelectionEvent {
 @Component({
   selector: 'app-customer-inquiry-name-address',
   standalone: true,
-  imports: [IgxCheckboxModule, IgxGridModule, IgxInputGroupModule],
+  imports: [IgxCheckboxModule, IgxGridModule, IgxInputGroupModule, IgxTabsModule],
   template: `
     <section class="name-address-tab">
       <div class="top-layout">
@@ -111,28 +118,86 @@ interface ShipToSelectionEvent {
         }
       </section>
 
-      <section class="panel locations-panel">
-        <header class="panel-header">Locations</header>
+      <section class="panel child-tabs-panel">
+        <igx-tabs class="child-tabs">
+          <igx-tab-item>
+            <igx-tab-header>Locations</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid
+                [data]="shipTos()"
+                [primaryKey]="'shipToNo'"
+                [rowSelection]="'single'"
+                [height]="'310px'"
+                [autoGenerate]="false"
+                (rowSelectionChanging)="onShipToSelection($event)"
+              >
+                <igx-column field="shipToNo" header="Code" [width]="'90px'"></igx-column>
+                <igx-column field="labCode" header="Lab" [width]="'90px'"></igx-column>
+                <igx-column field="alternateCustomer" header="Alt Cust" [width]="'110px'"></igx-column>
+                <igx-column field="noReturnLabel" header="No Return Label" dataType="boolean" [width]="'145px'"></igx-column>
+                <igx-column field="name" header="Name" [width]="'220px'"></igx-column>
+                <igx-column field="addr1" header="Address L1" [width]="'220px'"></igx-column>
+                <igx-column field="addr2" header="Address L2" [width]="'160px'"></igx-column>
+                <igx-column field="city" header="City" [width]="'150px'"></igx-column>
+                <igx-column field="state" header="State" [width]="'85px'"></igx-column>
+                <igx-column field="zipCode" header="Zip" [width]="'115px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
 
-        <igx-grid
-          [data]="shipTos()"
-          [primaryKey]="'shipToNo'"
-          [rowSelection]="'single'"
-          [height]="'310px'"
-          [autoGenerate]="false"
-          (rowSelectionChanging)="onShipToSelection($event)"
-        >
-          <igx-column field="shipToNo" header="Code" [width]="'90px'"></igx-column>
-          <igx-column field="labCode" header="Lab" [width]="'90px'"></igx-column>
-          <igx-column field="alternateCustomer" header="Alt Cust" [width]="'110px'"></igx-column>
-          <igx-column field="noReturnLabel" header="No Return Label" dataType="boolean" [width]="'145px'"></igx-column>
-          <igx-column field="name" header="Name" [width]="'220px'"></igx-column>
-          <igx-column field="addr1" header="Address L1" [width]="'220px'"></igx-column>
-          <igx-column field="addr2" header="Address L2" [width]="'160px'"></igx-column>
-          <igx-column field="city" header="City" [width]="'150px'"></igx-column>
-          <igx-column field="state" header="State" [width]="'85px'"></igx-column>
-          <igx-column field="zipCode" header="Zip" [width]="'115px'"></igx-column>
-        </igx-grid>
+          <igx-tab-item>
+            <igx-tab-header>Keyed Comments</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid [data]="keyedComments()" [height]="'310px'" [autoGenerate]="false">
+                <igx-column field="key" header="Key" [width]="'160px'"></igx-column>
+                <igx-column field="comment" header="Comment" [width]="'720px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
+
+          <igx-tab-item>
+            <igx-tab-header>Contacts</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid [data]="contacts()" [height]="'310px'" [autoGenerate]="false">
+                <igx-column field="customer" header="Customer" [width]="'120px'"></igx-column>
+                <igx-column field="type" header="Type" [width]="'120px'"></igx-column>
+                <igx-column field="vendor" header="Vendor" [width]="'120px'"></igx-column>
+                <igx-column field="name" header="Name" [width]="'180px'"></igx-column>
+                <igx-column field="phone" header="Phone" [width]="'140px'"></igx-column>
+                <igx-column field="ext" header="Ext" [width]="'80px'"></igx-column>
+                <igx-column field="fax" header="Fax" [width]="'140px'"></igx-column>
+                <igx-column field="email" header="Email" [width]="'240px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
+
+          <igx-tab-item>
+            <igx-tab-header>Lab Authorizations</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid [data]="labAuthorizations()" [height]="'310px'" [autoGenerate]="false">
+                <igx-column field="authCode" header="Auth Code" [width]="'130px'"></igx-column>
+                <igx-column field="name" header="Name" [width]="'220px'"></igx-column>
+                <igx-column field="status" header="Status" [width]="'110px'"></igx-column>
+                <igx-column field="createdBy" header="Created By" [width]="'130px'"></igx-column>
+                <igx-column field="createdOn" header="Created On" [width]="'130px'"></igx-column>
+                <igx-column field="modifiedBy" header="Modified By" [width]="'130px'"></igx-column>
+                <igx-column field="modifiedOn" header="Modified On" [width]="'130px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
+
+          <igx-tab-item>
+            <igx-tab-header>SMS Contacts</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid [data]="smsContacts()" [height]="'310px'" [autoGenerate]="false">
+                <igx-column field="shipToNo" header="Ship To" [width]="'110px'"></igx-column>
+                <igx-column field="name" header="Name" [width]="'280px'"></igx-column>
+                <igx-column field="smsNo" header="SMS No" [width]="'160px'"></igx-column>
+                <igx-column field="smsName" header="SMS Name" [width]="'240px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
+        </igx-tabs>
       </section>
     </section>
   `,
@@ -264,8 +329,12 @@ interface ShipToSelectionEvent {
       gap: 0.2rem;
     }
 
-    .locations-panel {
+    .child-tabs-panel {
       padding-bottom: 0.5rem;
+    }
+
+    .child-tabs {
+      display: block;
     }
 
     igx-grid {
@@ -287,6 +356,10 @@ interface ShipToSelectionEvent {
 export class CustomerInquiryNameAddressComponent {
   readonly customer = input.required<CustomerInquiryCustomer>();
   readonly shipTos = input.required<CustomerInquiryShipTo[]>();
+  readonly keyedComments = input.required<CustomerInquiryKeyedComment[]>({ alias: 'keyedComments' });
+  readonly contacts = input.required<CustomerInquiryContact[]>({ alias: 'contacts' });
+  readonly labAuthorizations = input.required<CustomerInquiryLabAuthorization[]>({ alias: 'labAuthorizations' });
+  readonly smsContacts = input.required<CustomerInquirySmsContact[]>({ alias: 'smsContacts' });
   readonly selectedShipTo = input<CustomerInquiryShipTo | null>(null);
 
   readonly selectedShipToChange = output<CustomerInquiryShipTo>();

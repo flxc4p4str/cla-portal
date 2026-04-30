@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { IgxCheckboxModule, IgxGridModule, IgxInputGroupModule, IgxRadioModule } from '@infragistics/igniteui-angular';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  IgxCheckboxModule,
+  IgxGridModule,
+  IgxInputGroupModule,
+  IgxRadioModule,
+  IgxTabsModule,
+} from '@infragistics/igniteui-angular';
 
-import { CustomerInquiryFreightContract } from '../../data/customer-inquiry.models';
+import {
+  CustomerInquiryFreightContract,
+  CustomerInquiryPricingLabContract,
+  CustomerInquirySlContract,
+} from '../../data/customer-inquiry.models';
 
 interface FreightContractSelectionEvent {
   newSelection: CustomerInquiryFreightContract[];
@@ -10,7 +20,7 @@ interface FreightContractSelectionEvent {
 @Component({
   selector: 'app-customer-inquiry-pricing-contracts',
   standalone: true,
-  imports: [IgxCheckboxModule, IgxGridModule, IgxInputGroupModule, IgxRadioModule],
+  imports: [IgxCheckboxModule, IgxGridModule, IgxInputGroupModule, IgxRadioModule, IgxTabsModule],
   template: `
     <section class="pricing-contracts-tab">
       <section class="panel grid-panel">
@@ -114,11 +124,50 @@ interface FreightContractSelectionEvent {
         </section>
       </section>
 
-      <section class="panel note-panel">
-        <header class="panel-header">Notes</header>
-        <div class="muted-note">
-          Read-only first pass. Data maps to ARTCUST3 freight contract history. Editing, insert/delete, and WinForms business-rule event behavior are intentionally deferred.
-        </div>
+      <section class="panel child-contract-tabs-panel">
+        <igx-tabs>
+          <igx-tab-item>
+            <igx-tab-header>Lab Contracts</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid
+                [data]="labContracts()"
+                [primaryKey]="'contractNo'"
+                [height]="'230px'"
+                [autoGenerate]="false"
+              >
+                <igx-column field="contractNo" header="Contract No" [width]="'135px'"></igx-column>
+                <igx-column field="contractName" header="Contract Name" [width]="'230px'"></igx-column>
+                <igx-column field="status" header="Status" [width]="'110px'"></igx-column>
+                <igx-column field="effectiveDate" header="Effective" dataType="date" [width]="'125px'"></igx-column>
+                <igx-column field="expirationDate" header="Expires" dataType="date" [width]="'125px'"></igx-column>
+                <igx-column field="priceLevel" header="Price Level" [width]="'125px'"></igx-column>
+                <igx-column field="labCode" header="Lab" [width]="'95px'"></igx-column>
+                <igx-column field="notes" header="Notes" [width]="'320px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
+
+          <igx-tab-item>
+            <igx-tab-header>SL Contracts</igx-tab-header>
+            <igx-tab-content>
+              <igx-grid
+                [data]="slContracts()"
+                [primaryKey]="'contractNo'"
+                [height]="'230px'"
+                [autoGenerate]="false"
+              >
+                <igx-column field="contractNo" header="Contract No" [width]="'135px'"></igx-column>
+                <igx-column field="contractName" header="Contract Name" [width]="'230px'"></igx-column>
+                <igx-column field="status" header="Status" [width]="'110px'"></igx-column>
+                <igx-column field="effectiveDate" header="Effective" dataType="date" [width]="'125px'"></igx-column>
+                <igx-column field="expirationDate" header="Expires" dataType="date" [width]="'125px'"></igx-column>
+                <igx-column field="salesCode" header="Sales Code" [width]="'125px'"></igx-column>
+                <igx-column field="priceLevel" header="Price Level" [width]="'125px'"></igx-column>
+                <igx-column field="notes" header="Notes" [width]="'320px'"></igx-column>
+              </igx-grid>
+            </igx-tab-content>
+          </igx-tab-item>
+        </igx-tabs>
       </section>
     </section>
   `,
@@ -209,11 +258,23 @@ interface FreightContractSelectionEvent {
       gap: 0.2rem;
     }
 
-    .empty-state,
-    .muted-note {
+    .empty-state {
       color: var(--text-muted);
       font-size: 0.88rem;
       line-height: 1.4;
+    }
+
+    .child-contract-tabs-panel {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .child-contract-tabs-panel igx-tabs {
+      display: block;
+    }
+
+    .child-contract-tabs-panel igx-grid {
+      border-top: 1px solid var(--surface-border);
     }
 
     igx-grid {
@@ -230,11 +291,11 @@ interface FreightContractSelectionEvent {
 })
 export class CustomerInquiryPricingContractsComponent {
   readonly freightContracts = input.required<CustomerInquiryFreightContract[]>();
+  readonly labContracts = input.required<CustomerInquiryPricingLabContract[]>();
+  readonly slContracts = input.required<CustomerInquirySlContract[]>();
   readonly selectedContract = input<CustomerInquiryFreightContract | null>(null);
 
   readonly selectedContractChange = output<CustomerInquiryFreightContract>();
-
-  readonly selectedContractTypeDescription = computed(() => this.selectedContract()?.typeDescription ?? '');
 
   onContractSelection(event: FreightContractSelectionEvent): void {
     const selectedContract = event.newSelection.at(0);

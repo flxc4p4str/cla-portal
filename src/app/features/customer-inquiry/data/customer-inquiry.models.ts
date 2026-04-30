@@ -35,6 +35,11 @@ export interface CustomerInquiryShipTo {
   email: string;
 }
 
+export interface CustomerInquiryShipToLookup extends CustomerInquiryShipTo {
+  custCode: string;
+  custName: string;
+}
+
 export interface CustomerInquiryLog {
   convNo: string;
   logged: string;
@@ -72,6 +77,28 @@ export interface CustomerInquiryFreightContract {
   alwaysChargeDelFreight: boolean;
 }
 
+export interface CustomerInquiryPricingLabContract {
+  contractNo: string;
+  contractName: string;
+  status: string;
+  effectiveDate: string;
+  expirationDate: string;
+  priceLevel: string;
+  labCode: string;
+  notes: string;
+}
+
+export interface CustomerInquirySlContract {
+  contractNo: string;
+  contractName: string;
+  status: string;
+  effectiveDate: string;
+  expirationDate: string;
+  salesCode: string;
+  priceLevel: string;
+  notes: string;
+}
+
 export interface CustomerInquiryLabJob {
   jobNo: string;
   date: string;
@@ -84,6 +111,24 @@ export interface CustomerInquiryLabJob {
   partnerOrderNo: string;
   pair50: boolean;
   billingHold: boolean;
+}
+
+export interface CustomerInquiryLabSummary {
+  jobNo: string;
+  patientName: string;
+  orderNo: string;
+  invoiceNo: string;
+  invoiceDate: string;
+  lensDesign: string;
+  material: string;
+  color: string;
+  frameType: string;
+  frameStatus: string;
+  tint: string;
+  arCoating: string;
+  trackingNumber: string;
+  commentLab: string;
+  commentInvoice: string;
 }
 
 export interface CustomerInquiryJobCharge {
@@ -106,12 +151,98 @@ export interface CustomerInquiryJobCredit {
   date: string;
 }
 
+export interface CustomerInquiryLensBank {
+  jobNo: string;
+  bankNo: string;
+  itemCode: string;
+  description: string;
+  eye: string;
+  qty: number;
+  price: number;
+  amount: number;
+}
+
+export interface CustomerInquiryLabContract {
+  jobNo: string;
+  contractNo: string;
+  contractName: string;
+  charge: string;
+  eye: string;
+  price: number;
+  qty: number;
+  amount: number;
+}
+
+export interface CustomerInquiryRewardProgram {
+  jobNo: string;
+  programCode: string;
+  programName: string;
+  status: string;
+  points: number;
+  amount: number;
+  notes: string;
+}
+
+export interface CustomerInquiryLabReview {
+  jobNo: string;
+  reviewCode: string;
+  reviewDescription: string;
+  status: string;
+  reviewedBy: string;
+  reviewedOn: string;
+  notes: string;
+}
+
+export interface CustomerInquiryKeyedComment {
+  key: string;
+  comment: string;
+}
+
+export interface CustomerInquiryContact {
+  customer: string;
+  type: string;
+  vendor: string;
+  name: string;
+  phone: string;
+  ext: string;
+  fax: string;
+  email: string;
+}
+
+export interface CustomerInquiryLabAuthorization {
+  authCode: string;
+  name: string;
+  status: string;
+  createdBy: string;
+  createdOn: string;
+  modifiedBy: string;
+  modifiedOn: string;
+}
+
+export interface CustomerInquirySmsContact {
+  shipToNo: string;
+  name: string;
+  smsNo: string;
+  smsName: string;
+}
+
 export interface CustomerInquiryData {
   customer: CustomerInquiryCustomer;
   shipTos: CustomerInquiryShipTo[];
   logs: CustomerInquiryLog[];
   freightContracts: CustomerInquiryFreightContract[];
+  labContracts: CustomerInquiryPricingLabContract[];
+  slContracts: CustomerInquirySlContract[];
   labJobs: CustomerInquiryLabJob[];
+  labSummaries: CustomerInquiryLabSummary[];
   jobCharges: CustomerInquiryJobCharge[];
   jobCredits: CustomerInquiryJobCredit[];
+  lensBanks: CustomerInquiryLensBank[];
+  labJobContracts: CustomerInquiryLabContract[];
+  rewardPrograms: CustomerInquiryRewardProgram[];
+  labReviews: CustomerInquiryLabReview[];
+  keyedComments: CustomerInquiryKeyedComment[];
+  contacts: CustomerInquiryContact[];
+  labAuthorizations: CustomerInquiryLabAuthorization[];
+  smsContacts: CustomerInquirySmsContact[];
 }

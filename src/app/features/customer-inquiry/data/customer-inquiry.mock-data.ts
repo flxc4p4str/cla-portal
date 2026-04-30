@@ -1,4 +1,23 @@
-import { CustomerInquiryData } from './customer-inquiry.models';
+import {
+  CustomerInquiryCustomer,
+  CustomerInquiryData,
+  CustomerInquiryJobCharge,
+  CustomerInquiryJobCredit,
+  CustomerInquiryKeyedComment,
+  CustomerInquiryContact,
+  CustomerInquiryLabAuthorization,
+  CustomerInquiryLabContract,
+  CustomerInquiryLabJob,
+  CustomerInquiryLabReview,
+  CustomerInquiryLabSummary,
+  CustomerInquiryLensBank,
+  CustomerInquiryPricingLabContract,
+  CustomerInquiryRewardProgram,
+  CustomerInquirySmsContact,
+  CustomerInquiryLog,
+  CustomerInquirySlContract,
+  CustomerInquiryShipTo,
+} from './customer-inquiry.models';
 
 export const CUSTOMER_INQUIRY_MOCK_DATA: CustomerInquiryData = {
   customer: {
@@ -649,6 +668,90 @@ export const CUSTOMER_INQUIRY_MOCK_DATA: CustomerInquiryData = {
       alwaysChargeDelFreight: false,
     },
   ],
+  labContracts: [
+    {
+      contractNo: 'LAB-26014',
+      contractName: 'FLOL Core Lens Schedule',
+      status: 'Active',
+      effectiveDate: '2026-01-01',
+      expirationDate: '2026-12-31',
+      priceLevel: 'A1',
+      labCode: 'FLOL',
+      notes: 'Primary finished lens pricing for Ontario locations.',
+    },
+    {
+      contractNo: 'LAB-26028',
+      contractName: 'Premium Coating Program',
+      status: 'Active',
+      effectiveDate: '2026-03-01',
+      expirationDate: '2026-08-31',
+      priceLevel: 'C2',
+      labCode: 'FLOL',
+      notes: 'Includes AR, blue filter, mirror, and scratch warranty add-ons.',
+    },
+    {
+      contractNo: 'LAB-25077',
+      contractName: 'Rush Processing Pilot',
+      status: 'Review',
+      effectiveDate: '2025-11-15',
+      expirationDate: '2026-05-15',
+      priceLevel: 'R1',
+      labCode: 'FLOL',
+      notes: 'Rush fees reviewed monthly with operations.',
+    },
+    {
+      contractNo: 'LAB-25031',
+      contractName: 'Rimless Specialty Work',
+      status: 'Expired',
+      effectiveDate: '2025-01-01',
+      expirationDate: '2025-12-31',
+      priceLevel: 'S3',
+      labCode: 'FLOL',
+      notes: 'Historical drilling and mount pricing retained for inquiry.',
+    },
+  ],
+  slContracts: [
+    {
+      contractNo: 'SL-26005',
+      contractName: 'National Retail Sales Schedule',
+      status: 'Active',
+      effectiveDate: '2026-01-01',
+      expirationDate: '2026-12-31',
+      salesCode: 'NATL',
+      priceLevel: 'N2',
+      notes: 'Default sales pricing for customer-owned retail locations.',
+    },
+    {
+      contractNo: 'SL-26019',
+      contractName: 'Second Pair Promotion',
+      status: 'Active',
+      effectiveDate: '2026-04-01',
+      expirationDate: '2026-06-30',
+      salesCode: 'PROMO',
+      priceLevel: 'P4',
+      notes: 'Applies to qualifying second-pair orders during spring campaign.',
+    },
+    {
+      contractNo: 'SL-25112',
+      contractName: 'Managed Care Allowance',
+      status: 'Active',
+      effectiveDate: '2025-10-01',
+      expirationDate: '2026-09-30',
+      salesCode: 'MCARE',
+      priceLevel: 'M1',
+      notes: 'Used when insurance pricing overrides retail schedule.',
+    },
+    {
+      contractNo: 'SL-25047',
+      contractName: 'Legacy Store Opening Credit',
+      status: 'Expired',
+      effectiveDate: '2025-02-01',
+      expirationDate: '2025-07-31',
+      salesCode: 'OPEN',
+      priceLevel: 'O1',
+      notes: 'Read-only historical launch pricing for converted stores.',
+    },
+  ],
   labJobs: [
     {
       jobNo: 'J783420',
@@ -781,6 +884,76 @@ export const CUSTOMER_INQUIRY_MOCK_DATA: CustomerInquiryData = {
       billingHold: true,
     },
   ],
+  labSummaries: [
+    {
+      jobNo: 'J783420',
+      patientName: 'Mason Clark',
+      orderNo: 'O-583104',
+      invoiceNo: 'INV-774210',
+      invoiceDate: '2026-04-25',
+      lensDesign: 'Digital Progressive',
+      material: 'Polycarbonate',
+      color: 'Clear',
+      frameType: 'Full Rim',
+      frameStatus: 'Received',
+      tint: 'None',
+      arCoating: 'Premium AR',
+      trackingNumber: '1Z9384710293847120',
+      commentLab: 'Rush surfacing completed before courier cutoff.',
+      commentInvoice: 'Freight waived by courtesy credit.',
+    },
+    {
+      jobNo: 'J783421',
+      patientName: 'Avery Nelson',
+      orderNo: 'O-583118',
+      invoiceNo: '',
+      invoiceDate: '',
+      lensDesign: 'Single Vision',
+      material: 'Trivex',
+      color: 'Clear',
+      frameType: 'Semi Rimless',
+      frameStatus: 'Received',
+      tint: 'None',
+      arCoating: 'Standard AR',
+      trackingNumber: '',
+      commentLab: 'Material changed after frame review.',
+      commentInvoice: 'Pending final inspection.',
+    },
+    {
+      jobNo: 'J783423',
+      patientName: 'Jordan Lee',
+      orderNo: 'O-583155',
+      invoiceNo: 'INV-774232',
+      invoiceDate: '2026-04-22',
+      lensDesign: 'Wrap Progressive',
+      material: 'High Index 1.67',
+      color: 'Clear',
+      frameType: 'Sport Wrap',
+      frameStatus: 'Received',
+      tint: 'Grey 15%',
+      arCoating: 'Scratch Warranty',
+      trackingNumber: '1Z9384710293847232',
+      commentLab: 'Warranty redo approved for non-adapt.',
+      commentInvoice: 'Wrap compensation credited.',
+    },
+    {
+      jobNo: 'J783428',
+      patientName: 'Taylor Morgan',
+      orderNo: 'O-583211',
+      invoiceNo: 'INV-774246',
+      invoiceDate: '2026-04-17',
+      lensDesign: 'Digital Progressive',
+      material: 'Polycarbonate',
+      color: 'Clear',
+      frameType: 'Full Rim',
+      frameStatus: 'Received',
+      tint: 'None',
+      arCoating: 'Blue Filter',
+      trackingNumber: '1Z9384710293847246',
+      commentLab: 'Priority queue for patient travel.',
+      commentInvoice: 'Freight contract correction issued.',
+    },
+  ],
   jobCharges: [
     { jobNo: 'J783420', charge: 'Digital Progressive Lens', eye: 'OU', price: 112.5, qty: 2, amount: 225, credited: 0 },
     { jobNo: 'J783420', charge: 'Premium AR Coating', eye: 'OU', price: 42, qty: 2, amount: 84, credited: 0 },
@@ -850,5 +1023,692 @@ export const CUSTOMER_INQUIRY_MOCK_DATA: CustomerInquiryData = {
       fuelSurcharge: 0,
       date: '2026-04-16',
     },
-  ]
+  ],
+  lensBanks: [
+    {
+      jobNo: 'J783420',
+      bankNo: 'LB-0142',
+      itemCode: 'PAL-POLY-CLR',
+      description: 'Progressive poly clear blank',
+      eye: 'OD',
+      qty: 1,
+      price: 38,
+      amount: 38,
+    },
+    {
+      jobNo: 'J783420',
+      bankNo: 'LB-0142',
+      itemCode: 'PAL-POLY-CLR',
+      description: 'Progressive poly clear blank',
+      eye: 'OS',
+      qty: 1,
+      price: 38,
+      amount: 38,
+    },
+    {
+      jobNo: 'J783423',
+      bankNo: 'LB-0226',
+      itemCode: 'WRAP-167-CLR',
+      description: 'High index wrap compensated blank',
+      eye: 'OU',
+      qty: 2,
+      price: 54,
+      amount: 108,
+    },
+    {
+      jobNo: 'J783428',
+      bankNo: 'LB-0188',
+      itemCode: 'PAL-BLUE-POLY',
+      description: 'Blue filter progressive blank',
+      eye: 'OU',
+      qty: 2,
+      price: 41,
+      amount: 82,
+    },
+  ],
+  labJobContracts: [
+    {
+      jobNo: 'J783420',
+      contractNo: 'LAB-26014',
+      contractName: 'FLOL Core Lens Schedule',
+      charge: 'Digital Progressive Lens',
+      eye: 'OU',
+      price: 112.5,
+      qty: 2,
+      amount: 225,
+    },
+    {
+      jobNo: 'J783420',
+      contractNo: 'LAB-26028',
+      contractName: 'Premium Coating Program',
+      charge: 'Premium AR Coating',
+      eye: 'OU',
+      price: 42,
+      qty: 2,
+      amount: 84,
+    },
+    {
+      jobNo: 'J783423',
+      contractNo: 'LAB-25077',
+      contractName: 'Rush Processing Pilot',
+      charge: 'Wrap Compensation',
+      eye: 'OU',
+      price: 18,
+      qty: 2,
+      amount: 36,
+    },
+    {
+      jobNo: 'J783428',
+      contractNo: 'LAB-26014',
+      contractName: 'FLOL Core Lens Schedule',
+      charge: 'Digital Progressive Lens',
+      eye: 'OU',
+      price: 112.5,
+      qty: 2,
+      amount: 225,
+    },
+  ],
+  rewardPrograms: [
+    {
+      jobNo: 'J783420',
+      programCode: 'RWD-PREM',
+      programName: 'Premium Lens Rewards',
+      status: 'Earned',
+      points: 225,
+      amount: 11.25,
+      notes: 'Calculated from qualifying progressive lens charges.',
+    },
+    {
+      jobNo: 'J783427',
+      programCode: 'RWD-PAIR',
+      programName: 'Second Pair Bonus',
+      status: 'Earned',
+      points: 75,
+      amount: 5,
+      notes: 'Applied to second-pair mirror order.',
+    },
+    {
+      jobNo: 'J783428',
+      programCode: 'RWD-RUSH',
+      programName: 'Rush Service Incentive',
+      status: 'Review',
+      points: 40,
+      amount: 3.5,
+      notes: 'Pending operations approval for rush handling.',
+    },
+  ],
+  labReviews: [
+    {
+      jobNo: 'J783420',
+      reviewCode: 'FINAL',
+      reviewDescription: 'Final Inspection',
+      status: 'Passed',
+      reviewedBy: 'TNGUY',
+      reviewedOn: '2026-04-24',
+      notes: 'Power and coating inspection complete.',
+    },
+    {
+      jobNo: 'J783421',
+      reviewCode: 'RXCHG',
+      reviewDescription: 'Prescription Change Review',
+      status: 'Open',
+      reviewedBy: 'MMENDO',
+      reviewedOn: '2026-04-23',
+      notes: 'Awaiting final verification after material change.',
+    },
+    {
+      jobNo: 'J783423',
+      reviewCode: 'REDO',
+      reviewDescription: 'Warranty Redo Review',
+      status: 'Approved',
+      reviewedBy: 'SLARK',
+      reviewedOn: '2026-04-21',
+      notes: 'Non-adapt approved under warranty policy.',
+    },
+    {
+      jobNo: 'J783429',
+      reviewCode: 'HOLD',
+      reviewDescription: 'Billing Hold Review',
+      status: 'Pending',
+      reviewedBy: 'ARTEAM',
+      reviewedOn: '2026-04-16',
+      notes: 'Hold remains visible for inquiry until AR clears account.',
+    },
+  ],
+  keyedComments: [
+    { key: 'BILLING', comment: 'Statements are emailed to AP on the first business day of each month.' },
+    { key: 'SHIP', comment: 'Use UPS for standard shipments unless the ship-to profile specifies Purolator.' },
+    { key: 'RUSH', comment: 'Rush requests require store manager approval before noon local time.' },
+  ],
+  contacts: [
+    {
+      customer: '1053703',
+      type: 'Billing',
+      vendor: '',
+      name: 'Accounts Payable',
+      phone: '800-555-1200',
+      ext: '224',
+      fax: '800-555-1201',
+      email: 'ap@example.com',
+    },
+    {
+      customer: '1053703',
+      type: 'Operations',
+      vendor: 'FLOL',
+      name: 'Kendra Robert',
+      phone: '800-555-1300',
+      ext: '118',
+      fax: '',
+      email: 'krobert@example.com',
+    },
+    {
+      customer: '1053703',
+      type: 'Shipping',
+      vendor: 'UPS',
+      name: 'Dispatch Desk',
+      phone: '800-555-1400',
+      ext: '',
+      fax: '',
+      email: 'dispatch@example.com',
+    },
+  ],
+  labAuthorizations: [
+    {
+      authCode: 'AR-STD',
+      name: 'Standard AR Coating',
+      status: 'Active',
+      createdBy: 'BINGRAM',
+      createdOn: '2025-01-15',
+      modifiedBy: 'MCHEN',
+      modifiedOn: '2026-03-08',
+    },
+    {
+      authCode: 'RUSH15',
+      name: 'Rush Processing',
+      status: 'Active',
+      createdBy: 'LPRICE',
+      createdOn: '2025-08-01',
+      modifiedBy: 'LPRICE',
+      modifiedOn: '2026-02-12',
+    },
+    {
+      authCode: 'WRAP',
+      name: 'Wrap Compensation',
+      status: 'Review',
+      createdBy: 'MCHEN',
+      createdOn: '2024-11-20',
+      modifiedBy: 'BINGRAM',
+      modifiedOn: '2026-01-22',
+    },
+  ],
+  smsContacts: [
+    { shipToNo: '0012', name: 'CVC- OAKVILLE #1029', smsNo: '9055551029', smsName: 'Oakville Manager' },
+    { shipToNo: '0033', name: 'CVC- MISSISSAUGA #0316', smsNo: '9055550316', smsName: 'Mississauga Front Desk' },
+    { shipToNo: '0047', name: 'CVC- TORONTO KING #4420', smsNo: '4165554420', smsName: 'Toronto King Lab' },
+    { shipToNo: '0086', name: 'CVC- MARKHAM #7195', smsNo: '9055557195', smsName: 'Markham Store' },
+  ],
 };
+
+const SECOND_CUSTOMER: CustomerInquiryCustomer = {
+  custCode: '2078841',
+  custName: 'NOVA OPTICAL GROUP',
+  addr1: '1440 Harbor Exchange Drive',
+  addr2: 'Suite 220',
+  addr3: '',
+  city: 'Tampa',
+  state: 'FL',
+  zipCode: '33602',
+  country: 'USA',
+  phone: '813-555-8841',
+  fax: '813-555-8842',
+  contact: 'Marisol Vega',
+  email: 'ap@novaoptical.example.com',
+  comments: 'Mock customer for testing Customer Inquiry switching.',
+  orderOneTimePerDay: false,
+  dpdCopies: 'E',
+  crmCopies: '1',
+  ecpCopies: 'P',
+};
+
+const SECOND_CUSTOMER_SHIP_TOS: CustomerInquiryShipTo[] = [
+  {
+    shipToNo: '0100',
+    labCode: 'TAML',
+    alternateCustomer: '',
+    noReturnLabel: false,
+    name: 'NOVA OPTICAL - TAMPA CENTRAL',
+    addr1: '210 Madison Street',
+    addr2: 'Suite 101',
+    city: 'Tampa',
+    state: 'FL',
+    zipCode: '33602',
+    phone: '813-555-0100',
+    contact: 'Ari Brooks',
+    email: 'tampa.central@nova.example.com',
+  },
+  {
+    shipToNo: '0145',
+    labCode: 'TAML',
+    alternateCustomer: '',
+    noReturnLabel: false,
+    name: 'NOVA OPTICAL - ST PETE',
+    addr1: '660 Central Avenue',
+    addr2: '',
+    city: 'St. Petersburg',
+    state: 'FL',
+    zipCode: '33701',
+    phone: '727-555-0145',
+    contact: 'Camila Reyes',
+    email: 'stpete@nova.example.com',
+  },
+  {
+    shipToNo: '0188',
+    labCode: 'TAML',
+    alternateCustomer: '2078841-S',
+    noReturnLabel: true,
+    name: 'NOVA OPTICAL - SARASOTA',
+    addr1: '3480 Fruitville Road',
+    addr2: 'Unit 3',
+    city: 'Sarasota',
+    state: 'FL',
+    zipCode: '34237',
+    phone: '941-555-0188',
+    contact: 'Lena Walsh',
+    email: 'sarasota@nova.example.com',
+  },
+];
+
+const THIRD_CUSTOMER: CustomerInquiryCustomer = {
+  custCode: '3094420',
+  custName: 'HARBOR VIEW EYECARE',
+  addr1: '820 Pierpoint Landing',
+  addr2: '',
+  addr3: '',
+  city: 'San Diego',
+  state: 'CA',
+  zipCode: '92101',
+  country: 'USA',
+  phone: '619-555-4420',
+  fax: '619-555-4421',
+  contact: 'Jules Navarro',
+  email: 'billing@harborview.example.com',
+  comments: 'West coast mock account with a smaller ship-to footprint.',
+  orderOneTimePerDay: true,
+  dpdCopies: 'N',
+  crmCopies: 'E',
+  ecpCopies: '1',
+};
+
+const THIRD_CUSTOMER_SHIP_TOS: CustomerInquiryShipTo[] = [
+  {
+    shipToNo: '0201',
+    labCode: 'SDCL',
+    alternateCustomer: '',
+    noReturnLabel: false,
+    name: 'HARBOR VIEW - GASLAMP',
+    addr1: '615 Market Street',
+    addr2: '',
+    city: 'San Diego',
+    state: 'CA',
+    zipCode: '92101',
+    phone: '619-555-0201',
+    contact: 'Maya Singh',
+    email: 'gaslamp@harborview.example.com',
+  },
+  {
+    shipToNo: '0219',
+    labCode: 'SDCL',
+    alternateCustomer: '',
+    noReturnLabel: false,
+    name: 'HARBOR VIEW - LA JOLLA',
+    addr1: '8855 Villa La Jolla Drive',
+    addr2: 'Suite 210',
+    city: 'La Jolla',
+    state: 'CA',
+    zipCode: '92037',
+    phone: '858-555-0219',
+    contact: 'Owen Hart',
+    email: 'lajolla@harborview.example.com',
+  },
+  {
+    shipToNo: '0242',
+    labCode: 'SDCL',
+    alternateCustomer: '',
+    noReturnLabel: false,
+    name: 'HARBOR VIEW - CHULA VISTA',
+    addr1: '525 Broadway',
+    addr2: 'Suite B',
+    city: 'Chula Vista',
+    state: 'CA',
+    zipCode: '91910',
+    phone: '619-555-0242',
+    contact: 'Noemi Carter',
+    email: 'chulavista@harborview.example.com',
+  },
+];
+
+function createMockInquiry(
+  customer: CustomerInquiryCustomer,
+  shipTos: CustomerInquiryShipTo[],
+  prefix: string,
+): CustomerInquiryData {
+  const contractOffset = prefix
+    .split('')
+    .reduce((total, character) => total + character.charCodeAt(0), 0);
+  const labJobs: CustomerInquiryLabJob[] = shipTos.map((shipTo, index) => {
+    const template = CUSTOMER_INQUIRY_MOCK_DATA.labJobs[index % CUSTOMER_INQUIRY_MOCK_DATA.labJobs.length];
+    return {
+      ...template,
+      jobNo: `${prefix}${420 + index}`,
+      date: `2026-04-${24 - index}`,
+      homeLab: shipTo.labCode,
+      frameArrived: `2026-04-${24 - index}`,
+      partnerOrderNo: `${prefix}-ORD-${110 + index}`,
+    };
+  });
+
+  const logs: CustomerInquiryLog[] = shipTos.map((shipTo, index) => {
+    const template = CUSTOMER_INQUIRY_MOCK_DATA.logs[index % CUSTOMER_INQUIRY_MOCK_DATA.logs.length];
+    return {
+      ...template,
+      convNo: `${prefix}-CN-${901 + index}`,
+      logged: `2026-04-${24 - index}`,
+      shipToNo: shipTo.shipToNo,
+      contact: shipTo.contact,
+      notes: `${shipTo.name} requested a mock status review for Customer Inquiry testing.`,
+      jobNo: labJobs[index]?.jobNo ?? '',
+      orderNo: `${prefix}-ORD-${110 + index}`,
+      ackNotes: 'Mock follow-up recorded for route and lookup testing.',
+    };
+  });
+
+  const jobCharges: CustomerInquiryJobCharge[] = labJobs.flatMap((job, index) => [
+    {
+      jobNo: job.jobNo,
+      charge: index % 2 === 0 ? 'Digital Progressive Lens' : 'Single Vision Poly',
+      eye: 'OU',
+      price: index % 2 === 0 ? 112.5 : 52,
+      qty: 2,
+      amount: index % 2 === 0 ? 225 : 104,
+      credited: 0,
+    },
+    {
+      jobNo: job.jobNo,
+      charge: 'Freight',
+      eye: '',
+      price: 8.95,
+      qty: 1,
+      amount: 8.95,
+      credited: 0,
+    },
+  ]);
+
+  const jobCredits: CustomerInquiryJobCredit[] = labJobs.slice(0, 1).map((job) => ({
+    jobNo: job.jobNo,
+    invNo: `${prefix}-CR-01`,
+    reason: 'Mock courtesy freight adjustment',
+    total: 8.95,
+    freight: 8.95,
+    fuelSurcharge: 0,
+    date: '2026-04-25',
+  }));
+
+  return {
+    customer,
+    shipTos,
+    logs,
+    freightContracts: CUSTOMER_INQUIRY_MOCK_DATA.freightContracts.slice(0, 3).map((contract, index) => ({
+      ...contract,
+      contractNo: contract.contractNo + contractOffset + index,
+      by: index % 2 === 0 ? 'MOCKUSR' : contract.by,
+    })),
+    labContracts: createLabContracts(prefix, shipTos),
+    slContracts: createSlContracts(prefix),
+    labJobs,
+    labSummaries: createLabSummaries(labJobs, prefix),
+    jobCharges,
+    jobCredits,
+    lensBanks: createLensBanks(labJobs, prefix),
+    labJobContracts: createLabJobContracts(labJobs, prefix),
+    rewardPrograms: createRewardPrograms(labJobs, prefix),
+    labReviews: createLabReviews(labJobs, prefix),
+    keyedComments: createKeyedComments(customer, prefix),
+    contacts: createContacts(customer, prefix),
+    labAuthorizations: createLabAuthorizations(prefix),
+    smsContacts: createSmsContacts(shipTos),
+  };
+}
+
+function createLabSummaries(labJobs: CustomerInquiryLabJob[], prefix: string): CustomerInquiryLabSummary[] {
+  return labJobs.map((job, index) => ({
+    jobNo: job.jobNo,
+    patientName: ['Riley Stone', 'Cam Harper', 'Quinn Evans'][index % 3],
+    orderNo: job.partnerOrderNo,
+    invoiceNo: index % 2 === 0 ? `${prefix}-INV-${7200 + index}` : '',
+    invoiceDate: index % 2 === 0 ? job.date : '',
+    lensDesign: index % 2 === 0 ? 'Digital Progressive' : 'Single Vision',
+    material: index % 2 === 0 ? 'Polycarbonate' : 'Trivex',
+    color: 'Clear',
+    frameType: index % 3 === 0 ? 'Full Rim' : 'Semi Rimless',
+    frameStatus: job.frameArrived ? 'Received' : 'Pending',
+    tint: index % 3 === 0 ? 'None' : 'Grey 15%',
+    arCoating: index % 2 === 0 ? 'Premium AR' : 'Standard AR',
+    trackingNumber: job.status === 'Shipped' || job.status === 'Delivered' ? `${prefix}-TRK-${8800 + index}` : '',
+    commentLab: `${prefix} mock lab summary for ${job.status.toLowerCase()} job.`,
+    commentInvoice: index % 2 === 0 ? 'Invoice detail available for inquiry display.' : 'Invoice not issued yet.',
+  }));
+}
+
+function createLensBanks(labJobs: CustomerInquiryLabJob[], prefix: string): CustomerInquiryLensBank[] {
+  return labJobs.slice(0, 3).flatMap((job, index) => [
+    {
+      jobNo: job.jobNo,
+      bankNo: `${prefix}-LB-${101 + index}`,
+      itemCode: index % 2 === 0 ? 'PAL-POLY-CLR' : 'SV-TRIVEX-CLR',
+      description: index % 2 === 0 ? 'Progressive poly clear blank' : 'Single vision Trivex clear blank',
+      eye: 'OD',
+      qty: 1,
+      price: index % 2 === 0 ? 38 : 30,
+      amount: index % 2 === 0 ? 38 : 30,
+    },
+    {
+      jobNo: job.jobNo,
+      bankNo: `${prefix}-LB-${101 + index}`,
+      itemCode: index % 2 === 0 ? 'PAL-POLY-CLR' : 'SV-TRIVEX-CLR',
+      description: index % 2 === 0 ? 'Progressive poly clear blank' : 'Single vision Trivex clear blank',
+      eye: 'OS',
+      qty: 1,
+      price: index % 2 === 0 ? 38 : 30,
+      amount: index % 2 === 0 ? 38 : 30,
+    },
+  ]);
+}
+
+function createLabJobContracts(labJobs: CustomerInquiryLabJob[], prefix: string): CustomerInquiryLabContract[] {
+  return labJobs.slice(0, 3).map((job, index) => ({
+    jobNo: job.jobNo,
+    contractNo: `${prefix}-LAB-${index + 1}`,
+    contractName: index % 2 === 0 ? `${prefix} Core Lens Schedule` : `${prefix} Coating Add-On Program`,
+    charge: index % 2 === 0 ? 'Digital Progressive Lens' : 'Premium AR Coating',
+    eye: 'OU',
+    price: index % 2 === 0 ? 112.5 : 42,
+    qty: 2,
+    amount: index % 2 === 0 ? 225 : 84,
+  }));
+}
+
+function createRewardPrograms(labJobs: CustomerInquiryLabJob[], prefix: string): CustomerInquiryRewardProgram[] {
+  return labJobs.slice(0, 2).map((job, index) => ({
+    jobNo: job.jobNo,
+    programCode: index === 0 ? 'RWD-PREM' : 'RWD-PAIR',
+    programName: index === 0 ? 'Premium Lens Rewards' : 'Second Pair Bonus',
+    status: index === 0 ? 'Earned' : 'Review',
+    points: index === 0 ? 225 : 75,
+    amount: index === 0 ? 11.25 : 5,
+    notes: `${prefix} mock reward program row for inquiry display.`,
+  }));
+}
+
+function createLabReviews(labJobs: CustomerInquiryLabJob[], prefix: string): CustomerInquiryLabReview[] {
+  return labJobs.slice(0, 4).map((job, index) => ({
+    jobNo: job.jobNo,
+    reviewCode: ['FINAL', 'RXCHG', 'REDO', 'HOLD'][index] ?? 'FINAL',
+    reviewDescription: ['Final Inspection', 'Prescription Change Review', 'Warranty Redo Review', 'Billing Hold Review'][index] ?? 'Final Inspection',
+    status: ['Passed', 'Open', 'Approved', 'Pending'][index] ?? 'Passed',
+    reviewedBy: ['TNGUY', 'MMENDO', 'SLARK', 'ARTEAM'][index] ?? 'TNGUY',
+    reviewedOn: job.date,
+    notes: `${prefix} mock review status for ${job.jobNo}.`,
+  }));
+}
+
+function createLabContracts(prefix: string, shipTos: CustomerInquiryShipTo[]): CustomerInquiryPricingLabContract[] {
+  const primaryLabCode = shipTos.at(0)?.labCode ?? prefix;
+
+  return [
+    {
+      contractNo: `${prefix}-LAB-01`,
+      contractName: `${prefix} Core Lens Schedule`,
+      status: 'Active',
+      effectiveDate: '2026-01-01',
+      expirationDate: '2026-12-31',
+      priceLevel: 'A1',
+      labCode: primaryLabCode,
+      notes: 'Primary finished lens pricing for mock customer inquiry testing.',
+    },
+    {
+      contractNo: `${prefix}-LAB-02`,
+      contractName: `${prefix} Coating Add-On Program`,
+      status: 'Active',
+      effectiveDate: '2026-03-01',
+      expirationDate: '2026-08-31',
+      priceLevel: 'C2',
+      labCode: primaryLabCode,
+      notes: 'Includes premium coating and warranty add-ons.',
+    },
+    {
+      contractNo: `${prefix}-LAB-03`,
+      contractName: `${prefix} Specialty Processing`,
+      status: 'Review',
+      effectiveDate: '2025-11-15',
+      expirationDate: '2026-05-15',
+      priceLevel: 'S1',
+      labCode: primaryLabCode,
+      notes: 'Special processing rates retained as read-only mock rows.',
+    },
+  ];
+}
+
+function createSlContracts(prefix: string): CustomerInquirySlContract[] {
+  return [
+    {
+      contractNo: `${prefix}-SL-01`,
+      contractName: `${prefix} Retail Sales Schedule`,
+      status: 'Active',
+      effectiveDate: '2026-01-01',
+      expirationDate: '2026-12-31',
+      salesCode: 'RETAIL',
+      priceLevel: 'N2',
+      notes: 'Default sales pricing schedule for mock account locations.',
+    },
+    {
+      contractNo: `${prefix}-SL-02`,
+      contractName: `${prefix} Managed Care Allowance`,
+      status: 'Active',
+      effectiveDate: '2025-10-01',
+      expirationDate: '2026-09-30',
+      salesCode: 'MCARE',
+      priceLevel: 'M1',
+      notes: 'Used when insurance pricing overrides retail schedule.',
+    },
+    {
+      contractNo: `${prefix}-SL-03`,
+      contractName: `${prefix} Promotional Pricing`,
+      status: 'Expired',
+      effectiveDate: '2025-02-01',
+      expirationDate: '2025-07-31',
+      salesCode: 'PROMO',
+      priceLevel: 'P1',
+      notes: 'Historical promotional pricing retained for inquiry display.',
+    },
+  ];
+}
+
+function createKeyedComments(customer: CustomerInquiryCustomer, prefix: string): CustomerInquiryKeyedComment[] {
+  return [
+    {
+      key: 'ACCOUNT',
+      comment: `${customer.custName} uses the ${prefix} mock account profile for Customer Inquiry testing.`,
+    },
+    {
+      key: 'SHIP',
+      comment: 'Confirm courier preference with the selected ship-to before sending rush jobs.',
+    },
+    {
+      key: 'BILLING',
+      comment: 'Send billing adjustments to the customer account contact on file.',
+    },
+  ];
+}
+
+function createContacts(customer: CustomerInquiryCustomer, prefix: string): CustomerInquiryContact[] {
+  return [
+    {
+      customer: customer.custCode,
+      type: 'Billing',
+      vendor: '',
+      name: customer.contact,
+      phone: customer.phone,
+      ext: '101',
+      fax: customer.fax,
+      email: customer.email,
+    },
+    {
+      customer: customer.custCode,
+      type: 'Operations',
+      vendor: prefix,
+      name: `${prefix} Order Desk`,
+      phone: customer.phone,
+      ext: '205',
+      fax: '',
+      email: `orders-${customer.custCode}@example.com`,
+    },
+  ];
+}
+
+function createLabAuthorizations(prefix: string): CustomerInquiryLabAuthorization[] {
+  return [
+    {
+      authCode: `${prefix}-AR`,
+      name: 'Premium AR Coating',
+      status: 'Active',
+      createdBy: 'MOCKUSR',
+      createdOn: '2026-01-10',
+      modifiedBy: 'MOCKUSR',
+      modifiedOn: '2026-04-12',
+    },
+    {
+      authCode: `${prefix}-RUSH`,
+      name: 'Rush Handling',
+      status: 'Active',
+      createdBy: 'BINGRAM',
+      createdOn: '2025-11-18',
+      modifiedBy: 'MCHEN',
+      modifiedOn: '2026-02-21',
+    },
+  ];
+}
+
+function createSmsContacts(shipTos: CustomerInquiryShipTo[]): CustomerInquirySmsContact[] {
+  return shipTos.map((shipTo) => ({
+    shipToNo: shipTo.shipToNo,
+    name: shipTo.name,
+    smsNo: shipTo.phone.replace(/\D/g, ''),
+    smsName: shipTo.contact || shipTo.name,
+  }));
+}
+
+export const CUSTOMER_INQUIRY_MOCK_DATASETS: CustomerInquiryData[] = [
+  CUSTOMER_INQUIRY_MOCK_DATA,
+  createMockInquiry(SECOND_CUSTOMER, SECOND_CUSTOMER_SHIP_TOS, 'NOVA'),
+  createMockInquiry(THIRD_CUSTOMER, THIRD_CUSTOMER_SHIP_TOS, 'HVEC'),
+];
