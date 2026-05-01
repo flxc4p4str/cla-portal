@@ -11,7 +11,7 @@ export const grdColsGLTPARM2 = signal<grdCol[]>([
   ])
   
 export const grdColsARTCUSTX_OPEN = signal<grdCol[]>([
-    {FIELD: 'YP', HEADER: 'YPx', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'YP', HEADER: 'YP', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
     {FIELD: 'CNT', HEADER: 'Count', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs0},
     {FIELD: 'QTY', HEADER: 'Qty', WIDTH: "100", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs0},
     {FIELD: 'AMT', HEADER: 'Net Sales', WIDTH: "150", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2},

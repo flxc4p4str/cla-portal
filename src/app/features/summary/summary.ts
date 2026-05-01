@@ -345,47 +345,47 @@ export class Summary implements OnInit, AfterViewInit {
       });
      
 
-    this.http.get<ARTCUSTX_OPEN[]>('assets/data/ARTCUSTX_OPEN.json')
-      .pipe(
+    // this.http.get<ARTCUSTX_OPEN[]>('assets/data/ARTCUSTX_OPEN.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        console.log('2A completed ARTCUSTX_OPEN')   
+    //   )
+    //   .subscribe(result => {
+    //     console.log('2A completed ARTCUSTX_OPEN')   
                 
-        for (let i = 0; i < result.length; i++) {
-          let x:ARTCUSTX_OPEN = result[i]
-          let n:number = +(x.MIN_DATE.toString());
-          x.MIN_DATE = ExcelDateToJSDate(n)
-          let n2:number = +(x.MAX_DATE.toString());
-          x.MAX_DATE = ExcelDateToJSDate(n2)
-        }
+    //     for (let i = 0; i < result.length; i++) {
+    //       let x:ARTCUSTX_OPEN = result[i]
+    //       let n:number = +(x.MIN_DATE.toString());
+    //       x.MIN_DATE = ExcelDateToJSDate(n)
+    //       let n2:number = +(x.MAX_DATE.toString());
+    //       x.MAX_DATE = ExcelDateToJSDate(n2)
+    //     }
 
-        this.ARTCUSTX_OPEN.set(result);
-        // console.log(this.ARTCUSTX_OPEN()); 
-      });
+    //     this.ARTCUSTX_OPEN.set(result);
+    //     // console.log(this.ARTCUSTX_OPEN()); 
+    //   });
 
     // console.log('2B started ARTCUSTX_BOOK')
-    this.http.get<ARTCUSTX_BOOK[]>('assets/data/ARTCUSTX_BOOK.json')
-      .pipe(
+    // this.http.get<ARTCUSTX_BOOK[]>('assets/data/ARTCUSTX_BOOK.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        // console.log('2B completed ARTCUSTX_BOOK')        
-        this.ARTCUSTX_BOOK.set(result);
-        // this.ARTCUSTX_BOOK.update(() =>result);
-        // console.log(this.ARTCUSTX_BOOK()); 
-      });
+    //   )
+    //   .subscribe(result => {
+    //     // console.log('2B completed ARTCUSTX_BOOK')        
+    //     this.ARTCUSTX_BOOK.set(result);
+    //     // this.ARTCUSTX_BOOK.update(() =>result);
+    //     // console.log(this.ARTCUSTX_BOOK()); 
+    //   });
       
-    // console.log('2C started ARTCUSTX_SHIP')
-    this.http.get<ARTCUSTX_SHIP[]>('assets/data/ARTCUSTX_SHIP.json')
-      .pipe(
+    // // console.log('2C started ARTCUSTX_SHIP')
+    // this.http.get<ARTCUSTX_SHIP[]>('assets/data/ARTCUSTX_SHIP.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        // // console.log ('2C completed ARTCUSTX_SHIP')        
-        this.ARTCUSTX_SHIP.set(result);
-        // console.log (this.ARTCUSTX_SHIP()); 
-      });
+    //   )
+    //   .subscribe(result => {
+    //     // // console.log ('2C completed ARTCUSTX_SHIP')        
+    //     this.ARTCUSTX_SHIP.set(result);
+    //     // console.log (this.ARTCUSTX_SHIP()); 
+    //   });
 
     // console.log ('2D started ARTCUSTX_RTRN')
     this.http.get<ARTCUSTX_RTRN[]>('assets/data/ARTCUSTX_RTRN.json')
@@ -457,13 +457,13 @@ export class Summary implements OnInit, AfterViewInit {
 
 
 
-  getOrders(YP: string) {
+  getOrders(YP: string, TYPE: string ) {
      
     console.log('1 started SOTORDR1 for ' + YP)
     // this.http.get<SOTORDR1[]>(`assets/data/SOTORDR1_BOOK_${YP}.json`)
     // let body = {'TYPE': 'BOOK', 'YP': YP}
     // this.http.post<SOTORDR1[]>(`https://absapi.absolution1.com/api/VAN/EC/Get_Orders/BOOK/${YP}`, body)
-    this.http.get<any>(`https://absapi.absolution1.com/api/VAN/EC/Get_Orders/BOOK/${YP}`)    
+    this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Orders/${TYPE}/${YP}`)    
       .pipe(
       )
       .subscribe(result => {
@@ -588,15 +588,31 @@ export class Summary implements OnInit, AfterViewInit {
         console.log('selectedRowObjects', this.selectedRowObjects);
         console.log(event);
 
+        if (event.owner.id === 'grdARTCUSTX_OPEN') {
+          let YP: string = this.selectedRowObjects[0]['YP']
+          let title: string =  ' Open Orders';
+          this.grdSOTORDR1_title = title;
+          // this.grdSOTORDR1_signal.set(title)
+          this.getOrders(YP,'OPEN');
+          this.grdSOTORDR2_title = '';
+        }
+
         if (event.owner.id === 'grdARTCUSTX_BOOK') {
           let YP: string = this.selectedRowObjects[0]['YP']
           let title: string =  'Orders Booked in ' + YP;
           this.grdSOTORDR1_title = title;
           // this.grdSOTORDR1_signal.set(title)
-          this.getOrders(YP);
+          this.getOrders(YP,'BOOK');
           this.grdSOTORDR2_title = '';
         }
-
+        if (event.owner.id === 'grdARTCUSTX_SHIP') {
+          let YP: string = this.selectedRowObjects[0]['YP']
+          let title: string =  'Orders Shipped in ' + YP;
+          this.grdSOTORDR1_title = title;
+          // this.grdSOTORDR1_signal.set(title)
+          this.getOrders(YP,'SHIP');
+          this.grdSOTORDR2_title = '';
+        }
         if (event.owner.id === 'grdSOTORDR1') {
           let ORDR_NO: string = this.selectedRowObjects[0]['ORDR_NO']
           let title: string =  'Order Details for Order ' + ORDR_NO;
