@@ -3,10 +3,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/spec",
-    "types": [
-      "vitest/globals"
-    ]
+    // "outDir": "./out-tsc/app", // wjz removed to fix "error TS6059: File 'src/app/app.module.ts' is not under 'rootDir' 'server'. 'rootDir' is expected to contain all source files."  
+    // "rootDir": "./src", // wjz added to fix "error TS6059: File 'src/app/app.module.ts' is not under 'rootDir' 'server'. 'rootDir' is expected to contain all source files."
+    "types": []
   },
   "include": [
     "src/**/*.d.ts",
