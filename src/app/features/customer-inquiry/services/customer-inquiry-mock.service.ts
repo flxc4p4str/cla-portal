@@ -9,8 +9,31 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class CustomerInquiryMockService {
+  searchCustomers(filter: string): CustomerInquiryCustomer[] {
+    const normalizedFilter = normalizeCode(filter);
+    return CUSTOMER_INQUIRY_MOCK_DATASETS
+      .map((data) => ({ ...data.customer }))
+      .filter(
+        (customer) =>
+          normalizedFilter.length === 0 ||
+          normalizeCode(customer.custCode).includes(normalizedFilter) ||
+          normalizeCode(customer.custName).includes(normalizedFilter),
+      );
+  }
+
+  searchShipTos(custCode: string, filter: string): CustomerInquiryShipToLookup[] {
+    const normalizedFilter = normalizeCode(filter);
+    return this.getShipTos(custCode).filter(
+      (shipTo) =>
+        normalizedFilter.length === 0 ||
+        normalizeCode(shipTo.shipToNo).includes(normalizedFilter) ||
+        normalizeCode(shipTo.name).includes(normalizedFilter) ||
+        normalizeCode(shipTo.custCode).includes(normalizedFilter),
+    );
+  }
+
   getCustomers(): CustomerInquiryCustomer[] {
-    return CUSTOMER_INQUIRY_MOCK_DATASETS.map((data) => ({ ...data.customer }));
+    return this.searchCustomers('');
   }
 
   getShipTos(custCode?: string): CustomerInquiryShipToLookup[] {

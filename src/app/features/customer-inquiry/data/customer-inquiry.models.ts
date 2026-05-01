@@ -246,3 +246,35 @@ export interface CustomerInquiryData {
   labAuthorizations: CustomerInquiryLabAuthorization[];
   smsContacts: CustomerInquirySmsContact[];
 }
+
+export interface CustomerInquiryState {
+  loaded: boolean;
+  loading: boolean;
+  errorMessage: string;
+  customerLookupOpen: boolean;
+  shipToLookupOpen: boolean;
+  custCode: string;
+  shipToNo: string;
+  customer: CustomerInquiryCustomer | null;
+  shipTos: CustomerInquiryShipTo[];
+  selectedShipTo: CustomerInquiryShipTo | null;
+  logs: CustomerInquiryLog[];
+  selectedLog: CustomerInquiryLog | null;
+  freightContracts: CustomerInquiryFreightContract[];
+  selectedContract: CustomerInquiryFreightContract | null;
+  labJobs: CustomerInquiryLabJob[];
+  selectedJob: CustomerInquiryLabJob | null;
+  jobCharges: CustomerInquiryJobCharge[];
+  jobCredits: CustomerInquiryJobCredit[];
+  keyedComments: CustomerInquiryKeyedComment[];
+  contacts: CustomerInquiryContact[];
+  labAuthorizations: CustomerInquiryLabAuthorization[];
+  smsContacts: CustomerInquirySmsContact[];
+  labContracts: CustomerInquiryPricingLabContract[];
+  slContracts: CustomerInquirySlContract[];
+  labSummaries: CustomerInquiryLabSummary[];
+  lensBanks: CustomerInquiryLensBank[];
+  labJobContracts: CustomerInquiryLabContract[];
+  rewardPrograms: CustomerInquiryRewardProgram[];
+  labReviews: CustomerInquiryLabReview[];
+}

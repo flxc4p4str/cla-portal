@@ -21,23 +21,11 @@ import { CustomerInquiryMockService } from './services/customer-inquiry-mock.ser
 import {
   CustomerInquiryCustomer,
   CustomerInquiryFreightContract,
-  CustomerInquiryJobCharge,
-  CustomerInquiryJobCredit,
-  CustomerInquiryKeyedComment,
-  CustomerInquiryContact,
-  CustomerInquiryLabAuthorization,
-  CustomerInquiryLabContract,
   CustomerInquiryLog,
   CustomerInquiryLabJob,
-  CustomerInquiryLabReview,
-  CustomerInquiryLabSummary,
-  CustomerInquiryLensBank,
-  CustomerInquiryPricingLabContract,
-  CustomerInquiryRewardProgram,
-  CustomerInquirySmsContact,
-  CustomerInquirySlContract,
   CustomerInquiryShipTo,
   CustomerInquiryShipToLookup,
+  CustomerInquiryState,
 } from './data/customer-inquiry.models';
 import { CustomerInquiryNameAddressComponent } from './tabs/name-address/customer-inquiry-name-address.component';
 import { CustomerInquiryPricingContractsComponent } from './tabs/pricing-contracts/customer-inquiry-pricing-contracts.component';
@@ -148,6 +136,10 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
         }
       </section>
 
+      @if (loading()) {
+        <div class="loading-state" role="status">Loading customer inquiry...</div>
+      }
+
       @if (customer(); as loadedCustomer) {
         <header class="inquiry-header-panel">
           <div class="identity-block">
@@ -199,7 +191,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
                 [labAuthorizations]="labAuthorizations()"
                 [smsContacts]="smsContacts()"
                 [selectedShipTo]="selectedShipTo()"
-                (selectedShipToChange)="selectLoadedShipTo($event)"
+                (selectedShipToChange)="selectShipTo($event)"
               />
             </igx-tab-content>
           </igx-tab-item>
@@ -212,7 +204,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
                 [shipTos]="shipTos()"
                 [logs]="logs()"
                 [selectedLog]="selectedLog()"
-                (selectedLogChange)="selectedLog.set($event)"
+                (selectedLogChange)="selectLog($event)"
               />
             </igx-tab-content>
           </igx-tab-item>
@@ -225,7 +217,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
                 [labContracts]="labContracts()"
                 [slContracts]="slContracts()"
                 [selectedContract]="selectedContract()"
-                (selectedContractChange)="selectedContract.set($event)"
+                (selectedContractChange)="selectContract($event)"
               />
             </igx-tab-content>
           </igx-tab-item>
@@ -243,7 +235,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
                 [rewardPrograms]="rewardPrograms()"
                 [reviews]="labReviews()"
                 [selectedJob]="selectedJob()"
-                (selectedJobChange)="selectedJob.set($event)"
+                (selectedJobChange)="selectJob($event)"
               />
             </igx-tab-content>
           </igx-tab-item>
@@ -437,6 +429,16 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
       min-height: 1.25rem;
     }
 
+    .loading-state {
+      border: 1px solid var(--surface-border);
+      border-radius: var(--app-radius);
+      padding: 0.55rem 0.75rem;
+      background: color-mix(in srgb, var(--surface) 78%, white);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
     .empty-state h1 {
       margin: 0.2rem 0 0;
       color: var(--text-primary);
@@ -621,38 +623,39 @@ export class CustomerInquiryComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
 
-  readonly customerCodeInput = signal('');
-  readonly shipToNoInput = signal('');
-  readonly isLoaded = signal(false);
-  readonly loadError = signal('');
-  readonly customerLookupOpen = signal(false);
-  readonly shipToLookupOpen = signal(false);
+  private readonly state = signal<CustomerInquiryState>(createInitialState());
 
-  readonly customers = signal(this.svc.getCustomers());
-  readonly customer = signal<CustomerInquiryCustomer | null>(null);
-  readonly shipTos = signal<CustomerInquiryShipTo[]>([]);
-  readonly logs = signal<CustomerInquiryLog[]>([]);
-  readonly contracts = signal<CustomerInquiryFreightContract[]>([]);
-  readonly jobs = signal<CustomerInquiryLabJob[]>([]);
-  readonly charges = signal<CustomerInquiryJobCharge[]>([]);
-  readonly credits = signal<CustomerInquiryJobCredit[]>([]);
-  readonly keyedComments = signal<CustomerInquiryKeyedComment[]>([]);
-  readonly contacts = signal<CustomerInquiryContact[]>([]);
-  readonly labAuthorizations = signal<CustomerInquiryLabAuthorization[]>([]);
-  readonly smsContacts = signal<CustomerInquirySmsContact[]>([]);
-  readonly labContracts = signal<CustomerInquiryPricingLabContract[]>([]);
-  readonly slContracts = signal<CustomerInquirySlContract[]>([]);
-  readonly labSummaries = signal<CustomerInquiryLabSummary[]>([]);
-  readonly lensBanks = signal<CustomerInquiryLensBank[]>([]);
-  readonly labJobContracts = signal<CustomerInquiryLabContract[]>([]);
-  readonly rewardPrograms = signal<CustomerInquiryRewardProgram[]>([]);
-  readonly labReviews = signal<CustomerInquiryLabReview[]>([]);
-
-  readonly selectedShipTo = signal<CustomerInquiryShipTo | null>(null);
-  readonly selectedContract = signal<CustomerInquiryFreightContract | null>(null);
-  readonly selectedLog = signal<CustomerInquiryLog | null>(null);
-  readonly selectedJob = signal<CustomerInquiryLabJob | null>(null);
-
+  readonly customerLookupOpen = computed(() => this.state().customerLookupOpen);
+  readonly shipToLookupOpen = computed(() => this.state().shipToLookupOpen);
+  readonly loading = computed(() => this.state().loading);
+  readonly isLoaded = computed(() => this.state().loaded);
+  readonly loadError = computed(() => this.state().errorMessage);
+  readonly customerCodeInput = computed(() => this.state().custCode);
+  readonly shipToNoInput = computed(() => this.state().shipToNo);
+  readonly customers = computed(() => this.svc.searchCustomers(''));
+  readonly customer = computed(() => this.state().customer);
+  readonly shipTos = computed(() => this.state().shipTos);
+  readonly selectedShipTo = computed(() => this.state().selectedShipTo);
+  readonly logs = computed(() => this.state().logs);
+  readonly selectedLog = computed(() => this.state().selectedLog);
+  readonly freightContracts = computed(() => this.state().freightContracts);
+  readonly contracts = this.freightContracts;
+  readonly selectedContract = computed(() => this.state().selectedContract);
+  readonly jobs = computed(() => this.state().labJobs);
+  readonly selectedJob = computed(() => this.state().selectedJob);
+  readonly charges = computed(() => this.state().jobCharges);
+  readonly credits = computed(() => this.state().jobCredits);
+  readonly keyedComments = computed(() => this.state().keyedComments);
+  readonly contacts = computed(() => this.state().contacts);
+  readonly labAuthorizations = computed(() => this.state().labAuthorizations);
+  readonly smsContacts = computed(() => this.state().smsContacts);
+  readonly labContracts = computed(() => this.state().labContracts);
+  readonly slContracts = computed(() => this.state().slContracts);
+  readonly labSummaries = computed(() => this.state().labSummaries);
+  readonly lensBanks = computed(() => this.state().lensBanks);
+  readonly labJobContracts = computed(() => this.state().labJobContracts);
+  readonly rewardPrograms = computed(() => this.state().rewardPrograms);
+  readonly labReviews = computed(() => this.state().labReviews);
   readonly normalizedCustomerCode = computed(() => normalizeCode(this.customerCodeInput()));
   readonly normalizedShipToNo = computed(() => normalizeCode(this.shipToNoInput()));
   readonly customerNameDisplay = computed(() => {
@@ -663,7 +666,10 @@ export class CustomerInquiryComponent {
     }
 
     return (
-      this.customers().find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
+      this
+        .svc
+        .searchCustomers(this.normalizedCustomerCode())
+        .find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
       ''
     );
   });
@@ -677,15 +683,19 @@ export class CustomerInquiryComponent {
     return (
       this
         .svc
-        .getShipTos(this.normalizedCustomerCode() || undefined)
+        .searchShipTos(this.normalizedCustomerCode(), this.normalizedShipToNo())
         .find((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo())?.name ?? ''
     );
   });
   readonly canLoad = computed(
-    () => !this.isLoaded() && this.normalizedCustomerCode().length > 0 && this.normalizedShipToNo().length > 0,
+    () =>
+      !this.loading() &&
+      !this.isLoaded() &&
+      this.normalizedCustomerCode().length > 0 &&
+      this.normalizedShipToNo().length > 0,
   );
   readonly shipToLookupRows = computed(() =>
-    this.svc.getShipTos(this.normalizedCustomerCode() || undefined).map((shipTo) => ({
+    this.svc.searchShipTos(this.normalizedCustomerCode(), '').map((shipTo) => ({
       ...shipTo,
       lookupKey: `${shipTo.custCode}-${shipTo.shipToNo}`,
     })),
@@ -700,35 +710,48 @@ export class CustomerInquiryComponent {
     const shipToNo = this.route.snapshot.paramMap.get('shipToNo');
 
     if (custCode && shipToNo) {
-      this.customerCodeInput.set(custCode);
-      this.shipToNoInput.set(shipToNo);
-      this.loadInquiry();
+      this.loadCustomerInquiry(custCode, shipToNo);
     }
   }
 
   onCustomerCodeInput(event: Event): void {
     const value = getInputValue(event);
-    this.customerCodeInput.set(value);
-    this.loadError.set('');
+    this.state.update((state) => ({
+      ...state,
+      custCode: value,
+      errorMessage: '',
+    }));
   }
 
   onShipToNoInput(event: Event): void {
     const value = getInputValue(event);
-    this.shipToNoInput.set(value);
-    this.loadError.set('');
+    this.state.update((state) => ({
+      ...state,
+      shipToNo: value,
+      errorMessage: '',
+    }));
   }
 
   openCustomerLookup(): void {
-    this.customerLookupOpen.set(true);
+    this.state.update((state) => ({
+      ...state,
+      customerLookupOpen: true,
+    }));
   }
 
   openShipToLookup(): void {
-    this.shipToLookupOpen.set(true);
+    this.state.update((state) => ({
+      ...state,
+      shipToLookupOpen: true,
+    }));
   }
 
   closeLookups(): void {
-    this.customerLookupOpen.set(false);
-    this.shipToLookupOpen.set(false);
+    this.state.update((state) => ({
+      ...state,
+      customerLookupOpen: false,
+      shipToLookupOpen: false,
+    }));
   }
 
   selectCustomerFromGrid(event: IGridCellEventArgs): void {
@@ -738,18 +761,16 @@ export class CustomerInquiryComponent {
       return;
     }
 
-    this.customerCodeInput.set(customer.custCode);
-
-    const shipToStillMatches = this
-      .svc
-      .getShipTos(customer.custCode)
+    const shipToStillMatches = this.svc
+      .searchShipTos(customer.custCode, '')
       .some((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo());
 
-    if (!shipToStillMatches) {
-      this.shipToNoInput.set('');
-    }
-
-    this.loadError.set('');
+    this.state.update((state) => ({
+      ...state,
+      custCode: customer.custCode,
+      shipToNo: shipToStillMatches ? state.shipToNo : '',
+      errorMessage: '',
+    }));
     this.closeLookups();
   }
 
@@ -760,91 +781,114 @@ export class CustomerInquiryComponent {
       return;
     }
 
-    this.customerCodeInput.set(shipTo.custCode);
-    this.shipToNoInput.set(shipTo.shipToNo);
-    this.loadError.set('');
+    this.state.update((state) => ({
+      ...state,
+      custCode: shipTo.custCode,
+      shipToNo: shipTo.shipToNo,
+      errorMessage: '',
+    }));
     this.closeLookups();
   }
 
   loadInquiry(): void {
-    const data = this.svc.getCustomerInquiry(this.normalizedCustomerCode(), this.normalizedShipToNo());
+    this.loadCustomerInquiry(this.normalizedCustomerCode(), this.normalizedShipToNo());
+  }
+
+  loadCustomerInquiry(custCode: string, shipToNo: string): void {
+    const normalizedCustCode = normalizeCode(custCode);
+    const normalizedShipToNo = normalizeCode(shipToNo);
+
+    this.state.update((state) => ({
+      ...state,
+      loading: true,
+      errorMessage: '',
+      custCode: custCode,
+      shipToNo: shipToNo,
+    }));
+
+    const data = this.svc.getCustomerInquiry(normalizedCustCode, normalizedShipToNo);
 
     if (!data) {
-      this.clearLoadedInquiry();
-      this.loadError.set('No mock inquiry found for that customer and ship-to combination.');
+      this.state.set({
+        ...createInitialState(),
+        custCode,
+        shipToNo,
+        loading: false,
+        errorMessage: 'No mock inquiry found for that customer and ship-to combination.',
+      });
       return;
     }
 
     const selectedShipTo =
-      data.shipTos.find((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo()) ??
+      data.shipTos.find((shipTo) => normalizeCode(shipTo.shipToNo) === normalizedShipToNo) ??
       data.shipTos.at(0) ??
       null;
 
-    this.customerCodeInput.set(data.customer.custCode);
-    this.shipToNoInput.set(selectedShipTo?.shipToNo ?? this.normalizedShipToNo());
-    this.customer.set(data.customer);
-    this.shipTos.set(data.shipTos);
-    this.logs.set(data.logs);
-    this.contracts.set(data.freightContracts);
-    this.labContracts.set(data.labContracts);
-    this.slContracts.set(data.slContracts);
-    this.jobs.set(data.labJobs);
-    this.labSummaries.set(data.labSummaries);
-    this.charges.set(data.jobCharges);
-    this.credits.set(data.jobCredits);
-    this.lensBanks.set(data.lensBanks);
-    this.labJobContracts.set(data.labJobContracts);
-    this.rewardPrograms.set(data.rewardPrograms);
-    this.labReviews.set(data.labReviews);
-    this.keyedComments.set(data.keyedComments);
-    this.contacts.set(data.contacts);
-    this.labAuthorizations.set(data.labAuthorizations);
-    this.smsContacts.set(data.smsContacts);
-    this.selectedShipTo.set(selectedShipTo);
-    this.selectedContract.set(data.freightContracts.at(0) ?? null);
-    this.selectedLog.set(data.logs.at(0) ?? null);
-    this.selectedJob.set(data.labJobs.at(0) ?? null);
-    this.isLoaded.set(true);
-    this.loadError.set('');
+    this.state.set({
+      loaded: true,
+      loading: false,
+      errorMessage: '',
+      customerLookupOpen: false,
+      shipToLookupOpen: false,
+      custCode: data.customer.custCode,
+      shipToNo: selectedShipTo?.shipToNo ?? normalizedShipToNo,
+      customer: data.customer,
+      shipTos: data.shipTos,
+      selectedShipTo,
+      logs: data.logs,
+      selectedLog: data.logs.at(0) ?? null,
+      freightContracts: data.freightContracts,
+      selectedContract: data.freightContracts.at(0) ?? null,
+      labJobs: data.labJobs,
+      selectedJob: data.labJobs.at(0) ?? null,
+      jobCharges: data.jobCharges,
+      jobCredits: data.jobCredits,
+      keyedComments: data.keyedComments,
+      contacts: data.contacts,
+      labAuthorizations: data.labAuthorizations,
+      smsContacts: data.smsContacts,
+      labContracts: data.labContracts,
+      slContracts: data.slContracts,
+      labSummaries: data.labSummaries,
+      lensBanks: data.lensBanks,
+      labJobContracts: data.labJobContracts,
+      rewardPrograms: data.rewardPrograms,
+      labReviews: data.labReviews,
+    });
     this.clearUrlParameters();
   }
 
-  selectLoadedShipTo(shipTo: CustomerInquiryShipTo): void {
-    this.selectedShipTo.set(shipTo);
-    this.shipToNoInput.set(shipTo.shipToNo);
+  selectShipTo(shipTo: CustomerInquiryShipTo): void {
+    this.state.update((state) => ({
+      ...state,
+      selectedShipTo: shipTo,
+      shipToNo: shipTo.shipToNo,
+    }));
+  }
+
+  selectLog(log: CustomerInquiryLog): void {
+    this.state.update((state) => ({
+      ...state,
+      selectedLog: log,
+    }));
+  }
+
+  selectContract(contract: CustomerInquiryFreightContract): void {
+    this.state.update((state) => ({
+      ...state,
+      selectedContract: contract,
+    }));
+  }
+
+  selectJob(job: CustomerInquiryLabJob): void {
+    this.state.update((state) => ({
+      ...state,
+      selectedJob: job,
+    }));
   }
 
   startNewInquiry(): void {
-    this.clearLoadedInquiry();
-    this.customerCodeInput.set('');
-    this.shipToNoInput.set('');
-    this.loadError.set('');
-  }
-
-  private clearLoadedInquiry(): void {
-    this.customer.set(null);
-    this.shipTos.set([]);
-    this.logs.set([]);
-    this.contracts.set([]);
-    this.labContracts.set([]);
-    this.slContracts.set([]);
-    this.jobs.set([]);
-    this.labSummaries.set([]);
-    this.charges.set([]);
-    this.credits.set([]);
-    this.lensBanks.set([]);
-    this.labJobContracts.set([]);
-    this.rewardPrograms.set([]);
-    this.labReviews.set([]);
-    this.keyedComments.set([]);
-    this.contacts.set([]);
-    this.labAuthorizations.set([]);
-    this.smsContacts.set([]);
-    this.selectedShipTo.set(null);
-    this.selectedContract.set(null);
-    this.selectedLog.set(null);
-    this.selectedJob.set(null);
-    this.isLoaded.set(false);
+    this.state.set(createInitialState());
   }
 
   private clearUrlParameters(): void {
@@ -852,6 +896,40 @@ export class CustomerInquiryComponent {
       this.location.replaceState('/customer-inquiry');
     }
   }
+}
+
+function createInitialState(): CustomerInquiryState {
+  return {
+    loaded: false,
+    loading: false,
+    errorMessage: '',
+    customerLookupOpen: false,
+    shipToLookupOpen: false,
+    custCode: '',
+    shipToNo: '',
+    customer: null,
+    shipTos: [],
+    selectedShipTo: null,
+    logs: [],
+    selectedLog: null,
+    freightContracts: [],
+    selectedContract: null,
+    labJobs: [],
+    selectedJob: null,
+    jobCharges: [],
+    jobCredits: [],
+    keyedComments: [],
+    contacts: [],
+    labAuthorizations: [],
+    smsContacts: [],
+    labContracts: [],
+    slContracts: [],
+    labSummaries: [],
+    lensBanks: [],
+    labJobContracts: [],
+    rewardPrograms: [],
+    labReviews: [],
+  };
 }
 
 function getInputValue(event: Event): string {
