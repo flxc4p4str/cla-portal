@@ -253,6 +253,8 @@ export interface CustomerInquiryState {
   errorMessage: string;
   customerLookupOpen: boolean;
   shipToLookupOpen: boolean;
+  customerLookupRows: CustomerInquiryCustomer[];
+  shipToLookupRows: CustomerInquiryShipToLookup[];
   custCode: string;
   shipToNo: string;
   customer: CustomerInquiryCustomer | null;

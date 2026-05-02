@@ -1,12 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   computed,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { catchError, debounceTime, distinctUntilChanged, map, of, Subject, switchMap } from 'rxjs';
 import {
   IgxButtonDirective,
   IgxIconButtonDirective,
@@ -17,7 +21,7 @@ import {
 import { IgxGridModule } from '@infragistics/igniteui-angular/grids/grid';
 import { IGridCellEventArgs } from '@infragistics/igniteui-angular/grids/core';
 
-import { CustomerInquiryMockService } from './services/customer-inquiry-mock.service';
+import { CustomerInquiryApiService } from './services/customer-inquiry-api.service';
 import {
   CustomerInquiryCustomer,
   CustomerInquiryFreightContract,
@@ -31,6 +35,11 @@ import { CustomerInquiryNameAddressComponent } from './tabs/name-address/custome
 import { CustomerInquiryPricingContractsComponent } from './tabs/pricing-contracts/customer-inquiry-pricing-contracts.component';
 import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.component';
 import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.component';
+
+interface ShipToSearchCriteria {
+  custCode: string;
+  filter: string;
+}
 
 @Component({
   selector: 'app-customer-inquiry',
@@ -47,6 +56,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
     CustomerInquiryLogComponent,
     CustomerInquiryLabComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <section class="customer-inquiry-page">
       <section class="criteria-panel" aria-label="Customer inquiry load criteria">
@@ -619,9 +629,12 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerInquiryComponent {
-  private readonly svc = inject(CustomerInquiryMockService);
+  private readonly api = inject(CustomerInquiryApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly customerSearch = new Subject<string>();
+  private readonly shipToSearch = new Subject<ShipToSearchCriteria>();
 
   private readonly state = signal<CustomerInquiryState>(createInitialState());
 
@@ -632,7 +645,7 @@ export class CustomerInquiryComponent {
   readonly loadError = computed(() => this.state().errorMessage);
   readonly customerCodeInput = computed(() => this.state().custCode);
   readonly shipToNoInput = computed(() => this.state().shipToNo);
-  readonly customers = computed(() => this.svc.searchCustomers(''));
+  readonly customers = computed(() => (this.state().customerLookupRows || []));
   readonly customer = computed(() => this.state().customer);
   readonly shipTos = computed(() => this.state().shipTos);
   readonly selectedShipTo = computed(() => this.state().selectedShipTo);
@@ -664,12 +677,10 @@ export class CustomerInquiryComponent {
     if (loadedCustomer && normalizeCode(loadedCustomer.custCode) === this.normalizedCustomerCode()) {
       return loadedCustomer.custName;
     }
-
+    let c = this.customers() || [];
+    console.log('c', c);
     return (
-      this
-        .svc
-        .searchCustomers(this.normalizedCustomerCode())
-        .find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
+      c.find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
       ''
     );
   });
@@ -682,8 +693,8 @@ export class CustomerInquiryComponent {
 
     return (
       this
-        .svc
-        .searchShipTos(this.normalizedCustomerCode(), this.normalizedShipToNo())
+        .state()
+        .shipToLookupRows
         .find((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo())?.name ?? ''
     );
   });
@@ -695,7 +706,7 @@ export class CustomerInquiryComponent {
       this.normalizedShipToNo().length > 0,
   );
   readonly shipToLookupRows = computed(() =>
-    this.svc.searchShipTos(this.normalizedCustomerCode(), '').map((shipTo) => ({
+    this.state().shipToLookupRows.map((shipTo) => ({
       ...shipTo,
       lookupKey: `${shipTo.custCode}-${shipTo.shipToNo}`,
     })),
@@ -706,12 +717,66 @@ export class CustomerInquiryComponent {
   readonly shipToLookupGridHeight = computed(() => lookupGridHeight(this.shipToLookupRows().length));
 
   constructor() {
+    this.bindLookupSearches();
+
     const custCode = this.route.snapshot.paramMap.get('custCode');
     const shipToNo = this.route.snapshot.paramMap.get('shipToNo');
 
     if (custCode && shipToNo) {
       this.loadCustomerInquiry(custCode, shipToNo);
+    } else {
+      this.searchCustomers('');
     }
+  }
+
+  private bindLookupSearches(): void {
+    this.customerSearch.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((filter) =>
+        this.api.searchCustomers(filter).pipe(
+          catchError(() => {
+            this.setLookupError('Unable to search customers from the API.');
+            return of<CustomerInquiryCustomer[]>([]);
+          }),
+        ),
+      ),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((customers) => {
+      console.log('customers', customers);
+      this.state.update((state) => ({
+        ...state,
+        customerLookupRows: customers,
+      }));
+    });
+
+    this.shipToSearch.pipe(
+      debounceTime(300),
+      distinctUntilChanged(areShipToSearchCriteriaEqual),
+      switchMap((criteria) => {
+        if (!criteria.custCode) {
+          return of<CustomerInquiryShipToLookup[]>([]);
+        }
+
+        return this.api.searchShipTos(criteria.custCode, criteria.filter).pipe(
+          map((shipTos) => shipTos.map((shipTo) => ({
+            ...shipTo,
+            custCode: shipTo.custCode || criteria.custCode,
+            custName: shipTo.custName || this.customerNameDisplay(),
+          }))),
+          catchError(() => {
+            this.setLookupError('Unable to search ship-to locations from the API.');
+            return of<CustomerInquiryShipToLookup[]>([]);
+          }),
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((shipTos) => {
+      this.state.update((state) => ({
+        ...state,
+        shipToLookupRows: shipTos,
+      }));
+    });
   }
 
   onCustomerCodeInput(event: Event): void {
@@ -721,6 +786,7 @@ export class CustomerInquiryComponent {
       custCode: value,
       errorMessage: '',
     }));
+    this.searchCustomers(value);
   }
 
   onShipToNoInput(event: Event): void {
@@ -730,12 +796,29 @@ export class CustomerInquiryComponent {
       shipToNo: value,
       errorMessage: '',
     }));
+    this.searchShipTos(this.normalizedCustomerCode(), value);
   }
 
   openCustomerLookup(): void {
     this.state.update((state) => ({
       ...state,
       customerLookupOpen: true,
+    }));
+    this.searchCustomers(this.normalizedCustomerCode());
+  }
+
+  private searchCustomers(filter: string): void {
+    this.customerSearch.next(filter);
+  }
+
+  private searchShipTos(custCode: string, filter: string): void {
+    this.shipToSearch.next({ custCode, filter });
+  }
+
+  private setLookupError(errorMessage: string): void {
+    this.state.update((state) => ({
+      ...state,
+      errorMessage,
     }));
   }
 
@@ -744,6 +827,7 @@ export class CustomerInquiryComponent {
       ...state,
       shipToLookupOpen: true,
     }));
+    this.searchShipTos(this.normalizedCustomerCode(), this.normalizedShipToNo());
   }
 
   closeLookups(): void {
@@ -761,8 +845,8 @@ export class CustomerInquiryComponent {
       return;
     }
 
-    const shipToStillMatches = this.svc
-      .searchShipTos(customer.custCode, '')
+    const shipToStillMatches = this.state()
+      .shipToLookupRows
       .some((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo());
 
     this.state.update((state) => ({
@@ -771,6 +855,7 @@ export class CustomerInquiryComponent {
       shipToNo: shipToStillMatches ? state.shipToNo : '',
       errorMessage: '',
     }));
+    this.searchShipTos(customer.custCode, shipToStillMatches ? this.normalizedShipToNo() : '');
     this.closeLookups();
   }
 
@@ -806,56 +891,63 @@ export class CustomerInquiryComponent {
       shipToNo: shipToNo,
     }));
 
-    const data = this.svc.getCustomerInquiry(normalizedCustCode, normalizedShipToNo);
+    this.api.getCustomerInquiry(normalizedCustCode, normalizedShipToNo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          const selectedShipTo =
+            data.shipTos.find((shipTo) => normalizeCode(shipTo.shipToNo) === normalizedShipToNo) ??
+            data.shipTos.at(0) ??
+            null;
 
-    if (!data) {
-      this.state.set({
-        ...createInitialState(),
-        custCode,
-        shipToNo,
-        loading: false,
-        errorMessage: 'No mock inquiry found for that customer and ship-to combination.',
+          this.state.set({
+            ...this.state(),
+            loaded: true,
+            loading: false,
+            errorMessage: '',
+            customerLookupOpen: false,
+            shipToLookupOpen: false,
+            customerLookupRows: mergeCustomerLookupRows(this.state().customerLookupRows, data.customer),
+            shipToLookupRows: data.shipTos.map((shipTo) => ({
+              ...shipTo,
+              custCode: data.customer.custCode,
+              custName: data.customer.custName,
+            })),
+            custCode: data.customer.custCode,
+            shipToNo: selectedShipTo?.shipToNo ?? normalizedShipToNo,
+            customer: data.customer,
+            shipTos: data.shipTos,
+            selectedShipTo,
+            logs: data.logs,
+            selectedLog: data.logs.at(0) ?? null,
+            freightContracts: data.freightContracts,
+            selectedContract: data.freightContracts.at(0) ?? null,
+            labJobs: data.labJobs,
+            selectedJob: data.labJobs.at(0) ?? null,
+            jobCharges: data.jobCharges,
+            jobCredits: data.jobCredits,
+            keyedComments: data.keyedComments,
+            contacts: data.contacts,
+            labAuthorizations: data.labAuthorizations,
+            smsContacts: data.smsContacts,
+            labContracts: data.labContracts,
+            slContracts: data.slContracts,
+            labSummaries: data.labSummaries,
+            lensBanks: data.lensBanks,
+            labJobContracts: data.labJobContracts,
+            rewardPrograms: data.rewardPrograms,
+            labReviews: data.labReviews,
+          });
+          this.clearUrlParameters();
+        },
+        error: () => {
+          this.state.update((state) => ({
+            ...state,
+            loading: false,
+            errorMessage: 'Unable to load customer inquiry from the API.',
+          }));
+        },
       });
-      return;
-    }
-
-    const selectedShipTo =
-      data.shipTos.find((shipTo) => normalizeCode(shipTo.shipToNo) === normalizedShipToNo) ??
-      data.shipTos.at(0) ??
-      null;
-
-    this.state.set({
-      loaded: true,
-      loading: false,
-      errorMessage: '',
-      customerLookupOpen: false,
-      shipToLookupOpen: false,
-      custCode: data.customer.custCode,
-      shipToNo: selectedShipTo?.shipToNo ?? normalizedShipToNo,
-      customer: data.customer,
-      shipTos: data.shipTos,
-      selectedShipTo,
-      logs: data.logs,
-      selectedLog: data.logs.at(0) ?? null,
-      freightContracts: data.freightContracts,
-      selectedContract: data.freightContracts.at(0) ?? null,
-      labJobs: data.labJobs,
-      selectedJob: data.labJobs.at(0) ?? null,
-      jobCharges: data.jobCharges,
-      jobCredits: data.jobCredits,
-      keyedComments: data.keyedComments,
-      contacts: data.contacts,
-      labAuthorizations: data.labAuthorizations,
-      smsContacts: data.smsContacts,
-      labContracts: data.labContracts,
-      slContracts: data.slContracts,
-      labSummaries: data.labSummaries,
-      lensBanks: data.lensBanks,
-      labJobContracts: data.labJobContracts,
-      rewardPrograms: data.rewardPrograms,
-      labReviews: data.labReviews,
-    });
-    this.clearUrlParameters();
   }
 
   selectShipTo(shipTo: CustomerInquiryShipTo): void {
@@ -905,6 +997,8 @@ function createInitialState(): CustomerInquiryState {
     errorMessage: '',
     customerLookupOpen: false,
     shipToLookupOpen: false,
+    customerLookupRows: [],
+    shipToLookupRows: [],
     custCode: '',
     shipToNo: '',
     customer: null,
@@ -930,6 +1024,21 @@ function createInitialState(): CustomerInquiryState {
     rewardPrograms: [],
     labReviews: [],
   };
+}
+
+function areShipToSearchCriteriaEqual(left: ShipToSearchCriteria, right: ShipToSearchCriteria): boolean {
+  return left.custCode === right.custCode && left.filter === right.filter;
+}
+
+function mergeCustomerLookupRows(
+  customers: CustomerInquiryCustomer[],
+  loadedCustomer: CustomerInquiryCustomer,
+): CustomerInquiryCustomer[] {
+  if (customers.some((customer) => normalizeCode(customer.custCode) === normalizeCode(loadedCustomer.custCode))) {
+    return customers;
+  }
+
+  return [loadedCustomer, ...customers];
 }
 
 function getInputValue(event: Event): string {
