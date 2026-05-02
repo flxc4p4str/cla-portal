@@ -233,6 +233,105 @@ export interface CustomerInquirySmsContact {
   smsName: string;
 }
 
+export interface CustomerInquiryInfoCode {
+  type: string;
+  code: string;
+  description: string;
+}
+
+export interface CustomerInquiryInfoAffiliation {
+  code: string;
+  name: string;
+  status: string;
+  notes: string;
+}
+
+export interface CustomerInquiryInfoManufacturerAccount {
+  manufacturer: string;
+  accountNo: string;
+  name: string;
+  status: string;
+}
+
+export interface CustomerInquiryOpenBalance {
+  type: string;
+  amount: number;
+}
+
+export interface CustomerInquiryOpenArByDocumentType {
+  type: string;
+  amount: number;
+}
+
+export interface CustomerInquiryStatistic {
+  metric: string;
+  mtd: number;
+  ytd: number;
+  lyr: number;
+}
+
+export interface CustomerInquiryActivity {
+  activity: string;
+  mtd: number;
+  ytd: number;
+  lyr: number;
+}
+
+export interface CustomerInquiryDocument {
+  documentType: string;
+  documentNo: string;
+  documentDate: string;
+  amount: number;
+  status: string;
+}
+
+export interface CustomerInquiryEvent {
+  eventDate: string;
+  eventType: string;
+  description: string;
+  user: string;
+}
+
+export interface CustomerInquiryAging {
+  aging: string;
+  amount: number;
+}
+
+export interface CustomerInquirySalesSettings {
+  noRestockingFee: boolean;
+  noSampleSurcharge: boolean;
+  noSampleHandling: boolean;
+  noPriceOnInvoice: boolean;
+  shipComplete: boolean;
+  webAuthorized: boolean;
+  pecpAuthorized: boolean;
+  refuseReturns: boolean;
+  salesHold: boolean;
+  poRequired: boolean;
+  shipToRequired: boolean;
+  noSubs: boolean;
+  storageType: 'BIN' | 'SHELF' | 'REGULAR';
+  billStatus: 'NA' | 'BILLABLE' | 'EXEMPT';
+  startBilling: string | null;
+  shipTo: string;
+  dpdPrinter: string;
+  bgDiscount: string;
+}
+
+export interface CustomerInquiryAccountingSettings {
+  noFinanceCharge: boolean;
+  noTrw: boolean;
+  businessEstablished: string;
+  queueType: 'NONE' | 'REMINDER' | 'AUTO_CHG' | 'AUTO_PAY_ACH';
+  printedStatements: 'MAIL' | 'PULL' | 'NONE';
+  electronicStatements: 'NONE' | 'EMAIL' | 'FAX';
+  statementEmail: string;
+  fuelSur: 'APPLY' | 'MAIN_LOC_EXEMPT' | 'ALL_LOCS_EXEMPT';
+  status: string;
+  exemptFromSalesTax: boolean;
+  resaleNo: string;
+}
+
 export interface CustomerInquiryData {
   customer: CustomerInquiryCustomer;
   shipTos: CustomerInquiryShipTo[];
@@ -252,6 +351,18 @@ export interface CustomerInquiryData {
   contacts: CustomerInquiryContact[];
   labAuthorizations: CustomerInquiryLabAuthorization[];
   smsContacts: CustomerInquirySmsContact[];
+  infoCodes: CustomerInquiryInfoCode[];
+  salesSettings: CustomerInquirySalesSettings;
+  accountingSettings: CustomerInquiryAccountingSettings;
+  infoAffiliations: CustomerInquiryInfoAffiliation[];
+  infoManufacturerAccounts: CustomerInquiryInfoManufacturerAccount[];
+  openBalances: CustomerInquiryOpenBalance[];
+  openArByDocumentType: CustomerInquiryOpenArByDocumentType[];
+  infoStatistics: CustomerInquiryStatistic[];
+  infoActivity: CustomerInquiryActivity[];
+  infoDocuments: CustomerInquiryDocument[];
+  infoEvents: CustomerInquiryEvent[];
+  infoAging: CustomerInquiryAging[];
 }
 
 export interface CustomerInquiryState {
@@ -286,4 +397,16 @@ export interface CustomerInquiryState {
   labJobContracts: CustomerInquiryLabContract[];
   rewardPrograms: CustomerInquiryRewardProgram[];
   labReviews: CustomerInquiryLabReview[];
+  infoCodes: CustomerInquiryInfoCode[];
+  salesSettings: CustomerInquirySalesSettings;
+  accountingSettings: CustomerInquiryAccountingSettings;
+  infoAffiliations: CustomerInquiryInfoAffiliation[];
+  infoManufacturerAccounts: CustomerInquiryInfoManufacturerAccount[];
+  openBalances: CustomerInquiryOpenBalance[];
+  openArByDocumentType: CustomerInquiryOpenArByDocumentType[];
+  infoStatistics: CustomerInquiryStatistic[];
+  infoActivity: CustomerInquiryActivity[];
+  infoDocuments: CustomerInquiryDocument[];
+  infoEvents: CustomerInquiryEvent[];
+  infoAging: CustomerInquiryAging[];
 }

@@ -35,6 +35,7 @@ import { CustomerInquiryNameAddressComponent } from './tabs/name-address/custome
 import { CustomerInquiryPricingContractsComponent } from './tabs/pricing-contracts/customer-inquiry-pricing-contracts.component';
 import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.component';
 import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.component';
+import { CustomerInquiryInfoComponent } from './tabs/info/customer-inquiry-info.component';
 
 interface ShipToSearchCriteria {
   custCode: string;
@@ -55,6 +56,7 @@ interface ShipToSearchCriteria {
     CustomerInquiryPricingContractsComponent,
     CustomerInquiryLogComponent,
     CustomerInquiryLabComponent,
+    CustomerInquiryInfoComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
@@ -215,6 +217,26 @@ interface ShipToSearchCriteria {
                 [logs]="logs()"
                 [selectedLog]="selectedLog()"
                 (selectedLogChange)="selectLog($event)"
+              />
+            </igx-tab-content>
+          </igx-tab-item>
+
+          <igx-tab-item>
+            <igx-tab-header>Info</igx-tab-header>
+            <igx-tab-content>
+              <app-customer-inquiry-info
+                [codes]="infoCodes()"
+                [salesSettings]="salesSettings()"
+                [accountingSettings]="accountingSettings()"
+                [affiliations]="infoAffiliations()"
+                [manufacturerAccounts]="infoManufacturerAccounts()"
+                [openBalances]="openBalances()"
+                [openArByDocumentType]="openArByDocumentType()"
+                [statistics]="infoStatistics()"
+                [activity]="infoActivity()"
+                [documents]="infoDocuments()"
+                [events]="infoEvents()"
+                [aging]="infoAging()"
               />
             </igx-tab-content>
           </igx-tab-item>
@@ -683,6 +705,18 @@ export class CustomerInquiryComponent {
   readonly labJobContracts = computed(() => this.state().labJobContracts);
   readonly rewardPrograms = computed(() => this.state().rewardPrograms);
   readonly labReviews = computed(() => this.state().labReviews);
+  readonly infoCodes = computed(() => this.state().infoCodes);
+  readonly salesSettings = computed(() => this.state().salesSettings);
+  readonly accountingSettings = computed(() => this.state().accountingSettings);
+  readonly infoAffiliations = computed(() => this.state().infoAffiliations);
+  readonly infoManufacturerAccounts = computed(() => this.state().infoManufacturerAccounts);
+  readonly openBalances = computed(() => this.state().openBalances);
+  readonly openArByDocumentType = computed(() => this.state().openArByDocumentType);
+  readonly infoStatistics = computed(() => this.state().infoStatistics);
+  readonly infoActivity = computed(() => this.state().infoActivity);
+  readonly infoDocuments = computed(() => this.state().infoDocuments);
+  readonly infoEvents = computed(() => this.state().infoEvents);
+  readonly infoAging = computed(() => this.state().infoAging);
   readonly normalizedCustomerCode = computed(() => normalizeCode(this.customerCodeInput()));
   readonly normalizedShipToNo = computed(() => normalizeCode(this.shipToNoInput()));
   readonly customerNameDisplay = computed(() => {
@@ -948,6 +982,18 @@ export class CustomerInquiryComponent {
             labJobContracts: data.labJobContracts,
             rewardPrograms: data.rewardPrograms,
             labReviews: data.labReviews,
+            infoCodes: data.infoCodes,
+            salesSettings: data.salesSettings,
+            accountingSettings: data.accountingSettings,
+            infoAffiliations: data.infoAffiliations,
+            infoManufacturerAccounts: data.infoManufacturerAccounts,
+            openBalances: data.openBalances,
+            openArByDocumentType: data.openArByDocumentType,
+            infoStatistics: data.infoStatistics,
+            infoActivity: data.infoActivity,
+            infoDocuments: data.infoDocuments,
+            infoEvents: data.infoEvents,
+            infoAging: data.infoAging,
           });
           this.clearUrlParameters();
         },
@@ -1034,6 +1080,49 @@ function createInitialState(): CustomerInquiryState {
     labJobContracts: [],
     rewardPrograms: [],
     labReviews: [],
+    infoCodes: [],
+    salesSettings: {
+      noRestockingFee: false,
+      noSampleSurcharge: false,
+      noSampleHandling: false,
+      noPriceOnInvoice: false,
+      shipComplete: false,
+      webAuthorized: false,
+      pecpAuthorized: false,
+      refuseReturns: false,
+      salesHold: false,
+      poRequired: false,
+      shipToRequired: false,
+      noSubs: false,
+      storageType: 'REGULAR',
+      billStatus: 'NA',
+      startBilling: null,
+      shipTo: '',
+      dpdPrinter: '',
+      bgDiscount: '',
+    },
+    accountingSettings: {
+      noFinanceCharge: false,
+      noTrw: false,
+      businessEstablished: '',
+      queueType: 'NONE',
+      printedStatements: 'NONE',
+      electronicStatements: 'NONE',
+      statementEmail: '',
+      fuelSur: 'APPLY',
+      status: '',
+      exemptFromSalesTax: false,
+      resaleNo: '',
+    },
+    infoAffiliations: [],
+    infoManufacturerAccounts: [],
+    openBalances: [],
+    openArByDocumentType: [],
+    infoStatistics: [],
+    infoActivity: [],
+    infoDocuments: [],
+    infoEvents: [],
+    infoAging: [],
   };
 }
 

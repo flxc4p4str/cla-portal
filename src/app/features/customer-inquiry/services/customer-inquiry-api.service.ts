@@ -115,6 +115,96 @@ function normalizeInquiryData(data: CustomerInquiryData): CustomerInquiryData {
     labJobContracts: data.labJobContracts ?? [],
     rewardPrograms: data.rewardPrograms ?? [],
     labReviews: data.labReviews ?? [],
+    infoCodes: data.infoCodes ?? [],
+    salesSettings: normalizeSalesSettings(data.salesSettings),
+    accountingSettings: normalizeAccountingSettings(data.accountingSettings),
+    infoAffiliations: data.infoAffiliations ?? [],
+    infoManufacturerAccounts: data.infoManufacturerAccounts ?? [],
+    openBalances: data.openBalances ?? [],
+    openArByDocumentType: data.openArByDocumentType ?? [],
+    infoStatistics: data.infoStatistics ?? [],
+    infoActivity: data.infoActivity ?? [],
+    infoDocuments: data.infoDocuments ?? [],
+    infoEvents: data.infoEvents ?? [],
+    infoAging: data.infoAging ?? [],
+  };
+}
+
+function normalizeSalesSettings(
+  settings: CustomerInquiryData['salesSettings'] | null | undefined,
+): CustomerInquiryData['salesSettings'] {
+  const defaults = defaultSalesSettings();
+  const source = settings ?? defaults;
+
+  return {
+    ...defaults,
+    ...source,
+    noRestockingFee: toBoolean(source.noRestockingFee),
+    noSampleSurcharge: toBoolean(source.noSampleSurcharge),
+    noSampleHandling: toBoolean(source.noSampleHandling),
+    noPriceOnInvoice: toBoolean(source.noPriceOnInvoice),
+    shipComplete: toBoolean(source.shipComplete),
+    webAuthorized: toBoolean(source.webAuthorized),
+    pecpAuthorized: toBoolean(source.pecpAuthorized),
+    refuseReturns: toBoolean(source.refuseReturns),
+    salesHold: toBoolean(source.salesHold),
+    poRequired: toBoolean(source.poRequired),
+    shipToRequired: toBoolean(source.shipToRequired),
+    noSubs: toBoolean(source.noSubs),
+  };
+}
+
+function normalizeAccountingSettings(
+  settings: CustomerInquiryData['accountingSettings'] | null | undefined,
+): CustomerInquiryData['accountingSettings'] {
+  const defaults = defaultAccountingSettings();
+  const source = settings ?? defaults;
+
+  return {
+    ...defaults,
+    ...source,
+    noFinanceCharge: toBoolean(source.noFinanceCharge),
+    noTrw: toBoolean(source.noTrw),
+    exemptFromSalesTax: toBoolean(source.exemptFromSalesTax),
+  };
+}
+
+function defaultSalesSettings(): CustomerInquiryData['salesSettings'] {
+  return {
+    noRestockingFee: false,
+    noSampleSurcharge: false,
+    noSampleHandling: false,
+    noPriceOnInvoice: false,
+    shipComplete: false,
+    webAuthorized: false,
+    pecpAuthorized: false,
+    refuseReturns: false,
+    salesHold: false,
+    poRequired: false,
+    shipToRequired: false,
+    noSubs: false,
+    storageType: 'REGULAR',
+    billStatus: 'NA',
+    startBilling: null,
+    shipTo: '',
+    dpdPrinter: '',
+    bgDiscount: '',
+  };
+}
+
+function defaultAccountingSettings(): CustomerInquiryData['accountingSettings'] {
+  return {
+    noFinanceCharge: false,
+    noTrw: false,
+    businessEstablished: '',
+    queueType: 'NONE',
+    printedStatements: 'NONE',
+    electronicStatements: 'NONE',
+    statementEmail: '',
+    fuelSur: 'APPLY',
+    status: '',
+    exemptFromSalesTax: false,
+    resaleNo: '',
   };
 }
 
