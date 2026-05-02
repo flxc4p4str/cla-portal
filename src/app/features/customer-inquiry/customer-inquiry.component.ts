@@ -691,10 +691,8 @@ export class CustomerInquiryComponent {
     if (loadedCustomer && normalizeCode(loadedCustomer.custCode) === this.normalizedCustomerCode()) {
       return loadedCustomer.custName;
     }
-    let c = this.customers() || [];
-    console.log('c', c);
     return (
-      c?.find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
+      this.customers().find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
       ''
     );
   });
@@ -757,7 +755,6 @@ export class CustomerInquiryComponent {
       ),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe((customers) => {
-      console.log('customers', customers);
       this.state.update((state) => ({
         ...state,
         customerLookupRows: customers,
