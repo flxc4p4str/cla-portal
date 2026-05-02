@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 
 import { environment } from '@abs-environments/environment';
 import {
+  ApiResponse,
   CustomerInquiryCustomer,
   CustomerInquiryData,
   CustomerInquiryShipToLookup,
@@ -15,22 +16,28 @@ export class CustomerInquiryApiService {
   private readonly baseUrl = `${environment.apiBaseUrl}/AR/customer-inquiry`;
 
   searchCustomers(filter: string): Observable<CustomerInquiryCustomer[]> {
-    return this.http.get<CustomerInquiryCustomer[]>(`${this.baseUrl}/customers`, {
-      params: createFilterParams(filter),
-    });
+    return this.http
+      .get<ApiResponse<CustomerInquiryCustomer[]>>(`${this.baseUrl}/customers`, {
+        params: createFilterParams(filter),
+      })
+      .pipe(map((response) => response.data ?? []));
   }
 
   searchShipTos(custCode: string, filter: string): Observable<CustomerInquiryShipToLookup[]> {
-    return this.http.get<CustomerInquiryShipToLookup[]>(
-      `${this.baseUrl}/${encodeURIComponent(custCode)}/shiptos`,
-      { params: createFilterParams(filter) },
-    );
+    return this.http
+      .get<ApiResponse<CustomerInquiryShipToLookup[]>>(
+        `${this.baseUrl}/${encodeURIComponent(custCode)}/shiptos`,
+        { params: createFilterParams(filter) },
+      )
+      .pipe(map((response) => response.data ?? []));
   }
 
   getCustomerInquiry(custCode: string, shipToNo: string): Observable<CustomerInquiryData> {
-    return this.http.get<CustomerInquiryData>(
-      `${this.baseUrl}/${encodeURIComponent(custCode)}/${encodeURIComponent(shipToNo)}`,
-    ).pipe(map(normalizeInquiryData));
+    return this.http
+      .get<ApiResponse<CustomerInquiryData>>(
+        `${this.baseUrl}/${encodeURIComponent(custCode)}/${encodeURIComponent(shipToNo)}`,
+      )
+      .pipe(map((response) => normalizeInquiryData(response.data)));
   }
 }
 

@@ -531,14 +531,18 @@ interface ShipToSearchCriteria {
       z-index: 1000;
       display: grid;
       place-items: center;
-      padding: 2rem;
+      padding: 1rem;
+      overflow: hidden;
       background: rgb(0 0 0 / 0.28);
     }
 
     .lookup-modal {
-      width: max-content;
-      max-width: calc(100vw - 4rem);
-      overflow: visible;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      width: min(760px, calc(100vw - 2rem));
+      max-height: min(85vh, calc(100vh - 2rem));
+      overflow: hidden;
       background: var(--surface);
       border: 1px solid var(--surface-border);
       border-radius: 0.35rem;
@@ -559,15 +563,24 @@ interface ShipToSearchCriteria {
       flex-direction: column;
       gap: 0.55rem;
       min-width: 0;
+      min-height: 0;
       padding-top: 0.25rem;
     }
 
+    .customer-lookup-modal {
+      width: min(760px, calc(100vw - 2rem));
+    }
+
+    .shipto-lookup-modal {
+      width: min(1240px, calc(100vw - 2rem));
+    }
+
     .customer-lookup-body {
-      width: 730px;
+      width: 100%;
     }
 
     .shipto-lookup-body {
-      width: 1200px;
+      width: 100%;
     }
 
     .lookup-meta {
@@ -585,6 +598,7 @@ interface ShipToSearchCriteria {
 
     .lookup-grid {
       --ig-size: var(--ig-size-small);
+      max-height: calc(85vh - 185px);
       border: 1px solid var(--surface-border);
       border-radius: 0.35rem;
       overflow: hidden;
@@ -593,6 +607,7 @@ interface ShipToSearchCriteria {
     .lookup-actions {
       display: flex;
       justify-content: flex-end;
+      flex: 0 0 auto;
       border-top: 1px solid var(--surface-border);
       margin-top: 0.75rem;
       padding-top: 0.65rem;
@@ -618,11 +633,10 @@ interface ShipToSearchCriteria {
 
       .lookup-overlay {
         justify-content: start;
-        overflow-x: auto;
       }
 
       .lookup-modal {
-        max-width: none;
+        width: calc(100vw - 2rem);
       }
     }
   `],
@@ -680,7 +694,7 @@ export class CustomerInquiryComponent {
     let c = this.customers() || [];
     console.log('c', c);
     return (
-      c.find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
+      c?.find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
       ''
     );
   });
@@ -711,8 +725,8 @@ export class CustomerInquiryComponent {
       lookupKey: `${shipTo.custCode}-${shipTo.shipToNo}`,
     })),
   );
-  readonly customerLookupGridWidth = '730px';
-  readonly shipToLookupGridWidth = '1200px';
+  readonly customerLookupGridWidth = '100%';
+  readonly shipToLookupGridWidth = '100%';
   readonly customerLookupGridHeight = computed(() => lookupGridHeight(this.customers().length));
   readonly shipToLookupGridHeight = computed(() => lookupGridHeight(this.shipToLookupRows().length));
 
@@ -1052,8 +1066,12 @@ function normalizeCode(value: string): string {
 function lookupGridHeight(rowCount: number): string {
   const headerAndFilterHeight = 94;
   const rowHeight = 41;
-  const bottomBorderAllowance = 4;
-  return `${headerAndFilterHeight + rowCount * rowHeight + bottomBorderAllowance}px`;
+  const borderAllowance = 4;
+  const minHeight = 140;
+  const maxHeight = 520;
+  const naturalHeight = headerAndFilterHeight + rowCount * rowHeight + borderAllowance;
+
+  return `${Math.min(maxHeight, Math.max(minHeight, naturalHeight))}px`;
 }
 
 function isCustomer(value: unknown): value is CustomerInquiryCustomer {

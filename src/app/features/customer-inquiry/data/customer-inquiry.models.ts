@@ -1,3 +1,10 @@
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  errorMessage: string | null;
+  errors: unknown;
+}
+
 export interface CustomerInquiryCustomer {
   custCode: string;
   custName: string;
