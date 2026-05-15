@@ -1,6 +1,6 @@
 const apiBase_dev = 'http://localhost:1977/';
 const apiBase_svr = 'https://absapi.absolution1.com/';
-const useDev = true; // false; // change this to true when running from code, and false when you want to use the deployed api
+const useDev = false // true; // false; // change this to true when running from code, and false when you want to use the deployed api
 
 const apiBase = useDev ? apiBase_dev : apiBase_svr
 

@@ -48,6 +48,12 @@ export const appRoutes: Routes = [
         loadComponent: () => import('./features/summary/summary').then((m) => m.Summary),
         data: { menuText: 'eComm Summary' },
       },
+            {
+        path: 'todo', 
+        canActivate: [authGuard], 
+        loadComponent: () => import('./features/todo/todo').then((m) => m.Todo),
+        data: { menuText: 'todo App' },
+      },
       {
         path: 'lab-monitor', 
         canActivate: [authGuard], 
