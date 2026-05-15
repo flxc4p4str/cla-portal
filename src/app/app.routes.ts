@@ -48,11 +48,30 @@ export const appRoutes: Routes = [
         loadComponent: () => import('./features/summary/summary').then((m) => m.Summary),
         data: { menuText: 'eComm Summary' },
       },
+            {
+        path: 'todo', 
+        canActivate: [authGuard], 
+        loadComponent: () => import('./features/todo/todo').then((m) => m.Todo),
+        data: { menuText: 'todo App' },
+      },
       {
         path: 'lab-monitor', 
         canActivate: [authGuard], 
         loadComponent: () => import('./features/lab-monitor/lab-monitor').then((m) => m.LabMonitor),
         data: { menuText: 'Lab Monitor' },
+      },
+      {
+        path: 'customer-inquiry/:custCode/:shipToNo',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/customer-inquiry/customer-inquiry.component')
+          .then((m) => m.CustomerInquiryComponent),
+      },
+      {
+        path: 'customer-inquiry',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/customer-inquiry/customer-inquiry.component')
+          .then((m) => m.CustomerInquiryComponent),
+        data: { menuText: 'Customer Inquiry', icon: 'widgets' },
       }
     ],
   },

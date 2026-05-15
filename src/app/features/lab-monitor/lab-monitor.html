@@ -60,7 +60,7 @@
   <div>
     <!-- <label for="cars">Choose a {{ machine_dev }} machine:</label>
       <select id="cars" name="cars" (change)="onChange($event)">>
-        <option *ngFor="let selmachine of selmachines()" [value]="selmachine.MACHINE_ID">{{selmachine.MACHINE_DESC}}</option>
+        <option *ngFor="let selmachine of selmachines()" [value]="selmachine.MACHINE_ID">{{selmachine.MACHINE_NAME}}</option>
       </select> -->
 
     <div style="max-width: 400px;">
@@ -68,7 +68,7 @@
         <label igxLabel>Choose a {{ machine_dev() }} machine</label>
         @for(selmachine of selmachines(); track selmachine) {
         <igx-select-item [value]="selmachine.MACHINE_ID" (click)="set_selectedDETMACH2fc(selmachine)">
-          {{ selmachine.MACHINE_ID}}, {{selmachine.MACHINE_DESC}}
+          {{ selmachine.MACHINE_ID}}, {{selmachine.MACHINE_NAME}}
         </igx-select-item>
         }
       </igx-select>
@@ -152,7 +152,7 @@
     <br />
     {{selectedDETMACH2()?.MACHINE_ID}}
     <br />
-    {{selectedDETMACH2()?.MACHINE_DESC}}
+    {{selectedDETMACH2()?.MACHINE_NAME}}
     <hr />
     }
 

@@ -80,7 +80,7 @@ export class AuthService {
   }
 
   private async authenticate(request: LoginRequest): Promise<LoginResponse> {
-    return firstValueFrom(this.http.post<LoginResponse>(`${environment.apiBaseUrl}/api/AS/login`, request));
+    return firstValueFrom(this.http.post<LoginResponse>(`${environment.apiBaseUrl}api/AS/login`, request));
   }
 
   private applyAuthenticatedSession(response: LoginResponse, fallbackUserId: string): void {

@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://absapi.absolution1.com',
+  apiBaseUrl: 'https://api-tsms.abboptical.com/rwall-vm/api',
   tokenStorageKey: 'cla-portal_jwt',
 };

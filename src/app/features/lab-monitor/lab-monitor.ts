@@ -4,7 +4,7 @@
 // change machines into a signal
 
 import { CommonModule } from '@angular/common';
-import { Component, signal, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, inject, computed, WritableSignal } from '@angular/core';
+import { Component, signal, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, inject, computed, WritableSignal, Injector, effect } from '@angular/core';
 import { HttpClient, httpResource } from '@angular/common/http';
 import { filter, map } from 'rxjs/operators';
 import { CdkDrag } from '@angular/cdk/drag-drop';
@@ -15,6 +15,7 @@ import { IgxButtonDirective, IgxLabelDirective, IgxRippleDirective, IgxSelectCom
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DataService } from '../../data.service';
 import { FormsModule } from '@angular/forms';
+import { environment } from '@abs-environments/environment';
 
 @Component({
   selector: 'app-lab-monitor',
@@ -57,7 +58,7 @@ export class LabMonitor implements OnInit, AfterViewInit {
   machines: DETMACH2[] = [
     // {
     //   MACHINE_ID: 'M001',
-    //   MACHINE_DESC: 'Lathe Machine',
+    //   MACHINE_NAME: 'Lathe Machine',
     //   DEPT_CODE: 'D01',
     //   MACHINE_DEV: 'GEN',
     //   MACHINE_TYPE: 'Lathe',
@@ -69,7 +70,7 @@ export class LabMonitor implements OnInit, AfterViewInit {
     // },
     // {
     //   MACHINE_ID: 'M002',
-    //   MACHINE_DESC: 'Lathe Machine',
+    //   MACHINE_NAME: 'Lathe Machine',
     //   DEPT_CODE: 'D01',
     //   MACHINE_DEV: 'POL',
     //   MACHINE_TYPE: 'Lathe',
@@ -133,6 +134,39 @@ export class LabMonitor implements OnInit, AfterViewInit {
   // selectedDETMACH2: any;
   selectedDETMACH2 = signal<DETMACH2 | null>(null);
 
+
+  triggerDETMACH2 = signal(0)
+
+  data = httpResource<{ DETMACH2s: DETMACH2[]}>(() => {
+  // data = httpResource<DETMACH2[]>(() => {
+    let trigger = this.triggerDETMACH2();
+    console.log('httpResource function called')
+    // if (this.initializing) {
+    //   return undefined; // this prevents the httpResource from firing on initialization, but allows it to fire on subsequent calls to refresh2 which updates the dataSignal. Note that the httpResource does not fire when dataSignal is updated if we do not include this check for initializing, which is why we need to set dataSignal to '0' initially and then update it in refresh2. This is a bit of a hack, but it works. A better solution would be to have a separate signal that tracks whether we are initializing or not, and use that signal in the httpResource instead of dataSignal. That way we could avoid using a hacky value like '0' in dataSignal.
+    // }
+    let url = `${environment.urlBase}api/DE/Get_DETMACH2_for_Lab/${this.lab_code()}`
+    console.log({url})
+    return {
+      url: url,   
+      method: 'GET', // change this to POST and add body if needed
+      // body: { value: this.dataSignal() }
+      // method: 'POST', // change this to POST and add body if needed
+      // body: { TEST: 'HI MOM' }
+    };
+  }, { injector: inject(Injector) }
+  )
+
+    // am = computed(() => {
+    //   console.log('INSIDE computed', this.data.value())
+    //   if (this.data.value()) {
+    //     // const result: DETMACH2[] = this.data.value() || [];
+    //     const result: {DETMACH2s: DETMACH2[]} = this.data.value() || {DETMACH2s: []}
+    //     console.log('INSIDE computed result', result)
+    //     // this.allmachines = result
+    //     this.allmachines = result.DETMACH2s
+    //   }}
+    // )
+  
   constructor(private http: HttpClient, private dataservice: DataService) {
 
     //  // Set available feature flags
@@ -155,6 +189,18 @@ export class LabMonitor implements OnInit, AfterViewInit {
     let today = new Date();
     console.log('formatted date', today, this.formatDate(today));
 
+    
+    effect(() => {
+      console.log('INSIDE effect', this.data.value())
+      if (this.data.value()) {
+        // const result: DETMACH2[] = this.data.value() || [];
+        const result: {DETMACH2s: DETMACH2[]} = this.data.value() || {DETMACH2s: []}
+        console.log('INSIDE effect result', result)
+        // this.allmachines = result
+        this.allmachines = result.DETMACH2s
+      }
+    });
+    
   }
 
     ngOnInit() {
@@ -343,26 +389,9 @@ export class LabMonitor implements OnInit, AfterViewInit {
 
     // this.cd.detectChanges();
 
-    console.log('2 started DETMACH2_HAW')
-    this.http.get<DETMACH2[]>('assets/data/DETMACH2_HAW.json')
-      .pipe(
-      // map(machine:DETMACH2){
-      //   machine.selected = false;
-      //   machine.position = {x: 0, y: 0};
-      //    machine.initialPosition = {x: 0, y: 0};
-      // }     
-    )
-      .subscribe(result => {
-        console.log('2 completed DETMACH2_HAW')
-        this.allmachines = result;
-        console.log(this.allmachines);
-
-        // this.allmachines.forEach(x => {
-        //   if (x.MACHINE_ID === "EDG023" || x.MACHINE_ID === "GEN010") {
-        //          this.machines.push (x);
-        //   }
-        // });
-      });
+    if (this.lab_code()) {
+      this.getMachinesForLab()
+    }
 
     // this.cd.detectChanges();
 
@@ -404,14 +433,32 @@ export class LabMonitor implements OnInit, AfterViewInit {
       });
     // this.cd.detectChanges();
 
+  }
 
+  getMachinesForLab() {
+          console.log('2 started DETMACH2_HAW')
+      // this.http.get<DETMACH2[]>('assets/data/DETMACH2_HAW.json')
+      console.log(`${environment.urlBase}api/DE/Get_DETMACH2_for_Lab/${this.lab_code()}`)
+      this.http.get<{DETMACH2s: DETMACH2[]}>(`${environment.urlBase}api/DE/Get_DETMACH2_for_Lab/${this.lab_code()}`)
+        .pipe(
+        // map(machine:DETMACH2){
+        //   machine.selected = false;
+        //   machine.position = {x: 0, y: 0};
+        //    machine.initialPosition = {x: 0, y: 0};
+        // }     
+      )
+      .subscribe(result => {
+        console.log('2 completed DETMACH2_HAW')
+        // this.allmachines = result;
+        this.allmachines = result.DETMACH2s
+        console.log(this.allmachines);
 
-
-
-
-
-
-
+        // this.allmachines.forEach(x => {
+        //   if (x.MACHINE_ID === "EDG023" || x.MACHINE_ID === "GEN010") {
+        //          this.machines.push (x);
+        //   }
+        // });
+      });
   }
 
   onChange(event: Event): void {
@@ -450,7 +497,9 @@ export class LabMonitor implements OnInit, AfterViewInit {
   loadLab(labCode: string) {
     console.log('Selected Lab:', labCode);
     // this.machine_dev = dev;
-    this.lab_code.set(labCode);
+    this.lab_code.set(labCode); //  fires data, which fires comnputed and effects
+    // this.getMachinesForLab();
+    console.log('allmachines', this.allmachines)
   }
 
   mapClicked(event: MouseEvent) {
@@ -555,7 +604,7 @@ export class LabMonitor implements OnInit, AfterViewInit {
       // // const existingMachine = existingMachineArray ? Object.assign({}, existingMachineArray[0]) : undefined; // does not work
       // // const existingMachine = existingMachineArray ? {...existingMachineArray[0]} : undefined; // does not work
       // if (existingMachine) {
-      //   // existingMachine.MACHINE_DESC = 'hijacked';
+      //   // existingMachine.MACHINE_NAME = 'hijacked';
       // }
 
       let n: number = 1
@@ -620,7 +669,7 @@ export class LabMonitor implements OnInit, AfterViewInit {
 
     // const machine = {
     //   MACHINE_ID: machineToAdd.MACHINE_ID,
-    //   MACHINE_DESC: machineToAdd.MACHINE_DESC,
+    //   MACHINE_NAME: machineToAdd.MACHINE_NAME,
     //   DEPT_CODE: '',
     //   MACHINE_DEV: machineToAdd.MACHINE_DEV,
     //   MACHINE_TYPE: machineToAdd.MACHINE_TYPE,
@@ -701,10 +750,11 @@ export interface ItemGroup<T> {
 
 export class DETMACH2 {
   MACHINE_ID!: string;
-  MACHINE_DESC!: string;
+  MACHINE_NAME!: string;
+  MACHINE_TYPE!: string;
   DEPT_CODE!: string;
   MACHINE_DEV!: string;
-  MACHINE_TYPE!: string;
+  LAB_CODE!: string;
   // selected!: boolean;
   selected: WritableSignal<boolean> = signal(false)
   position: any;
