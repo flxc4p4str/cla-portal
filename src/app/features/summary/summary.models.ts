@@ -213,3 +213,78 @@ export class ARTCUSTX_ALL {
     PYMTs: ARTCUSTX_PYMT[] = [];
     GLTPARM2s: GLTPARM2[] = [];
 }
+
+export class SOTINVH1 {
+    INV_TYPE!: string;
+    INV_NO!: string;
+    INV_DATE!: Date;
+    ORDR_CUST_PO!: string;
+    ORDR_NO!: string;
+    ORDR_DATE_UPDATED!: Date;
+    ORDR_YYYYPP_UPDATED!: string;    
+    WHSE_CODE!: string;
+    REASON_CODE!: string;
+    SALES_DIVISION_CODE!: string;  
+    TERM_CODE!: string; 
+    INIT_DATE!: Date;
+    INIT_OPER!: string; 
+    POST_CODE!: string; 
+    INV_NO_CONS!: string; 
+    SREP_CODE!: string; 
+    CURR_CODE!: string; 
+    CURR_EXCH_RATE!: string;  
+    ORDR_TYPE_CODE!: string;          
+    ORDR_WEB_IND!: string;  
+    ORDR_DEPT!: string; 
+    STAX_CODE!: string; 
+    STAX_RATE!: string;  
+    INV_SALES!: number;
+    INV_COGS!: number;
+    INV_FREIGHT!: number;
+    INV_MISC_CHG!: number;
+    INV_TOTAL_AMOUNT!: number;
+    INV_SALES_CURR!: number;
+    INV_FREIGHT_CURR!: number;    
+    INV_MISC_CHG_CURR!: number;
+    INV_TOTAL_AMOUNT_CURR!: number;
+    INV_TOTAL_AMT_CURR!: number;
+    INV_STAX!: number; 
+    INV_STAX_CURR!: number;  
+    }
+
+    export class SOTINVH2 {
+    INV_TYPE!: string;
+    INV_NO!: string;
+    INV_LNO!: number;
+    STYLE_CODE!: string;
+    COLOR_CODE!: string;
+    STYLE_DESC!: string; 
+    ORDR_UNIT_COST!: number;
+    ORDR_UNIT_PRICE!: number;
+    ORDR_QTY_SHIP!: number;
+    TARIFF_UNIT_COST!: number;
+    CUST_CODE!: string;
+    }
+
+
+export class ARTPYMTY {
+    PYMT_BATCH_NO!: string;
+    PYMT_BATCH_LNO!: number; 
+    PYMT_BATCH_DATE!: Date;
+    BANK_CODE!: string; 
+    CUST_PYMT_AMT!: number;
+    CUST_CODE!: string; 
+    CUST_PYMT_REF_NO!: string; 
+    CUST_PYMT_REF_DATE!: Date;
+    PYMT_STATUS!: string; 
+    PAYOUT_ID!: string; 
+    PAYMT_TYPE!: string; 
+    }
+
+
+
+
+
+
+
+

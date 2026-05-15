@@ -142,3 +142,63 @@ export const grdColsARTCUSTX_BOOK = signal<grdCol[]>([
     {FIELD: 'CUST_UPC', HEADER: 'UPC', WIDTH: "160", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
   ])
   
+  // ADD CORRECT FIELDS 
+export const grdColsSOTINVH1 = signal<grdCol[]>([
+    {FIELD: 'INV_NO', HEADER: 'Invoice No', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, 
+      COLUMN_FORMAT: pipeArgs2, 
+      COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+    {FIELD: 'INV_DATE', HEADER: 'Invoice Date', WIDTH: "130", DATATYPE: GridColumnDataType.Date, EDITABLE: true, 
+      COLUMN_FORMAT: pipeArgsDate, 
+      },
+    {FIELD: 'INV_SALES', HEADER: '$Inv Sales', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, 
+      COLUMN_FORMAT: pipeArgs2, 
+      COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},
+
+    {FIELD: 'INV_COGS', HEADER: '$COGS', WIDTH: "150", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},
+    {FIELD: 'INV_TOTAL_AMOUNT', HEADER: '$Inv Amount', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+
+    {FIELD: 'ORDR_CUST_PO', HEADER: 'Cust PO', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'WHSE_CODE', HEADER: 'Whse', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'REASON_CODE', HEADER: 'Reas Cd', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsDateMMDDTime},
+    {FIELD: 'SALES_DIVISION_CODE', HEADER: 'Div Cd', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'TERMS_CODE', HEADER: 'Terms Cd', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},    
+    {FIELD: 'POST_CODE', HEADER: 'Post Cd', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'SREP_CODE', HEADER: 'SRep', WIDTH: "70", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'CURR_CODE', HEADER: 'Curr', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'ORDR_TYPE_CODE', HEADER: 'Ord Type', WIDTH: "200", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'CURR_EXCH_RATE', HEADER: 'Curr Exch RATE', WIDTH: "200", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'INV_CONS', HEADER: 'WebInd', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'ORDR_WEB_IND', HEADER: 'Web Ind', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},  
+    {FIELD: 'INV_FREIGHT', HEADER: '$Frt Amount', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_MISC_CHG', HEADER: '$Misc Amount', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_SALES_CURR', HEADER: '$Sales Curr', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_FREIGHT_CURR', HEADER: '$Frt Curr', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_MISC_CHG_CURR', HEADER: '$Misc Curr', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_TOTAL_AMOUNT_CURR', HEADER: '$Inv Total Curr', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_STAX', HEADER: '$Stax', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'INV_STAX_CURR', HEADER: '$Stax Curr', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+  ])                          
+
+    export const grdColsSOTINVH2 = signal<grdCol[]>([
+    {FIELD: 'INV_LNO', HEADER: 'Ln', WIDTH: "70", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+    {FIELD: 'STYLE_CODE', HEADER: 'Style', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'ORDR_UNIT_COST', HEADER: 'Unit Cst', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'TARIFF_UNIT_COST', HEADER: 'Tariff Cst', WIDTH: "80", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'ORDR_UNIT_PRICE', HEADER: 'Net Prc', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},     
+    {FIELD: 'ORDR_QTY_SHIP', HEADER: '#Ship', WIDTH: "90", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+    {FIELD: 'CUST_CODE', HEADER: 'Cust Cd', WIDTH: "160", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+  ])
+  
+  export const grdColsARTPYMTY = signal<grdCol[]>([
+    {FIELD: 'PYMT_BATCH_NO', HEADER: 'Batch', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'PYMT_BATCH_LNO', HEADER: 'Batch Lno', WIDTH: "120", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+    {FIELD: 'PYMT_BATCH_DATE', HEADER: 'Pymt Batch Date', WIDTH: "130", DATATYPE: GridColumnDataType.Date, EDITABLE: true,COLUMN_FORMAT: pipeArgsDate},
+    {FIELD: 'BANK_CODE', HEADER: 'Bank Cd', WIDTH: "90", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'CUST_PYMT_AMT', HEADER: 'Cust Pymt Amt', WIDTH: "160", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},   
+    {FIELD: 'CUST_CODE', HEADER: 'Cust Code', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'CUST_PYMT_REF_NO', HEADER: 'Cust Ref No', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsDateMMDDTime},
+    {FIELD: 'CUST_PYMT_REF_DATE', HEADER: 'Cust Ref Dt', WIDTH: "130", DATATYPE: GridColumnDataType.Date, EDITABLE: true, COLUMN_FORMAT: pipeArgsDate},
+    {FIELD: 'PYMT_STATUS', HEADER: 'Pymt Status', WIDTH: "80", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+    {FIELD: 'PAYOUT_ID', HEADER: 'Payout ID', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},     
+    {FIELD: 'PAYMT_TYPE', HEADER: 'Pymt Type', WIDTH: "160", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  ])

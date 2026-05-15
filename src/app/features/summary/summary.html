@@ -10,7 +10,9 @@
             (selectedIndexChanging)="tabIndexChanging($event)" [(selectedIndex)]="selectedTab">
 
             <igx-tab-item>
-                <igx-tab-header>
+                <!-- <igx-tab-header> -->
+                   <igx-tab-header (click)="tabclicked('OPEN',grdARTCUSTX_OPEN)">
+
                     <igx-icon class="summary-tab-icon" igxTabHeaderIcon>shopping_cart</igx-icon>
                     <span igxTabHeaderLabel>Open</span>
                 </igx-tab-header>
@@ -57,7 +59,10 @@
             </igx-tab-item>
 
             <igx-tab-item>
-                <igx-tab-header>
+                <!-- <igx-tab-header> -->
+               <igx-tab-header (click)="tabclicked('BOOK',grdARTCUSTX_BOOK)">
+
+
                     <igx-icon class="summary-tab-icon" igxTabHeaderIcon>book_2</igx-icon>
 
                     @if (!environment.production) {
@@ -122,7 +127,9 @@
             </igx-tab-item>
 
             <igx-tab-item>
-                <igx-tab-header>
+                <igx-tab-header (click)="tabclicked('SHIP',grdARTCUSTX_SHIP)">
+              
+                
                     <igx-icon class="summary-tab-icon" igxTabHeaderIcon>local_shipping</igx-icon>
                     <span igxTabHeaderLabel>Shipped</span>
                 </igx-tab-header>
@@ -169,13 +176,14 @@
             </igx-tab-item>
 
             <igx-tab-item>
-                <igx-tab-header>
-                    <igx-icon class="summary-tab-icon" igxTabHeaderIcon>keyboard_return</igx-icon>
+                <igx-tab-header (click)="tabclicked_RTN(grdARTCUSTX_RTRN)">
+
+                      <igx-icon class="summary-tab-icon" igxTabHeaderIcon>keyboard_return</igx-icon>
                     <span igxTabHeaderLabel>Returns</span>
                 </igx-tab-header>
                 <igx-tab-content>
                     <div class="grid__wrapper">
-                        <igx-grid #grdARTCUSTX_SHIP id="grdARTCUSTX_RTRN" [data]="ARTCUSTX_RTRN()" [rowHeight]="20"
+                        <igx-grid #grdARTCUSTX_RTRN id="grdARTCUSTX_RTRN" [data]="ARTCUSTX_RTRN()" [rowHeight]="20"
                             [height]="'200px'" [width]="'800px'" style="margin: 20px" ; [cellSelection]="'none'"
                             [rowSelection]="selectionMode" [selectedRows]="selectedRows" [primaryKey]="'YP'"
                             (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
@@ -216,7 +224,8 @@
             </igx-tab-item>
 
             <igx-tab-item>
-                <igx-tab-header>
+                <igx-tab-header (click)="tabclicked_PYMT(grdARTCUSTX_PYMT)">
+
                     <igx-icon class="summary-tab-icon" igxTabHeaderIcon>paid</igx-icon>
                     <span igxTabHeaderLabel>Payments</span>
                 </igx-tab-header>
@@ -258,8 +267,8 @@
                                 click on a row above to see the Orders
                             </igx-grid-footer> -->
                         </igx-grid>
-                    </div>                         
-                </igx-tab-content>
+                    </div>   
+                 </igx-tab-content>
             </igx-tab-item>
 
             <igx-tab-item>
@@ -396,5 +405,182 @@
         </div>
     </div>
     }
+
+@if (grdSOTINVH1_title) {
+
+    <div class="sample-wrapper summary-panel">
+        <div class="grid__wrapper">
+            <igx-grid #grdSOTINVH1 id="grdSOTINVH1" [data]="SOTINVH1()" [rowHeight]="20" [height]="'350px'"
+                [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
+                [selectedRows]="selectedRows" [primaryKey]="'PYMT_BATCH_NO,PYMT_BATCH_LNO'"
+                (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                @for (grdCol of grdColsSOTINVH1(); track grdCol.FIELD) {
+                <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
+                    [resizable]="true" [editable]="true" [hasSummary]="(grdCol['COLUMN_SUMMARY'] ? true : false)"
+                   [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                     [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                    [headerStyles]="grdHeaderStyles">
+
+                    @if (grdCol.FIELD === 'INV_TYPE') {
+                    <ng-template igxCell let-val>
+                        <!-- Use interpolation to access the mapped value from the component's map object -->
+                        <span [style.color]="val === 'O' ? 'green' : 'red'">
+                            {{ statusMap[val] }}
+                        </span>
+                    </ng-template>
+                    }
+
+                </igx-column>
+                }
+
+                <igx-grid-toolbar class="total-row">
+                    <!-- <igx-grid-toolbar-title>{{grdSOTINVH1_signal()}}</igx-grid-toolbar-title> -->
+                    <igx-grid-toolbar-title>{{grdSOTINVH1_title}}</igx-grid-toolbar-title>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                        <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>                        
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+
+                <!-- <igx-grid-footer>
+                    click on a row above to see the Order Details
+                                </igx-grid-footer> -->
+            </igx-grid>
+        </div>
+    </div>
+    }
+
+ @if (grdSOTINVH2_title) {
+    <div class="sample-wrapper summary-panel">
+        <div class="grid__wrapper">
+  
+            <igx-grid #grdSOTINVH2 id="grdSOTINVH2" [data]="SOTINVH2_INV()" [rowHeight]="20" [height]="'180px'"
+                [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
+                [selectedRows]="selectedRows" (rowSelectionChanging)="rowSelectionChanged($event)"
+                [hideRowSelectors]="hideRowSelectors">
+                <!-- <igx-column *ngFor="let each of datacolumns2" [sortable]="true" [field]="each.COLUMN_NAME"
+        [header]="each.COLUMN_CAPTION" [dataType]="each.COLUMN_TYPE" [pipeArgs]="each.COLUMN_FORMAT"
+        [hasSummary]="(each['COLUMN_SUMMARY'] ? true : false)" [summaries]="each.COLUMN_SUMMARY"
+        [width]="each.COLUMN_WIDTH" 
+        [summaryFormatter]="each.COLUMN_SUMMARY_FORMAT" 
+        resizable="true">
+    </igx-column> -->
+
+                <!-- [hasSummary]=!!grdCol['COLUMN_SUMMARY'] -->
+
+                @for (grdCol of grdColsSOTINVH2(); track grdCol.FIELD) {
+                <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
+                      [resizable]="true" [editable]="true" [summaries]=grdCol.COLUMN_SUMMARY
+                    [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT [pipeArgs]=grdCol.COLUMN_FORMAT
+                    class="column-header" [headerClasses]="'column-header'" [headerStyles]="grdHeaderStyles">
+                </igx-column>
+                }
+
+                
+                <igx-grid-toolbar class="total-row">
+                    <!-- <igx-grid-toolbar-title>{{grdSOTINVH2_signal()}}</igx-grid-toolbar-title> -->
+                    <igx-grid-toolbar-title>{{grdSOTINVH2_title}}</igx-grid-toolbar-title>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+
+            </igx-grid>
+        </div>
+    </div>
+    }
+
+@if (grdARTPYMTY_title) {
+
+    <div class="sample-wrapper summary-panel">
+        <div class="grid__wrapper">
+            <igx-grid #grdARTPYMTY id="grdARTPYMTY" [data]="ARTPYMTY()" [rowHeight]="20" [height]="'350px'"
+                [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
+                [selectedRows]="selectedRows" [primaryKey]="'INV_NO'"
+                (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
+
+                @for (grdCol of grdColsARTPYMTY(); track grdCol.FIELD) {
+                <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH [dataType]=grdCol.DATATYPE
+                    [resizable]="true" [editable]="true" [hasSummary]="(grdCol['COLUMN_SUMMARY'] ? true : false)"
+                   [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                     [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                    [headerStyles]="grdHeaderStyles">
+
+                    @if (grdCol.FIELD === 'PYMT_STATUS') {
+                    <ng-template igxCell let-val>
+                        <!-- Use interpolation to access the mapped value from the component's map object -->
+                        <span [style.color]="val === '1' ? 'green' : 'red'">
+                            {{ statusMap[val] }}
+                        </span>
+                    </ng-template>
+                    }
+
+                </igx-column>
+                }
+
+                <igx-grid-toolbar class="total-row">
+                    <!-- <igx-grid-toolbar-title>{{grdSOTINVH1_signal()}}</igx-grid-toolbar-title> -->
+                    <igx-grid-toolbar-title>{{grdARTPYMTY_title}}</igx-grid-toolbar-title>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                        <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>                        
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+
+                <!-- <igx-grid-footer>
+                    click on a row above to see the Order Details
+                                </igx-grid-footer> -->
+            </igx-grid>
+
+
+
+
+
+            <div>
+                <igx-tabs class="summary-tabs" #ARTPYMTdetail style="min-width:600px; height:100%" >
+
+                <igx-tab-item>
+                    <!-- <igx-tab-header> -->
+                    <igx-tab-header >
+
+                        <igx-icon class="summary-tab-icon" igxTabHeaderIcon>paid</igx-icon>
+                        <span igxTabHeaderLabel>Open AR paid</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        <div class="grid__wrapper">
+                            grd
+                        </div>                    
+                    </igx-tab-content>
+
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <!-- <igx-tab-header> -->
+                <igx-tab-header >
+
+
+                        <igx-icon class="summary-tab-icon" igxTabHeaderIcon>money_off</igx-icon>
+
+                              <span igxTabHeaderLabel>Deductions....</span>
+
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        <div class="grid__wrapper">
+                            grd
+                        </div>
+                    </igx-tab-content>
+                </igx-tab-item>
+    
+            </igx-tabs>
+          
+            </div>                      
+   
+        </div>
+    </div>
+    }
+
+
+
 
 </div>

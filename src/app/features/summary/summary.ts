@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, effect, inject, Inject, Injector, OnInit, signal, WritableSignal } from '@angular/core';
-import { IgxGridModule } from '@infragistics/igniteui-angular/grids/grid';
+import { IgxGridComponent, IgxGridModule } from '@infragistics/igniteui-angular/grids/grid';
 import { HttpParm, TestClass } from '../../app.models';
 import { HttpClient, httpResource, HttpResourceRef } from '@angular/common/http';
 import { GridSelectionMode, IRowSelectionEventArgs } from '@infragistics/igniteui-angular/grids/core';
 import { IgxButtonDirective, IgxIconModule, IgxRippleDirective, IgxTabsModule, ITabsSelectedIndexChangingEventArgs } from '@infragistics/igniteui-angular';
 import { DataService } from '../../data.service';
 import { environment } from '@abs-environments/environment';
-import { ARTCUSTX_BOOK, ARTCUSTX_OPEN, ARTCUSTX_PYMT, ARTCUSTX_RF, ARTCUSTX_RTRN, ARTCUSTX_SHIP, SOTORDR1, SOTORDR2, GLTPARM2, ARTCUSTX_ALL, ARTCUSTX } from './summary.models';
-import { grdColsARTCUSTX_OPEN, grdColsARTCUSTX_BOOK, grdColsARTCUSTX_SHIP, grdColsARTCUSTX_RTRN, grdColsSOTORDR1, grdColsSOTORDR2, grdColsARTCUSTX_RF, grdColsARTCUSTX_PYMT } from './summary.grids';
+import { ARTCUSTX_BOOK, ARTCUSTX_OPEN, ARTCUSTX_PYMT, ARTCUSTX_RF, ARTCUSTX_RTRN, ARTCUSTX_SHIP, SOTORDR1, SOTORDR2,   GLTPARM2, ARTCUSTX_ALL, ARTCUSTX, SOTINVH1, SOTINVH2, ARTPYMTY } from './summary.models';
+import { grdColsARTCUSTX_OPEN, grdColsARTCUSTX_BOOK, grdColsARTCUSTX_SHIP, grdColsARTCUSTX_RTRN, grdColsSOTORDR1, grdColsSOTORDR2, grdColsARTCUSTX_RF, grdColsARTCUSTX_PYMT, grdColsSOTINVH1, grdColsSOTINVH2, grdColsARTPYMTY } from './summary.grids';
+import { IMXIcon, invoice } from '@igniteui/material-icons-extended';
 
 
 // your mission is to change the http from JSON to 
@@ -24,6 +25,64 @@ import { grdColsARTCUSTX_OPEN, grdColsARTCUSTX_BOOK, grdColsARTCUSTX_SHIP, grdCo
   styleUrl: './summary.scss',
 })
 export class Summary implements OnInit, AfterViewInit {
+//       let n:number = +(x.ORDR_DATE.toString());
+//       x.ORDR_DATE = ExcelDateToJSDate(n)
+//       let n2:number = +(x.INIT_DATE.toString());
+//       x.INIT_DATE = ExcelDateToJSDate(n2)
+//     }
+//     this.SOTORDR1.set(result);        
+//     // console.log (this.SOTORDR1()); 
+//   });
+// console.log ('4 started SOTORDR2')
+// this.http.get<SOTORDR2[]>('assets/data/SOTORDR2.json')
+//   .pipe(
+//   )
+//   .subscribe(result => {
+//     // console.log ('4 completed SOTORDR2')
+//     this.SOTORDR2.set(result);
+//     result[0].ORDR_QTY = -1;
+//     // console.log (this.SOTORDR2()); 
+//   });
+  tabclicked(TYPE: string, grd: IgxGridComponent) {
+    console.log({TYPE,grd})
+    if (grd.selectedRows.length === 1){
+        let YP: string = grd.selectedRows[0]
+        console.log(YP,grd.selectedRows.length,grd.selectedRows[0])
+        let title: string =  'Orders Shipped in ' + YP;
+        this.grdSOTORDR1_title = title;
+        this.getOrders(YP,TYPE);
+    }
+  }
+
+tabclicked_RTN(grd: IgxGridComponent) {
+    console.log({grd})
+    if (grd.selectedRows.length === 1){
+        let YP: string = grd.selectedRows[0]
+        console.log(YP,grd.selectedRows.length,grd.selectedRows[0])
+        let title: string =  'Credits in ' + YP;
+        this.grdSOTINVH1_title = title;
+        this.getCredits(YP);
+    }
+  }
+
+  tabclicked_PYMT(grd: IgxGridComponent) {
+    console.log({grd})
+    if (grd.selectedRows.length === 1){
+        let YP: string = grd.selectedRows[0]
+        console.log(YP,grd.selectedRows.length,grd.selectedRows[0])
+        let title: string =  'Payments in ' + YP;
+         this.grdARTPYMTY_title = title;
+        this.getPayments(YP);
+    }
+  }
+
+
+// Add TABCLICK FOR ALL TABS
+// RE-FACTOR CODE AROUND GET ORDERS (OPEN BOOK SHIP) 
+// HIT THE HTTP RESOURCE IN LOAD. AUTOMATICALLY
+// COMPLETE RETURNS AND PAYMENTS (HTML SETUPFIELDS FOR INVH1 INVH2 .MODELS.TD)
+// Implement Authorize
+
 
   dst: any = {};
   public dataService: DataService;
@@ -42,8 +101,11 @@ export class Summary implements OnInit, AfterViewInit {
   grdColsARTCUSTX_RTRN = grdColsARTCUSTX_RTRN
   grdColsSOTORDR1 = grdColsSOTORDR1
   grdColsSOTORDR2 = grdColsSOTORDR2
+  grdColsSOTINVH1 = grdColsSOTINVH1
+  grdColsSOTINVH2 = grdColsSOTINVH2
   grdColsARTCUSTX_RF = grdColsARTCUSTX_RF
   grdColsARTCUSTX_PYMT = grdColsARTCUSTX_PYMT
+  grdColsARTPYMTY = grdColsARTPYMTY
 
   ABS_TABLE_NAME: string = ""
 
@@ -58,6 +120,11 @@ export class Summary implements OnInit, AfterViewInit {
   SOTORDR1 = signal<SOTORDR1[]>([])
   SOTORDR2 = signal<SOTORDR2[]>([])
   SOTORDR2_ORDR = signal<SOTORDR2[]>([])
+  SOTINVH1 = signal<SOTINVH1[]>([])
+  SOTINVH2 = signal<SOTINVH2[]>([])
+  SOTINVH2_INV = signal<SOTINVH2[]>([])
+  ARTPYMTY = signal<ARTPYMTY[]>([])
+
 
   selectedTab: number = 0;
 
@@ -81,6 +148,14 @@ export class Summary implements OnInit, AfterViewInit {
     grdSOTORDR1_signal = signal('')
     grdSOTORDR2_title: string = '';
     grdSOTORDR2_signal = signal('')
+    grdSOTINVH1_title: string = '';
+    grdSOTINVH1_signal = signal('')
+    grdSOTINVH2_title: string = '';
+    grdSOTINVH2_signal = signal('')
+    grdARTPYMTY_title: string = '';
+    grdARTPYMTY_signal = signal('')
+     
+
 
     
 
@@ -116,7 +191,7 @@ export class Summary implements OnInit, AfterViewInit {
     }
     return {
       // url: `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary/?value=${this.dataSignal()}`,
-      url: `https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary/`,   
+       url: `${environment.urlBase}api/VAN/EC/Get_eComm_Summary/`,   
       // method: 'GET', // change this to POST and add body if needed
       // // body: { value: this.dataSignal() }
       method: 'POST', // change this to POST and add body if needed
@@ -205,8 +280,9 @@ export class Summary implements OnInit, AfterViewInit {
   async ngAfterViewInit() {
     // console.log('before')
     this.readJsonFile();
-    // console.log('after')
+    console.log('after')
     // this.refresh2() // controlled Fill_Records, used if we configure httpResource to not fire on initialization (see data signal and initializing boolean)
+    this.refresh2()
 
   }
 
@@ -388,17 +464,17 @@ export class Summary implements OnInit, AfterViewInit {
     //   });
 
     // console.log ('2D started ARTCUSTX_RTRN')
-    this.http.get<ARTCUSTX_RTRN[]>('assets/data/ARTCUSTX_RTRN.json')
-      .pipe(
+    // this.http.get<ARTCUSTX_RTRN[]>('assets/data/ARTCUSTX_RTRN.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        // console.log ('2D completed ARTCUSTX_RTRN')        
-        this.ARTCUSTX_RTRN.set(result);
-        // console.log (this.ARTCUSTX_RTRN()); 
-      });
+    //   )
+    //   .subscribe(result => {
+    //     // console.log ('2D completed ARTCUSTX_RTRN')        
+    //     this.ARTCUSTX_RTRN.set(result);
+    //     // console.log (this.ARTCUSTX_RTRN()); 
+    //   });
 
-    // console.log ('2E started ARTCUSTX_PYMT')
+    console.log ('2E started ARTCUSTX_PYMT')
     this.http.get<ARTCUSTX_PYMT[]>('assets/data/ARTCUSTX_PYMT.json')
       .pipe(
    
@@ -512,7 +588,7 @@ export class Summary implements OnInit, AfterViewInit {
     
   }
 
-  getOrderDetails(Order: string) {
+ getOrderDetails(Order: string) {
      
     console.log('1 started SOTORDR2 for ' + Order)
     // this.http.get<SOTORDR1[]>(`assets/data/SOTORDR1_BOOK_${YP}.json`)
@@ -550,21 +626,126 @@ export class Summary implements OnInit, AfterViewInit {
         console.log(this.SOTORDR2_ORDR()); 
       });
         
-    // console.log('2 started SOTORDR2 for ' + YP)
-    // this.http.get<SOTORDR2[]>(`assets/data/SOTORDR2_BOOK_${YP}.json`)
-    //   .pipe(
-    //   )
-    //   .subscribe(result => {
-    //     console.log('2 completed SOTORDR2 for ' + YP)
-    //     this.SOTORDR2.set(result);
-    //     result[0].ORDR_QTY = -1;
-    //     console.log(this.SOTORDR2); 
-    //   });
-
-    //https://absapi.absolution1.com/api/VAN/EC/Get_Order_Details/0008021932
-    
   }
 
+  
+  getCredits(YP: string) {
+     
+    console.log('1 started SOTINVH1 for ' + YP)
+    // this.http.get<SOTORDR1[]>(`assets/data/SOTORDR1_BOOK_${YP}.json`)
+    // let body = {'TYPE': 'BOOK', 'YP': YP}
+    // this.http.post<SOTORDR1[]>(`https://absapi.absolution1.com/api/VAN/EC/Get_Orders/BOOK/${YP}`, body)
+    this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Credits/${YP}`)    
+      .pipe(
+      )
+      .subscribe(result => {
+        console.log({result})
+        console.log('1 completed SOTINVH1 for ' + YP)
+
+        result = result['SOTINVH1s']
+
+        let INV_NO: string = '';
+        for (let i = 0; i < result.length; i++) {
+          try {
+            let x:SOTINVH1 = result[i]
+            INV_NO = x.INV_NO;
+            // let n:number = +(x.ORDR_DATE.toString());
+            // x.ORDR_DATE = ExcelDateToJSDate(n)
+            // let n2:number = +(x.INIT_DATE.toString());
+            // x.INIT_DATE = ExcelDateToJSDate(n2)
+          } catch (error: any) {
+            console.error({INV_NO})
+            // Code to handle the error
+            console.error("An error occurred:", error.message);
+            // Output the specific name of the error
+            console.error("Error name:", error.name);
+          }
+        }
+
+        this.SOTINVH1.set(result);        
+       console.log(this.SOTINVH1()); 
+      });
+         
+  }
+
+   getCreditDetails(invoice: string) {
+     
+    console.log('1 started SOTINVH2 for ' + invoice)
+    // this.http.get<SOTORDR1[]>(`assets/data/SOTORDR1_BOOK_${YP}.json`)
+    // let body = {'TYPE': 'BOOK', 'YP': YP}
+    // this.http.post<SOTORDR1[]>(`https://absapi.absolution1.com/api/VAN/EC/Get_Orders/BOOK/${YP}`, body)
+    // this.http.get<any>(`https://absapi.absolution1.com/api/VAN/EC/Get_Order_Details/${Order}`)    
+    this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Credit_Details/${invoice}`)    
+      .pipe(
+      )
+      .subscribe(result => {
+        console.log({result})
+        console.log('1 completed SOTINVH2 for ' + invoice)
+
+        result = result['SOTINVH2s']
+
+        let INV_NO: string = '';
+        for (let i = 0; i < result.length; i++) {
+          try {
+            let x:SOTINVH2 = result[i]
+            INV_NO = x.INV_NO;
+            // let n:number = +(x.ORDR_DATE.toString());
+            // x.ORDR_DATE = ExcelDateToJSDate(n)
+            // let n2:number = +(x.INIT_DATE.toString());
+            // x.INIT_DATE = ExcelDateToJSDate(n2)
+          } catch (error: any) {
+            console.error({INV_NO})
+            // Code to handle the error
+            console.error("An error occurred:", error.message);
+            // Output the specific name of the error
+            console.error("Error name:", error.name);
+          }
+        }
+
+        this.SOTINVH2_INV.set(result);        
+        console.log(this.SOTINVH2_INV()); 
+      });
+        
+  }
+
+getPayments(YP: string) {
+     
+    console.log('1 started ARTPYMTY for ' + YP)
+    // this.http.get<SOTORDR1[]>(`assets/data/SOTORDR1_BOOK_${YP}.json`)
+    // let body = {'TYPE': 'BOOK', 'YP': YP}
+    // this.http.post<SOTORDR1[]>(`https://absapi.absolution1.com/api/VAN/EC/Get_Orders/BOOK/${YP}`, body)
+    this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Payments/${YP}`)    
+      .pipe(
+      )
+      .subscribe(result => {
+        console.log({result})
+        console.log('1 completed ARTPYMTY for ' + YP)
+
+        result = result['ARTPYMTYs']
+
+        let PYMT_BATCH_NO: string = '';
+        for (let i = 0; i < result.length; i++) {
+          try {
+            let x:ARTPYMTY = result[i]
+            PYMT_BATCH_NO = x.PYMT_BATCH_NO;
+            // let n:number = +(x.ORDR_DATE.toString());
+            // x.ORDR_DATE = ExcelDateToJSDate(n)
+            // let n2:number = +(x.INIT_DATE.toString());
+            // x.INIT_DATE = ExcelDateToJSDate(n2)
+          } catch (error: any) {
+            console.error({PYMT_BATCH_NO})
+            // Code to handle the error
+            console.error("An error occurred:", error.message);
+            // Output the specific name of the error
+            console.error("Error name:", error.name);
+          }
+        }
+
+        this.ARTPYMTY.set(result);        
+       console.log(this.ARTPYMTY()); 
+      });
+         
+  }
 
 
 
@@ -588,31 +769,59 @@ export class Summary implements OnInit, AfterViewInit {
         console.log('selectedRowObjects', this.selectedRowObjects);
         console.log(event);
 
-        if (event.owner.id === 'grdARTCUSTX_OPEN') {
-          let YP: string = this.selectedRowObjects[0]['YP']
-          let title: string =  ' Open Orders';
-          this.grdSOTORDR1_title = title;
-          // this.grdSOTORDR1_signal.set(title)
-          this.getOrders(YP,'OPEN');
-          this.grdSOTORDR2_title = '';
-        }
+        // if (event.owner.id === 'grdARTCUSTX_OPEN') {
+        //   let YP: string = this.selectedRowObjects[0]['YP']
+        //   let title: string =  'Open Orders';
+        //   this.grdSOTORDR1_title = title;
+        //   // this.grdSOTORDR1_signal.set(title)
+        //   this.getOrders(YP,'OPEN');
+        //   this.grdSOTORDR2_title = '';
+        // }
 
-        if (event.owner.id === 'grdARTCUSTX_BOOK') {
-          let YP: string = this.selectedRowObjects[0]['YP']
-          let title: string =  'Orders Booked in ' + YP;
-          this.grdSOTORDR1_title = title;
-          // this.grdSOTORDR1_signal.set(title)
-          this.getOrders(YP,'BOOK');
-          this.grdSOTORDR2_title = '';
-        }
-        if (event.owner.id === 'grdARTCUSTX_SHIP') {
-          let YP: string = this.selectedRowObjects[0]['YP']
-          let title: string =  'Orders Shipped in ' + YP;
-          this.grdSOTORDR1_title = title;
-          // this.grdSOTORDR1_signal.set(title)
-          this.getOrders(YP,'SHIP');
-          this.grdSOTORDR2_title = '';
-        }
+        // if (event.owner.id === 'grdARTCUSTX_BOOK') {
+        //   let YP: string = this.selectedRowObjects[0]['YP']
+        //   let title: string =  'Orders Booked in ' + YP;
+        //   this.grdSOTORDR1_title = title;
+        //   // this.grdSOTORDR1_signal.set(title)
+        //   this.getOrders(YP,'BOOK');
+        //   this.grdSOTORDR2_title = '';
+        // }
+        // if (event.owner.id === 'grdARTCUSTX_SHIP') {
+        //   let YP: string = this.selectedRowObjects[0]['YP']
+        //   let title: string =  'Orders Shipped in ' + YP;
+        //   this.grdSOTORDR1_title = title;
+        //   // this.grdSOTORDR1_signal.set(title)
+        //   this.getOrders(YP,'SHIP');
+        //   this.grdSOTORDR2_title = '';
+        // }
+
+const gridConfig: Record<string, { title: (yp: string) => string; status: string }> = {
+  grdARTCUSTX_OPEN: {
+    title: () => 'Open Orders',
+    status: 'OPEN'
+  },
+  grdARTCUSTX_BOOK: {
+    title: (yp: string) => `Orders Booked in ${yp}`,
+    status: 'BOOK'
+  },
+  grdARTCUSTX_SHIP: {
+    title: (yp: string) => `Orders Shipped in ${yp}`,
+    status: 'SHIP'
+  }
+};
+
+const config = gridConfig[event.owner.id];
+
+if (config) {
+  const YP: string = this.selectedRowObjects[0]['YP'];
+
+  this.grdSOTORDR1_title = config.title(YP);
+  this.getOrders(YP, config.status);
+  this.grdSOTORDR2_title = '';
+   console.log(YP);
+}
+
+
         if (event.owner.id === 'grdSOTORDR1') {
           let ORDR_NO: string = this.selectedRowObjects[0]['ORDR_NO']
           let title: string =  'Order Details for Order ' + ORDR_NO;
@@ -624,6 +833,37 @@ export class Summary implements OnInit, AfterViewInit {
           console.log({ORDR_NO})
           console.log(this.SOTORDR2())
         }
+
+        if (event.owner.id === 'grdARTCUSTX_RTRN') {
+          let YP: string = this.selectedRowObjects[0]['YP']
+          let title: string =  'Credits Memos in ' + YP;
+          this.grdSOTINVH1_title = title;
+          // this.grdSOTORDR1_signal.set(title)
+          this.getCredits(YP);
+          // this.grdSOTINVH1_title = '';
+        }
+      if (event.owner.id === 'grdSOTINVH1') {
+          let INV_NO: string = this.selectedRowObjects[0]['INV_NO']
+          let title: string =  ' Order Details for Credit ' + INV_NO;
+          this.grdSOTINVH2_title = title;
+         //  this.grdSOTORDR2_signal.set(title)
+           this.getCreditDetails(INV_NO);
+          this.SOTINVH2_INV.set(this.SOTINVH2().filter(x => x.INV_NO === INV_NO))
+          console.log(this.SOTINVH2_INV())
+          console.log({INV_NO})
+          console.log(this.SOTINVH2())
+        }
+
+            if (event.owner.id === 'grdARTCUSTX_PYMT') {
+          let YP: string = this.selectedRowObjects[0]['YP']
+          let title: string =  'Payments in ' + YP;
+          this.grdARTPYMTY_title = title;
+           // this.grdSOTORDR1_signal.set(title)
+          this.getPayments(YP);
+          // this.grdARTPYMTY_title = '';
+        }
+
+
     }
 
 
@@ -634,6 +874,9 @@ export class Summary implements OnInit, AfterViewInit {
     public tabIndexChanged(tabIndex: number) {
       this.grdSOTORDR1_title = '';
       this.grdSOTORDR2_title = '';
+      this.grdSOTINVH1_title = '';
+      this.grdSOTINVH2_title = '';
+      this.grdARTPYMTY_title = '';
     }
 
     public tabIndexChanging(args: ITabsSelectedIndexChangingEventArgs) {
@@ -698,3 +941,4 @@ function ExcelDateToJSDate(serial: number) {
 
    return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
 }
+
