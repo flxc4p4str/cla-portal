@@ -6,7 +6,8 @@ const apiBase = useDev ? apiBase_dev : apiBase_svr
 
 export const environment = {
   production: false,
-  apiBaseUrl: apiBase, // 'https://absapi.absolution1.com',
+  apiBaseUrl: 'https://absapi.absolution1.com',
+  apiBaseUrl2: 'https://api-tsms.abboptical.com/rwall-vm/api',
   tokenStorageKey: 'cla-portal_jwt',
 
   // maybe we should create an environment.dev.ts

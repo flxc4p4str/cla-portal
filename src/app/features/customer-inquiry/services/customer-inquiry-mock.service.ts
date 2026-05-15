@@ -88,5 +88,17 @@ function cloneInquiryData(data: CustomerInquiryData): CustomerInquiryData {
     contacts: data.contacts.map((contact) => ({ ...contact })),
     labAuthorizations: data.labAuthorizations.map((authorization) => ({ ...authorization })),
     smsContacts: data.smsContacts.map((contact) => ({ ...contact })),
+    infoCodes: data.infoCodes.map((code) => ({ ...code })),
+    salesSettings: { ...data.salesSettings },
+    accountingSettings: { ...data.accountingSettings },
+    infoAffiliations: data.infoAffiliations.map((affiliation) => ({ ...affiliation })),
+    infoManufacturerAccounts: data.infoManufacturerAccounts.map((account) => ({ ...account })),
+    openBalances: data.openBalances.map((balance) => ({ ...balance })),
+    openArByDocumentType: data.openArByDocumentType.map((balance) => ({ ...balance })),
+    infoStatistics: data.infoStatistics.map((statistic) => ({ ...statistic })),
+    infoActivity: data.infoActivity.map((activity) => ({ ...activity })),
+    infoDocuments: data.infoDocuments.map((document) => ({ ...document })),
+    infoEvents: data.infoEvents.map((event) => ({ ...event })),
+    infoAging: data.infoAging.map((aging) => ({ ...aging })),
   };
 }

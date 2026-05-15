@@ -1,12 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   computed,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { catchError, debounceTime, distinctUntilChanged, map, of, Subject, switchMap } from 'rxjs';
 import {
   IgxButtonDirective,
   IgxIconButtonDirective,
@@ -17,7 +21,7 @@ import {
 import { IgxGridModule } from '@infragistics/igniteui-angular/grids/grid';
 import { IGridCellEventArgs } from '@infragistics/igniteui-angular/grids/core';
 
-import { CustomerInquiryMockService } from './services/customer-inquiry-mock.service';
+import { CustomerInquiryApiService } from './services/customer-inquiry-api.service';
 import {
   CustomerInquiryCustomer,
   CustomerInquiryFreightContract,
@@ -31,6 +35,12 @@ import { CustomerInquiryNameAddressComponent } from './tabs/name-address/custome
 import { CustomerInquiryPricingContractsComponent } from './tabs/pricing-contracts/customer-inquiry-pricing-contracts.component';
 import { CustomerInquiryLogComponent } from './tabs/log/customer-inquiry-log.component';
 import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.component';
+import { CustomerInquiryInfoComponent } from './tabs/info/customer-inquiry-info.component';
+
+interface ShipToSearchCriteria {
+  custCode: string;
+  filter: string;
+}
 
 @Component({
   selector: 'app-customer-inquiry',
@@ -46,7 +56,9 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
     CustomerInquiryPricingContractsComponent,
     CustomerInquiryLogComponent,
     CustomerInquiryLabComponent,
+    CustomerInquiryInfoComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <section class="customer-inquiry-page">
       <section class="criteria-panel" aria-label="Customer inquiry load criteria">
@@ -205,6 +217,26 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
                 [logs]="logs()"
                 [selectedLog]="selectedLog()"
                 (selectedLogChange)="selectLog($event)"
+              />
+            </igx-tab-content>
+          </igx-tab-item>
+
+          <igx-tab-item>
+            <igx-tab-header>Info</igx-tab-header>
+            <igx-tab-content>
+              <app-customer-inquiry-info
+                [codes]="infoCodes()"
+                [salesSettings]="salesSettings()"
+                [accountingSettings]="accountingSettings()"
+                [affiliations]="infoAffiliations()"
+                [manufacturerAccounts]="infoManufacturerAccounts()"
+                [openBalances]="openBalances()"
+                [openArByDocumentType]="openArByDocumentType()"
+                [statistics]="infoStatistics()"
+                [activity]="infoActivity()"
+                [documents]="infoDocuments()"
+                [events]="infoEvents()"
+                [aging]="infoAging()"
               />
             </igx-tab-content>
           </igx-tab-item>
@@ -521,14 +553,18 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
       z-index: 1000;
       display: grid;
       place-items: center;
-      padding: 2rem;
+      padding: 1rem;
+      overflow: hidden;
       background: rgb(0 0 0 / 0.28);
     }
 
     .lookup-modal {
-      width: max-content;
-      max-width: calc(100vw - 4rem);
-      overflow: visible;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      width: min(760px, calc(100vw - 2rem));
+      max-height: min(85vh, calc(100vh - 2rem));
+      overflow: hidden;
       background: var(--surface);
       border: 1px solid var(--surface-border);
       border-radius: 0.35rem;
@@ -549,15 +585,24 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
       flex-direction: column;
       gap: 0.55rem;
       min-width: 0;
+      min-height: 0;
       padding-top: 0.25rem;
     }
 
+    .customer-lookup-modal {
+      width: min(760px, calc(100vw - 2rem));
+    }
+
+    .shipto-lookup-modal {
+      width: min(1240px, calc(100vw - 2rem));
+    }
+
     .customer-lookup-body {
-      width: 730px;
+      width: 100%;
     }
 
     .shipto-lookup-body {
-      width: 1200px;
+      width: 100%;
     }
 
     .lookup-meta {
@@ -575,6 +620,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
 
     .lookup-grid {
       --ig-size: var(--ig-size-small);
+      max-height: calc(85vh - 185px);
       border: 1px solid var(--surface-border);
       border-radius: 0.35rem;
       overflow: hidden;
@@ -583,6 +629,7 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
     .lookup-actions {
       display: flex;
       justify-content: flex-end;
+      flex: 0 0 auto;
       border-top: 1px solid var(--surface-border);
       margin-top: 0.75rem;
       padding-top: 0.65rem;
@@ -608,20 +655,22 @@ import { CustomerInquiryLabComponent } from './tabs/lab/customer-inquiry-lab.com
 
       .lookup-overlay {
         justify-content: start;
-        overflow-x: auto;
       }
 
       .lookup-modal {
-        max-width: none;
+        width: calc(100vw - 2rem);
       }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerInquiryComponent {
-  private readonly svc = inject(CustomerInquiryMockService);
+  private readonly api = inject(CustomerInquiryApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly customerSearch = new Subject<string>();
+  private readonly shipToSearch = new Subject<ShipToSearchCriteria>();
 
   private readonly state = signal<CustomerInquiryState>(createInitialState());
 
@@ -632,7 +681,7 @@ export class CustomerInquiryComponent {
   readonly loadError = computed(() => this.state().errorMessage);
   readonly customerCodeInput = computed(() => this.state().custCode);
   readonly shipToNoInput = computed(() => this.state().shipToNo);
-  readonly customers = computed(() => this.svc.searchCustomers(''));
+  readonly customers = computed(() => (this.state().customerLookupRows || []));
   readonly customer = computed(() => this.state().customer);
   readonly shipTos = computed(() => this.state().shipTos);
   readonly selectedShipTo = computed(() => this.state().selectedShipTo);
@@ -656,6 +705,18 @@ export class CustomerInquiryComponent {
   readonly labJobContracts = computed(() => this.state().labJobContracts);
   readonly rewardPrograms = computed(() => this.state().rewardPrograms);
   readonly labReviews = computed(() => this.state().labReviews);
+  readonly infoCodes = computed(() => this.state().infoCodes);
+  readonly salesSettings = computed(() => this.state().salesSettings);
+  readonly accountingSettings = computed(() => this.state().accountingSettings);
+  readonly infoAffiliations = computed(() => this.state().infoAffiliations);
+  readonly infoManufacturerAccounts = computed(() => this.state().infoManufacturerAccounts);
+  readonly openBalances = computed(() => this.state().openBalances);
+  readonly openArByDocumentType = computed(() => this.state().openArByDocumentType);
+  readonly infoStatistics = computed(() => this.state().infoStatistics);
+  readonly infoActivity = computed(() => this.state().infoActivity);
+  readonly infoDocuments = computed(() => this.state().infoDocuments);
+  readonly infoEvents = computed(() => this.state().infoEvents);
+  readonly infoAging = computed(() => this.state().infoAging);
   readonly normalizedCustomerCode = computed(() => normalizeCode(this.customerCodeInput()));
   readonly normalizedShipToNo = computed(() => normalizeCode(this.shipToNoInput()));
   readonly customerNameDisplay = computed(() => {
@@ -664,12 +725,8 @@ export class CustomerInquiryComponent {
     if (loadedCustomer && normalizeCode(loadedCustomer.custCode) === this.normalizedCustomerCode()) {
       return loadedCustomer.custName;
     }
-
     return (
-      this
-        .svc
-        .searchCustomers(this.normalizedCustomerCode())
-        .find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
+      this.customers().find((customer) => normalizeCode(customer.custCode) === this.normalizedCustomerCode())?.custName ??
       ''
     );
   });
@@ -682,8 +739,8 @@ export class CustomerInquiryComponent {
 
     return (
       this
-        .svc
-        .searchShipTos(this.normalizedCustomerCode(), this.normalizedShipToNo())
+        .state()
+        .shipToLookupRows
         .find((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo())?.name ?? ''
     );
   });
@@ -695,23 +752,76 @@ export class CustomerInquiryComponent {
       this.normalizedShipToNo().length > 0,
   );
   readonly shipToLookupRows = computed(() =>
-    this.svc.searchShipTos(this.normalizedCustomerCode(), '').map((shipTo) => ({
+    this.state().shipToLookupRows.map((shipTo) => ({
       ...shipTo,
       lookupKey: `${shipTo.custCode}-${shipTo.shipToNo}`,
     })),
   );
-  readonly customerLookupGridWidth = '730px';
-  readonly shipToLookupGridWidth = '1200px';
+  readonly customerLookupGridWidth = '100%';
+  readonly shipToLookupGridWidth = '100%';
   readonly customerLookupGridHeight = computed(() => lookupGridHeight(this.customers().length));
   readonly shipToLookupGridHeight = computed(() => lookupGridHeight(this.shipToLookupRows().length));
 
   constructor() {
+    this.bindLookupSearches();
+
     const custCode = this.route.snapshot.paramMap.get('custCode');
     const shipToNo = this.route.snapshot.paramMap.get('shipToNo');
 
     if (custCode && shipToNo) {
       this.loadCustomerInquiry(custCode, shipToNo);
+    } else {
+      this.searchCustomers('');
     }
+  }
+
+  private bindLookupSearches(): void {
+    this.customerSearch.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((filter) =>
+        this.api.searchCustomers(filter).pipe(
+          catchError(() => {
+            this.setLookupError('Unable to search customers from the API.');
+            return of<CustomerInquiryCustomer[]>([]);
+          }),
+        ),
+      ),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((customers) => {
+      this.state.update((state) => ({
+        ...state,
+        customerLookupRows: customers,
+      }));
+    });
+
+    this.shipToSearch.pipe(
+      debounceTime(300),
+      distinctUntilChanged(areShipToSearchCriteriaEqual),
+      switchMap((criteria) => {
+        if (!criteria.custCode) {
+          return of<CustomerInquiryShipToLookup[]>([]);
+        }
+
+        return this.api.searchShipTos(criteria.custCode, criteria.filter).pipe(
+          map((shipTos) => shipTos.map((shipTo) => ({
+            ...shipTo,
+            custCode: shipTo.custCode || criteria.custCode,
+            custName: shipTo.custName || this.customerNameDisplay(),
+          }))),
+          catchError(() => {
+            this.setLookupError('Unable to search ship-to locations from the API.');
+            return of<CustomerInquiryShipToLookup[]>([]);
+          }),
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((shipTos) => {
+      this.state.update((state) => ({
+        ...state,
+        shipToLookupRows: shipTos,
+      }));
+    });
   }
 
   onCustomerCodeInput(event: Event): void {
@@ -721,6 +831,7 @@ export class CustomerInquiryComponent {
       custCode: value,
       errorMessage: '',
     }));
+    this.searchCustomers(value);
   }
 
   onShipToNoInput(event: Event): void {
@@ -730,12 +841,29 @@ export class CustomerInquiryComponent {
       shipToNo: value,
       errorMessage: '',
     }));
+    this.searchShipTos(this.normalizedCustomerCode(), value);
   }
 
   openCustomerLookup(): void {
     this.state.update((state) => ({
       ...state,
       customerLookupOpen: true,
+    }));
+    this.searchCustomers(this.normalizedCustomerCode());
+  }
+
+  private searchCustomers(filter: string): void {
+    this.customerSearch.next(filter);
+  }
+
+  private searchShipTos(custCode: string, filter: string): void {
+    this.shipToSearch.next({ custCode, filter });
+  }
+
+  private setLookupError(errorMessage: string): void {
+    this.state.update((state) => ({
+      ...state,
+      errorMessage,
     }));
   }
 
@@ -744,6 +872,7 @@ export class CustomerInquiryComponent {
       ...state,
       shipToLookupOpen: true,
     }));
+    this.searchShipTos(this.normalizedCustomerCode(), this.normalizedShipToNo());
   }
 
   closeLookups(): void {
@@ -761,8 +890,8 @@ export class CustomerInquiryComponent {
       return;
     }
 
-    const shipToStillMatches = this.svc
-      .searchShipTos(customer.custCode, '')
+    const shipToStillMatches = this.state()
+      .shipToLookupRows
       .some((shipTo) => normalizeCode(shipTo.shipToNo) === this.normalizedShipToNo());
 
     this.state.update((state) => ({
@@ -771,6 +900,7 @@ export class CustomerInquiryComponent {
       shipToNo: shipToStillMatches ? state.shipToNo : '',
       errorMessage: '',
     }));
+    this.searchShipTos(customer.custCode, shipToStillMatches ? this.normalizedShipToNo() : '');
     this.closeLookups();
   }
 
@@ -806,56 +936,75 @@ export class CustomerInquiryComponent {
       shipToNo: shipToNo,
     }));
 
-    const data = this.svc.getCustomerInquiry(normalizedCustCode, normalizedShipToNo);
+    this.api.getCustomerInquiry(normalizedCustCode, normalizedShipToNo)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          const selectedShipTo =
+            data.shipTos.find((shipTo) => normalizeCode(shipTo.shipToNo) === normalizedShipToNo) ??
+            data.shipTos.at(0) ??
+            null;
 
-    if (!data) {
-      this.state.set({
-        ...createInitialState(),
-        custCode,
-        shipToNo,
-        loading: false,
-        errorMessage: 'No mock inquiry found for that customer and ship-to combination.',
+          this.state.set({
+            ...this.state(),
+            loaded: true,
+            loading: false,
+            errorMessage: '',
+            customerLookupOpen: false,
+            shipToLookupOpen: false,
+            customerLookupRows: mergeCustomerLookupRows(this.state().customerLookupRows, data.customer),
+            shipToLookupRows: data.shipTos.map((shipTo) => ({
+              ...shipTo,
+              custCode: data.customer.custCode,
+              custName: data.customer.custName,
+            })),
+            custCode: data.customer.custCode,
+            shipToNo: selectedShipTo?.shipToNo ?? normalizedShipToNo,
+            customer: data.customer,
+            shipTos: data.shipTos,
+            selectedShipTo,
+            logs: data.logs,
+            selectedLog: data.logs.at(0) ?? null,
+            freightContracts: data.freightContracts,
+            selectedContract: data.freightContracts.at(0) ?? null,
+            labJobs: data.labJobs,
+            selectedJob: data.labJobs.at(0) ?? null,
+            jobCharges: data.jobCharges,
+            jobCredits: data.jobCredits,
+            keyedComments: data.keyedComments,
+            contacts: data.contacts,
+            labAuthorizations: data.labAuthorizations,
+            smsContacts: data.smsContacts,
+            labContracts: data.labContracts,
+            slContracts: data.slContracts,
+            labSummaries: data.labSummaries,
+            lensBanks: data.lensBanks,
+            labJobContracts: data.labJobContracts,
+            rewardPrograms: data.rewardPrograms,
+            labReviews: data.labReviews,
+            infoCodes: data.infoCodes,
+            salesSettings: data.salesSettings,
+            accountingSettings: data.accountingSettings,
+            infoAffiliations: data.infoAffiliations,
+            infoManufacturerAccounts: data.infoManufacturerAccounts,
+            openBalances: data.openBalances,
+            openArByDocumentType: data.openArByDocumentType,
+            infoStatistics: data.infoStatistics,
+            infoActivity: data.infoActivity,
+            infoDocuments: data.infoDocuments,
+            infoEvents: data.infoEvents,
+            infoAging: data.infoAging,
+          });
+          this.clearUrlParameters();
+        },
+        error: () => {
+          this.state.update((state) => ({
+            ...state,
+            loading: false,
+            errorMessage: 'Unable to load customer inquiry from the API.',
+          }));
+        },
       });
-      return;
-    }
-
-    const selectedShipTo =
-      data.shipTos.find((shipTo) => normalizeCode(shipTo.shipToNo) === normalizedShipToNo) ??
-      data.shipTos.at(0) ??
-      null;
-
-    this.state.set({
-      loaded: true,
-      loading: false,
-      errorMessage: '',
-      customerLookupOpen: false,
-      shipToLookupOpen: false,
-      custCode: data.customer.custCode,
-      shipToNo: selectedShipTo?.shipToNo ?? normalizedShipToNo,
-      customer: data.customer,
-      shipTos: data.shipTos,
-      selectedShipTo,
-      logs: data.logs,
-      selectedLog: data.logs.at(0) ?? null,
-      freightContracts: data.freightContracts,
-      selectedContract: data.freightContracts.at(0) ?? null,
-      labJobs: data.labJobs,
-      selectedJob: data.labJobs.at(0) ?? null,
-      jobCharges: data.jobCharges,
-      jobCredits: data.jobCredits,
-      keyedComments: data.keyedComments,
-      contacts: data.contacts,
-      labAuthorizations: data.labAuthorizations,
-      smsContacts: data.smsContacts,
-      labContracts: data.labContracts,
-      slContracts: data.slContracts,
-      labSummaries: data.labSummaries,
-      lensBanks: data.lensBanks,
-      labJobContracts: data.labJobContracts,
-      rewardPrograms: data.rewardPrograms,
-      labReviews: data.labReviews,
-    });
-    this.clearUrlParameters();
   }
 
   selectShipTo(shipTo: CustomerInquiryShipTo): void {
@@ -905,6 +1054,8 @@ function createInitialState(): CustomerInquiryState {
     errorMessage: '',
     customerLookupOpen: false,
     shipToLookupOpen: false,
+    customerLookupRows: [],
+    shipToLookupRows: [],
     custCode: '',
     shipToNo: '',
     customer: null,
@@ -929,7 +1080,65 @@ function createInitialState(): CustomerInquiryState {
     labJobContracts: [],
     rewardPrograms: [],
     labReviews: [],
+    infoCodes: [],
+    salesSettings: {
+      noRestockingFee: false,
+      noSampleSurcharge: false,
+      noSampleHandling: false,
+      noPriceOnInvoice: false,
+      shipComplete: false,
+      webAuthorized: false,
+      pecpAuthorized: false,
+      refuseReturns: false,
+      salesHold: false,
+      poRequired: false,
+      shipToRequired: false,
+      noSubs: false,
+      storageType: 'REGULAR',
+      billStatus: 'NA',
+      startBilling: null,
+      shipTo: '',
+      dpdPrinter: '',
+      bgDiscount: '',
+    },
+    accountingSettings: {
+      noFinanceCharge: false,
+      noTrw: false,
+      businessEstablished: '',
+      queueType: 'NONE',
+      printedStatements: 'NONE',
+      electronicStatements: 'NONE',
+      statementEmail: '',
+      fuelSur: 'APPLY',
+      status: '',
+      exemptFromSalesTax: false,
+      resaleNo: '',
+    },
+    infoAffiliations: [],
+    infoManufacturerAccounts: [],
+    openBalances: [],
+    openArByDocumentType: [],
+    infoStatistics: [],
+    infoActivity: [],
+    infoDocuments: [],
+    infoEvents: [],
+    infoAging: [],
   };
+}
+
+function areShipToSearchCriteriaEqual(left: ShipToSearchCriteria, right: ShipToSearchCriteria): boolean {
+  return left.custCode === right.custCode && left.filter === right.filter;
+}
+
+function mergeCustomerLookupRows(
+  customers: CustomerInquiryCustomer[],
+  loadedCustomer: CustomerInquiryCustomer,
+): CustomerInquiryCustomer[] {
+  if (customers.some((customer) => normalizeCode(customer.custCode) === normalizeCode(loadedCustomer.custCode))) {
+    return customers;
+  }
+
+  return [loadedCustomer, ...customers];
 }
 
 function getInputValue(event: Event): string {
@@ -943,8 +1152,12 @@ function normalizeCode(value: string): string {
 function lookupGridHeight(rowCount: number): string {
   const headerAndFilterHeight = 94;
   const rowHeight = 41;
-  const bottomBorderAllowance = 4;
-  return `${headerAndFilterHeight + rowCount * rowHeight + bottomBorderAllowance}px`;
+  const borderAllowance = 4;
+  const minHeight = 140;
+  const maxHeight = 520;
+  const naturalHeight = headerAndFilterHeight + rowCount * rowHeight + borderAllowance;
+
+  return `${Math.min(maxHeight, Math.max(minHeight, naturalHeight))}px`;
 }
 
 function isCustomer(value: unknown): value is CustomerInquiryCustomer {

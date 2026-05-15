@@ -1,6 +1,13 @@
 import {
   CustomerInquiryCustomer,
   CustomerInquiryData,
+  CustomerInquiryActivity,
+  CustomerInquiryAging,
+  CustomerInquiryDocument,
+  CustomerInquiryEvent,
+  CustomerInquiryInfoAffiliation,
+  CustomerInquiryInfoCode,
+  CustomerInquiryInfoManufacturerAccount,
   CustomerInquiryJobCharge,
   CustomerInquiryJobCredit,
   CustomerInquiryKeyedComment,
@@ -11,8 +18,13 @@ import {
   CustomerInquiryLabReview,
   CustomerInquiryLabSummary,
   CustomerInquiryLensBank,
+  CustomerInquiryOpenArByDocumentType,
+  CustomerInquiryOpenBalance,
   CustomerInquiryPricingLabContract,
   CustomerInquiryRewardProgram,
+  CustomerInquiryAccountingSettings,
+  CustomerInquirySalesSettings,
+  CustomerInquiryStatistic,
   CustomerInquirySmsContact,
   CustomerInquiryLog,
   CustomerInquirySlContract,
@@ -1247,6 +1259,92 @@ export const CUSTOMER_INQUIRY_MOCK_DATA: CustomerInquiryData = {
     { shipToNo: '0047', name: 'CVC- TORONTO KING #4420', smsNo: '4165554420', smsName: 'Toronto King Lab' },
     { shipToNo: '0086', name: 'CVC- MARKHAM #7195', smsNo: '9055557195', smsName: 'Markham Store' },
   ],
+  infoCodes: [
+    { type: 'Customer Type', code: 'LAB', description: 'Lab customer account' },
+    { type: 'Territory', code: 'CAN-ON', description: 'Ontario retail territory' },
+    { type: 'Statement Cycle', code: 'M01', description: 'Monthly statement on first business day' },
+    { type: 'Credit Class', code: 'A', description: 'Standard open account terms' },
+  ],
+  salesSettings: {
+    noRestockingFee: true,
+    noSampleSurcharge: false,
+    noSampleHandling: false,
+    noPriceOnInvoice: true,
+    shipComplete: true,
+    webAuthorized: true,
+    pecpAuthorized: true,
+    refuseReturns: false,
+    salesHold: false,
+    poRequired: true,
+    shipToRequired: true,
+    noSubs: false,
+    storageType: 'BIN',
+    billStatus: 'BILLABLE',
+    startBilling: '2026-01-01',
+    shipTo: '0012',
+    dpdPrinter: 'FLOL-DPD-01',
+    bgDiscount: '4.0%',
+  },
+  accountingSettings: {
+    noFinanceCharge: false,
+    noTrw: true,
+    businessEstablished: '2019-04-15',
+    queueType: 'REMINDER',
+    printedStatements: 'MAIL',
+    electronicStatements: 'EMAIL',
+    statementEmail: 'ap@example.com',
+    fuelSur: 'APPLY',
+    status: 'Active',
+    exemptFromSalesTax: false,
+    resaleNo: 'ON-4478201',
+  },
+  infoAffiliations: [
+    { code: 'CVC', name: 'Canadian Vision Care', status: 'Active', notes: 'Primary buying group affiliation.' },
+    { code: 'RWD', name: 'Premium Lens Rewards', status: 'Active', notes: 'Eligible for quarterly reward accruals.' },
+    { code: 'MCR', name: 'Managed Care Network', status: 'Review', notes: 'Contract renewal pending.' },
+  ],
+  infoManufacturerAccounts: [
+    { manufacturer: 'Essilor', accountNo: 'ESS-441902', name: 'FLOL-FIN Central Billing', status: 'Active' },
+    { manufacturer: 'Hoya', accountNo: 'HOY-880114', name: 'FLOL Ontario Stores', status: 'Active' },
+    { manufacturer: 'Zeiss', accountNo: 'ZEI-305771', name: 'FLOL Premium Program', status: 'Inactive' },
+  ],
+  openBalances: [
+    { type: 'Current', amount: 8420.5 },
+    { type: 'Past Due', amount: 1375.25 },
+    { type: 'Credits', amount: -245.75 },
+  ],
+  openArByDocumentType: [
+    { type: 'Invoices', amount: 9820.8 },
+    { type: 'Credit Memos', amount: -245.75 },
+    { type: 'Debit Memos', amount: 220.95 },
+  ],
+  infoStatistics: [
+    { metric: 'Sales', mtd: 18420.75, ytd: 146880.4, lyr: 139240.1 },
+    { metric: 'Jobs', mtd: 128, ytd: 1024, lyr: 976 },
+    { metric: 'Credits', mtd: 245.75, ytd: 2180.2, lyr: 2455.9 },
+  ],
+  infoActivity: [
+    { activity: 'Orders', mtd: 132, ytd: 1048, lyr: 1002 },
+    { activity: 'Shipments', mtd: 119, ytd: 996, lyr: 940 },
+    { activity: 'Returns', mtd: 3, ytd: 18, lyr: 22 },
+  ],
+  infoDocuments: [
+    { documentType: 'Invoice', documentNo: 'INV-774231', documentDate: '2026-04-22', amount: 625.4, status: 'Open' },
+    { documentType: 'Credit Memo', documentNo: 'CM-11840', documentDate: '2026-04-18', amount: -125.5, status: 'Applied' },
+    { documentType: 'Statement', documentNo: 'ST-202604', documentDate: '2026-04-30', amount: 9795.0, status: 'Generated' },
+  ],
+  infoEvents: [
+    { eventDate: '2026-04-24', eventType: 'Credit Review', description: 'Account reviewed for April aging.', user: 'ARTEAM' },
+    { eventDate: '2026-04-19', eventType: 'Sales Note', description: 'Confirmed summer promotion eligibility.', user: 'MCHEN' },
+    { eventDate: '2026-04-12', eventType: 'Profile Change', description: 'Updated statement delivery contact.', user: 'KROBER' },
+  ],
+  infoAging: [
+    { aging: 'Current', amount: 8420.5 },
+    { aging: '1-30', amount: 975.25 },
+    { aging: '31-60', amount: 400.0 },
+    { aging: '61-90', amount: 0 },
+    { aging: '90+', amount: 0 },
+  ],
 };
 
 const SECOND_CUSTOMER: CustomerInquiryCustomer = {
@@ -1476,6 +1574,18 @@ function createMockInquiry(
     contacts: createContacts(customer, prefix),
     labAuthorizations: createLabAuthorizations(prefix),
     smsContacts: createSmsContacts(shipTos),
+    infoCodes: createInfoCodes(prefix),
+    salesSettings: createSalesSettings(prefix, shipTos),
+    accountingSettings: createAccountingSettings(prefix),
+    infoAffiliations: createInfoAffiliations(prefix),
+    infoManufacturerAccounts: createInfoManufacturerAccounts(prefix),
+    openBalances: createOpenBalances(contractOffset),
+    openArByDocumentType: createOpenArByDocumentType(contractOffset),
+    infoStatistics: createInfoStatistics(contractOffset),
+    infoActivity: createInfoActivity(contractOffset),
+    infoDocuments: createInfoDocuments(prefix, contractOffset),
+    infoEvents: createInfoEvents(prefix),
+    infoAging: createInfoAging(contractOffset),
   };
 }
 
@@ -1705,6 +1815,129 @@ function createSmsContacts(shipTos: CustomerInquiryShipTo[]): CustomerInquirySms
     smsNo: shipTo.phone.replace(/\D/g, ''),
     smsName: shipTo.contact || shipTo.name,
   }));
+}
+
+function createInfoCodes(prefix: string): CustomerInquiryInfoCode[] {
+  return [
+    { type: 'Customer Type', code: 'RX', description: `${prefix} prescription lens account` },
+    { type: 'Territory', code: `${prefix}-REG`, description: `${prefix} regional sales territory` },
+    { type: 'Statement Cycle', code: 'M01', description: 'Monthly statement cycle' },
+  ];
+}
+
+function createSalesSettings(prefix: string, shipTos: CustomerInquiryShipTo[]): CustomerInquirySalesSettings {
+  return {
+    noRestockingFee: true,
+    noSampleSurcharge: prefix === 'HVEC',
+    noSampleHandling: false,
+    noPriceOnInvoice: prefix !== 'NOVA',
+    shipComplete: true,
+    webAuthorized: true,
+    pecpAuthorized: prefix !== 'HVEC',
+    refuseReturns: false,
+    salesHold: false,
+    poRequired: prefix === 'NOVA',
+    shipToRequired: true,
+    noSubs: prefix === 'HVEC',
+    storageType: prefix === 'NOVA' ? 'SHELF' : 'BIN',
+    billStatus: 'BILLABLE',
+    startBilling: '2026-01-01',
+    shipTo: shipTos.at(0)?.shipToNo ?? '',
+    dpdPrinter: `${prefix}-DPD-01`,
+    bgDiscount: prefix === 'HVEC' ? '3.5%' : '4.0%',
+  };
+}
+
+function createAccountingSettings(prefix: string): CustomerInquiryAccountingSettings {
+  return {
+    noFinanceCharge: prefix === 'HVEC',
+    noTrw: true,
+    businessEstablished: prefix === 'NOVA' ? '2021-08-09' : '2020-02-14',
+    queueType: prefix === 'NOVA' ? 'AUTO_PAY_ACH' : 'REMINDER',
+    printedStatements: 'MAIL',
+    electronicStatements: 'EMAIL',
+    statementEmail: `ap-${prefix.toLowerCase()}@example.com`,
+    fuelSur: prefix === 'HVEC' ? 'MAIN_LOC_EXEMPT' : 'APPLY',
+    status: 'Active',
+    exemptFromSalesTax: false,
+    resaleNo: `${prefix}-RESALE-01`,
+  };
+}
+
+function createInfoAffiliations(prefix: string): CustomerInquiryInfoAffiliation[] {
+  return [
+    { code: `${prefix}-BUY`, name: `${prefix} Buying Group`, status: 'Active', notes: 'Primary customer affiliation.' },
+    { code: `${prefix}-RWD`, name: `${prefix} Rewards`, status: 'Active', notes: 'Eligible for program accruals.' },
+  ];
+}
+
+function createInfoManufacturerAccounts(prefix: string): CustomerInquiryInfoManufacturerAccount[] {
+  return [
+    { manufacturer: 'Essilor', accountNo: `${prefix}-ESS-1001`, name: `${prefix} Main Billing`, status: 'Active' },
+    { manufacturer: 'Hoya', accountNo: `${prefix}-HOY-2002`, name: `${prefix} Retail Network`, status: 'Active' },
+    { manufacturer: 'Zeiss', accountNo: `${prefix}-ZEI-3003`, name: `${prefix} Premium Lenses`, status: 'Review' },
+  ];
+}
+
+function createOpenBalances(offset: number): CustomerInquiryOpenBalance[] {
+  const currentAmount = 5200 + offset * 8;
+  const pastDueAmount = 450 + offset;
+
+  return [
+    { type: 'Current', amount: currentAmount },
+    { type: 'Past Due', amount: pastDueAmount },
+    { type: 'Credits', amount: -125.5 },
+  ];
+}
+
+function createOpenArByDocumentType(offset: number): CustomerInquiryOpenArByDocumentType[] {
+  return [
+    { type: 'Invoices', amount: 5650 + offset * 8 },
+    { type: 'Credit Memos', amount: -125.5 },
+    { type: 'Debit Memos', amount: 95 + offset },
+  ];
+}
+
+function createInfoStatistics(offset: number): CustomerInquiryStatistic[] {
+  return [
+    { metric: 'Sales', mtd: 9200 + offset * 6, ytd: 84600 + offset * 20, lyr: 81250 + offset * 18 },
+    { metric: 'Jobs', mtd: 82 + offset % 12, ytd: 690 + offset % 50, lyr: 655 + offset % 40 },
+    { metric: 'Credits', mtd: 125.5, ytd: 1040 + offset, lyr: 1180 + offset },
+  ];
+}
+
+function createInfoActivity(offset: number): CustomerInquiryActivity[] {
+  return [
+    { activity: 'Orders', mtd: 84 + offset % 10, ytd: 706 + offset % 50, lyr: 674 + offset % 40 },
+    { activity: 'Shipments', mtd: 79 + offset % 8, ytd: 682 + offset % 45, lyr: 640 + offset % 35 },
+    { activity: 'Returns', mtd: 2, ytd: 14 + offset % 4, lyr: 16 + offset % 5 },
+  ];
+}
+
+function createInfoDocuments(prefix: string, offset: number): CustomerInquiryDocument[] {
+  return [
+    { documentType: 'Invoice', documentNo: `${prefix}-INV-${7000 + offset}`, documentDate: '2026-04-22', amount: 548.25, status: 'Open' },
+    { documentType: 'Credit Memo', documentNo: `${prefix}-CM-${1100 + offset}`, documentDate: '2026-04-17', amount: -125.5, status: 'Applied' },
+    { documentType: 'Statement', documentNo: `${prefix}-ST-202604`, documentDate: '2026-04-30', amount: 6020.5, status: 'Generated' },
+  ];
+}
+
+function createInfoEvents(prefix: string): CustomerInquiryEvent[] {
+  return [
+    { eventDate: '2026-04-24', eventType: 'AR Review', description: `${prefix} account reviewed for open balance.`, user: 'ARTEAM' },
+    { eventDate: '2026-04-18', eventType: 'Sales Note', description: 'Promotion eligibility verified for current quarter.', user: 'MOCKUSR' },
+    { eventDate: '2026-04-10', eventType: 'Profile Change', description: 'Updated manufacturer account cross-reference.', user: 'BINGRAM' },
+  ];
+}
+
+function createInfoAging(offset: number): CustomerInquiryAging[] {
+  return [
+    { aging: 'Current', amount: 5200 + offset * 8 },
+    { aging: '1-30', amount: 350 + offset },
+    { aging: '31-60', amount: 100 },
+    { aging: '61-90', amount: 0 },
+    { aging: '90+', amount: 0 },
+  ];
 }
 
 export const CUSTOMER_INQUIRY_MOCK_DATASETS: CustomerInquiryData[] = [
