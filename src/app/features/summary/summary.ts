@@ -750,6 +750,7 @@ getPayments(YP: string) {
           }
         }
 
+        //
         this.ARTPYMTY.set(result);        
        console.log(this.ARTPYMTY()); 
       });
