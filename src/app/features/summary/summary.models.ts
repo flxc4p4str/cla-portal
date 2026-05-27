@@ -211,6 +211,7 @@ export class ARTCUSTX_ALL {
     SHIPs: ARTCUSTX_SHIP[] = [];
     RTRNs: ARTCUSTX_RTRN[] = [];
     PYMTs: ARTCUSTX_PYMT[] = [];
+    RFs: ARTCUSTX_RF[] = [];
     GLTPARM2s: GLTPARM2[] = [];
 }
 
@@ -281,6 +282,34 @@ export class ARTPYMTY {
     PAYMT_TYPE!: string; 
     }
 
+    export class ARTPYMTX {
+    PYMT_BATCH_LNO!: number;
+    PYMT_BATCH_DTLNO!: number;
+    INV_TYPE!: string;
+    INV_NUM!: string;
+    REASON_CODE!: string;
+    INV_DATE!: Date;
+    INV_DUE_DATE!: Date;
+    CUST_CODE_SO!: string;
+    INV_CUST_PO!: string;
+    INV_BALANCE!: number;
+    INV_PMT!: number;
+}
+
+export class ARTPYMTZ {
+    PYMT_BATCH_LNO!: number;
+    PYMT_BATCH_DTLNO!: number;
+    REASON_CODE!: string;
+    ACCT_CODE!: string;
+    GL_DIST_AMT!: number;
+    GL_DIST_COMMENT!: string;
+    CHARGEBACK_IND!: string;
+    CHARGEBACK_NO!: string;
+    CUST_REFERENCE!: string;
+    INV_TYPE_CB!: string;
+    REASON_DESC!: string;
+    TRANSACTION_LEGEND!: string;
+}
 
 
 

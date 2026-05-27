@@ -202,3 +202,32 @@ export const grdColsSOTINVH1 = signal<grdCol[]>([
     {FIELD: 'PAYOUT_ID', HEADER: 'Payout ID', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},     
     {FIELD: 'PAYMT_TYPE', HEADER: 'Pymt Type', WIDTH: "160", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
   ])
+
+  export const grdColsARTPYMTX = signal<grdCol[]>([
+  {FIELD: 'PYMT_BATCH_LNO', HEADER: 'Batch Lno', WIDTH: "110", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+  {FIELD: 'PYMT_BATCH_DTLNO', HEADER: 'Dtl No', WIDTH: "100", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'INV_TYPE', HEADER: 'Inv Type', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'INV_NUM', HEADER: 'Invoice No', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'REASON_CODE', HEADER: 'Reason', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'INV_DATE', HEADER: 'Inv Date', WIDTH: "120", DATATYPE: GridColumnDataType.Date, EDITABLE: true, COLUMN_FORMAT: pipeArgsDate},
+  {FIELD: 'INV_DUE_DATE', HEADER: 'Due Date', WIDTH: "120", DATATYPE: GridColumnDataType.Date, EDITABLE: true, COLUMN_FORMAT: pipeArgsDate},
+  {FIELD: 'CUST_CODE_SO', HEADER: 'Cust Code SO', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'INV_CUST_PO', HEADER: 'Cust PO', WIDTH: "130", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'INV_BALANCE', HEADER: 'Inv Balance', WIDTH: "150", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},
+  {FIELD: 'INV_PMT', HEADER: 'Inv Pymt', WIDTH: "150", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},
+]);
+
+export const grdColsARTPYMTZ = signal<grdCol[]>([
+  {FIELD: 'PYMT_BATCH_LNO', HEADER: 'Batch Lno', WIDTH: "110", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone, COLUMN_SUMMARY: CountSummary, COLUMN_SUMMARY_FORMAT: number0SummaryFormat},
+  {FIELD: 'PYMT_BATCH_DTLNO', HEADER: 'Dtl No', WIDTH: "100", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'REASON_CODE', HEADER: 'Reason', WIDTH: "100", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'ACCT_CODE', HEADER: 'Acct Code', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'GL_DIST_AMT', HEADER: 'GL Dist Amt', WIDTH: "150", DATATYPE: GridColumnDataType.Number, EDITABLE: true, COLUMN_FORMAT: pipeArgs2, COLUMN_SUMMARY: SumSummary, COLUMN_SUMMARY_FORMAT: number2SummaryFormat},
+  {FIELD: 'GL_DIST_COMMENT', HEADER: 'GL Dist Comment', WIDTH: "220", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'CHARGEBACK_IND', HEADER: 'CB Ind', WIDTH: "90", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'CHARGEBACK_NO', HEADER: 'Chargeback No', WIDTH: "140", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'CUST_REFERENCE', HEADER: 'Cust Reference', WIDTH: "160", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'INV_TYPE_CB', HEADER: 'Inv Type CB', WIDTH: "120", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'REASON_DESC', HEADER: 'Reason Desc', WIDTH: "180", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+  {FIELD: 'TRANSACTION_LEGEND', HEADER: 'Transaction Legend', WIDTH: "200", DATATYPE: GridColumnDataType.String, EDITABLE: true, COLUMN_FORMAT: pipeArgsNone},
+]);
