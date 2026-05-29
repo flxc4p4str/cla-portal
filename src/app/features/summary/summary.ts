@@ -6,8 +6,8 @@ import { GridSelectionMode, IRowSelectionEventArgs } from '@infragistics/igniteu
 import { IgxButtonDirective, IgxIconModule, IgxRippleDirective, IgxTabsModule, ITabsSelectedIndexChangingEventArgs } from '@infragistics/igniteui-angular';
 import { DataService } from '../../data.service';
 import { environment } from '@abs-environments/environment';
-import { ARTCUSTX_BOOK, ARTCUSTX_OPEN, ARTCUSTX_PYMT, ARTCUSTX_RF, ARTCUSTX_RTRN, ARTCUSTX_SHIP, SOTORDR1, SOTORDR2,   GLTPARM2, ARTCUSTX_ALL, ARTCUSTX, SOTINVH1, SOTINVH2, ARTPYMTY } from './summary.models';
-import { grdColsARTCUSTX_OPEN, grdColsARTCUSTX_BOOK, grdColsARTCUSTX_SHIP, grdColsARTCUSTX_RTRN, grdColsSOTORDR1, grdColsSOTORDR2, grdColsARTCUSTX_RF, grdColsARTCUSTX_PYMT, grdColsSOTINVH1, grdColsSOTINVH2, grdColsARTPYMTY } from './summary.grids';
+import { ARTCUSTX_BOOK, ARTCUSTX_OPEN, ARTCUSTX_PYMT, ARTCUSTX_RF, ARTCUSTX_RTRN, ARTCUSTX_SHIP, SOTORDR1, SOTORDR2, GLTPARM2, ARTCUSTX_ALL, ARTCUSTX, SOTINVH1, SOTINVH2, ARTPYMTY, ARTPYMTX, ARTPYMTZ } from './summary.models';
+import { grdColsARTCUSTX_OPEN, grdColsARTCUSTX_BOOK, grdColsARTCUSTX_SHIP, grdColsARTCUSTX_RTRN, grdColsSOTORDR1, grdColsSOTORDR2, grdColsARTCUSTX_RF, grdColsARTCUSTX_PYMT, grdColsSOTINVH1, grdColsSOTINVH2, grdColsARTPYMTY, grdColsARTPYMTX, grdColsARTPYMTZ } from './summary.grids';
 import { IMXIcon, invoice } from '@igniteui/material-icons-extended';
 
 
@@ -106,6 +106,8 @@ tabclicked_RTN(grd: IgxGridComponent) {
   grdColsARTCUSTX_RF = grdColsARTCUSTX_RF
   grdColsARTCUSTX_PYMT = grdColsARTCUSTX_PYMT
   grdColsARTPYMTY = grdColsARTPYMTY
+  grdColsARTPYMTX = grdColsARTPYMTX
+  grdColsARTPYMTZ = grdColsARTPYMTZ
 
   ABS_TABLE_NAME: string = ""
 
@@ -124,6 +126,8 @@ tabclicked_RTN(grd: IgxGridComponent) {
   SOTINVH2 = signal<SOTINVH2[]>([])
   SOTINVH2_INV = signal<SOTINVH2[]>([])
   ARTPYMTY = signal<ARTPYMTY[]>([])
+  ARTPYMTX = signal<ARTPYMTX[]>([])
+  ARTPYMTZ = signal<ARTPYMTZ[]>([])
 
 
   selectedTab: number = 0;
@@ -154,7 +158,10 @@ tabclicked_RTN(grd: IgxGridComponent) {
     grdSOTINVH2_signal = signal('')
     grdARTPYMTY_title: string = '';
     grdARTPYMTY_signal = signal('')
-     
+    grdARTPYMTX_title: string = '';
+    grdARTPYMTX_signal = signal('')
+    grdARTPYMTZ_title: string = '';
+    grdARTPYMTZ_signal = signal('')
 
 
     
@@ -252,7 +259,8 @@ tabclicked_RTN(grd: IgxGridComponent) {
         this.ARTCUSTX_OPEN.update(() => result.OPENs.sort((a, b) => Number(b.YP) - Number(a.YP)));
         this.ARTCUSTX_SHIP.update(() => result.SHIPs.sort((a, b) => Number(b.YP) - Number(a.YP)));
         this.ARTCUSTX_RTRN.update(() => result.RTRNs.sort((a, b) => Number(b.YP) - Number(a.YP)));
-        // this.ARTCUSTX_PYMT.update(() => result.PYMTs.sort((a, b) => Number(b.YP) - Number(a.YP)));
+        this.ARTCUSTX_PYMT.update(() => result.PYMTs.sort((a, b) => Number(b.YP) - Number(a.YP)));
+        this.ARTCUSTX_RF.update(() => result.RFs.sort((a, b) => Number(b.YP) - Number(a.YP)));
         this.GLTPARM2.update(() => result.GLTPARM2s); 
 
         this.CYP.update(() => this.GLTPARM2()[2].OPS_YYYYPP)
@@ -297,9 +305,9 @@ tabclicked_RTN(grd: IgxGridComponent) {
 
     console.log('Now Refreshing data using RxJs - for TYPE: ' + TYPE)
     //    this.http.get<ARTCUSTX_BOOK[]>('https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary')'
-    this.http.get<ARTCUSTX_ALL>('https://absapi.absolution1.com/api/VAN/EC/Get_eComm_Summary')
+    this.http.get<ARTCUSTX_ALL>('${environment.urlBase}api/VAN/EC/Get_eComm_Summary')
+
       .pipe(
-   
       )
       .subscribe(result => {
         console.log('completed refresh', result)        
@@ -307,7 +315,8 @@ tabclicked_RTN(grd: IgxGridComponent) {
         this.ARTCUSTX_OPEN.update(() => result.OPENs.sort((a, b) => Number(b.YP) - Number(a.YP)));
         this.ARTCUSTX_SHIP.update(() => result.SHIPs.sort((a, b) => Number(b.YP) - Number(a.YP)));
         this.ARTCUSTX_RTRN.update(() => result.RTRNs.sort((a, b) => Number(b.YP) - Number(a.YP)));
-        // this.ARTCUSTX_PYMT.update(() => result.PYMTs.sort((a, b) => Number(b.YP) - Number(a.YP)));
+        this.ARTCUSTX_RTRN.update(() => result.RTRNs.sort((a, b) => Number(b.YP) - Number(a.YP)));
+        this.ARTCUSTX_PYMT.update(() => result.PYMTs.sort((a, b) => Number(b.YP) - Number(a.YP)));
         this.GLTPARM2.update(() => result.GLTPARM2s); 
 
         this.CYP.update(() => this.GLTPARM2()[2].OPS_YYYYPP)
@@ -474,27 +483,27 @@ tabclicked_RTN(grd: IgxGridComponent) {
     //     // console.log (this.ARTCUSTX_RTRN()); 
     //   });
 
-    console.log ('2E started ARTCUSTX_PYMT')
-    this.http.get<ARTCUSTX_PYMT[]>('assets/data/ARTCUSTX_PYMT.json')
-      .pipe(
+    // console.log ('2E started ARTCUSTX_PYMT')
+    // this.http.get<ARTCUSTX_PYMT[]>('assets/data/ARTCUSTX_PYMT.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        // console.log ('2E completed ARTCUSTX_PYMT')        
-        this.ARTCUSTX_PYMT.set(result);
-        // console.log (this.ARTCUSTX_PYMT()); 
-      });
+    //   )
+    //   .subscribe(result => {
+    //     // console.log ('2E completed ARTCUSTX_PYMT')        
+    //     this.ARTCUSTX_PYMT.set(result);
+    //     // console.log (this.ARTCUSTX_PYMT()); 
+    //   });
 
-    // console.log ('2F started ARTCUSTX_RF')
-    this.http.get<ARTCUSTX_RF[]>('assets/data/ARTCUSTX_RF.json')
-      .pipe(
+    // // console.log ('2F started ARTCUSTX_RF')
+    // this.http.get<ARTCUSTX_RF[]>('assets/data/ARTCUSTX_RF.json')
+    //   .pipe(
    
-      )
-      .subscribe(result => {
-        // console.log ('2F completed ARTCUSTX_RF')        
-        this.ARTCUSTX_RF.set(result);
-        // console.log (this.ARTCUSTX_RF()); 
-      });
+    //   )
+    //   .subscribe(result => {
+    //     // console.log ('2F completed ARTCUSTX_RF')        
+    //     this.ARTCUSTX_RF.set(result);
+    //     // console.log (this.ARTCUSTX_RF()); 
+    //   });
 
     // console.log ('3 started SOTORDR1')
     // this.http.get<SOTORDR1[]>('assets/data/SOTORDR1.json')
@@ -741,13 +750,85 @@ getPayments(YP: string) {
           }
         }
 
+        //
         this.ARTPYMTY.set(result);        
        console.log(this.ARTPYMTY()); 
       });
          
   }
+ 
+//   getPaymentDetails(PYMT_BATCH_NO: string, PYMT_BATCH_LNO: number | string) {
 
+//   this.getPaymentDetailsPayments(PYMT_BATCH_NO, PYMT_BATCH_LNO);
+//   this.getPaymentDetailsDeductions(PYMT_BATCH_NO, PYMT_BATCH_LNO);
 
+// }
+
+getPaymentDetails(PYMT_BATCH_NO: string) {
+
+  console.log('Started payment details for Batch ' + PYMT_BATCH_NO);
+
+  this.ARTPYMTX.set([]);
+  this.ARTPYMTZ.set([]);
+
+  this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Payment_Details/${PYMT_BATCH_NO}`)
+    .pipe(
+    )
+    .subscribe(result => {
+      console.log({ result });
+      console.log('Completed payment details for Batch ' + PYMT_BATCH_NO);
+
+      const pymtX = result['ARTPYMTXs'] ?? result['ARTPYMTX'] ?? [];
+      const pymtZ = result['ARTPYMTZs'] ?? result['ARTPYMTZ'] ?? [];
+
+      this.ARTPYMTX.set(pymtX);
+      this.ARTPYMTZ.set(pymtZ);
+
+      console.log('ARTPYMTX', this.ARTPYMTX());
+      console.log('ARTPYMTZ', this.ARTPYMTZ());
+    });
+
+}
+
+// getPaymentDetailsPayments(PYMT_BATCH_NO: string, PYMT_BATCH_LNO: number | string) {
+
+//   console.log('Started ARTPYMTX for Batch ' + PYMT_BATCH_NO + ', Line ' + PYMT_BATCH_LNO);
+
+//   this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Payment_Details_Payments/${PYMT_BATCH_NO}/${PYMT_BATCH_LNO}`)
+//     .pipe(
+//     )
+//     .subscribe(result => {
+//       console.log({ result });
+//       console.log('Completed ARTPYMTX for Batch ' + PYMT_BATCH_NO + ', Line ' + PYMT_BATCH_LNO);
+
+//       const pymtX = result['ARTPYMTXs'] ?? result['ARTPYMTX'] ?? [];
+
+//       this.ARTPYMTX.set(pymtX);
+
+//       console.log('ARTPYMTX', this.ARTPYMTX());
+//     });
+
+// }
+
+// getPaymentDetailsDeductions(PYMT_BATCH_NO: string, PYMT_BATCH_LNO: number | string) {
+
+//   console.log('Started ARTPYMTZ for Batch ' + PYMT_BATCH_NO + ', Line ' + PYMT_BATCH_LNO);
+
+//   this.http.get<any>(`${environment.urlBase}api/VAN/EC/Get_Payment_Details_Deductions/${PYMT_BATCH_NO}/${PYMT_BATCH_LNO}`)
+//     .pipe(
+//     )
+//     .subscribe(result => {
+//       console.log({ result });
+//       console.log('Completed ARTPYMTZ for Batch ' + PYMT_BATCH_NO + ', Line ' + PYMT_BATCH_LNO);
+
+//       const pymtZ = result['ARTPYMTZs'] ?? result['ARTPYMTZ'] ?? [];
+
+//       this.ARTPYMTZ.set(pymtZ);
+
+//       console.log('ARTPYMTZ', this.ARTPYMTZ());
+//     });
+
+// }
 
     public handleRowSelection(event: IRowSelectionEventArgs) {
         this.selectedRowsCount = event.newSelection.length;
@@ -863,21 +944,39 @@ if (config) {
           // this.grdARTPYMTY_title = '';
         }
 
+        if (event.owner.id === 'grdARTPYMTY') {
+  let PYMT_BATCH_NO: string = this.selectedRowObjects[0]['PYMT_BATCH_NO'];
+  let PYMT_BATCH_LNO: number | string = this.selectedRowObjects[0]['PYMT_BATCH_LNO'];
+
+  this.grdARTPYMTX_title = 'Payment Details Payments for Batch ' + PYMT_BATCH_NO + ', Line ' + PYMT_BATCH_LNO;
+  this.grdARTPYMTZ_title = 'Payment Details Deductions for Batch ' + PYMT_BATCH_NO + ', Line ' + PYMT_BATCH_LNO;
+
+  this.getPaymentDetails(PYMT_BATCH_NO);
+
+  console.log({ PYMT_BATCH_NO, PYMT_BATCH_LNO });
+}
+
 
     }
 
+    
 
 
 
 
 
     public tabIndexChanged(tabIndex: number) {
-      this.grdSOTORDR1_title = '';
-      this.grdSOTORDR2_title = '';
-      this.grdSOTINVH1_title = '';
-      this.grdSOTINVH2_title = '';
-      this.grdARTPYMTY_title = '';
-    }
+  this.grdSOTORDR1_title = '';
+  this.grdSOTORDR2_title = '';
+  this.grdSOTINVH1_title = '';
+  this.grdSOTINVH2_title = '';
+  this.grdARTPYMTY_title = '';
+  this.grdARTPYMTX_title = '';
+  this.grdARTPYMTZ_title = '';
+
+  this.ARTPYMTX.set([]);
+  this.ARTPYMTZ.set([]);
+}
 
     public tabIndexChanging(args: ITabsSelectedIndexChangingEventArgs) {
 

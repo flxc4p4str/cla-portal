@@ -412,7 +412,7 @@
         <div class="grid__wrapper">
             <igx-grid #grdSOTINVH1 id="grdSOTINVH1" [data]="SOTINVH1()" [rowHeight]="20" [height]="'350px'"
                 [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
-                [selectedRows]="selectedRows" [primaryKey]="'PYMT_BATCH_NO,PYMT_BATCH_LNO'"
+                [selectedRows]="selectedRows" [primaryKey]="'INV_NO'"
                 (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
 
                 @for (grdCol of grdColsSOTINVH1(); track grdCol.FIELD) {
@@ -497,7 +497,7 @@
         <div class="grid__wrapper">
             <igx-grid #grdARTPYMTY id="grdARTPYMTY" [data]="ARTPYMTY()" [rowHeight]="20" [height]="'350px'"
                 [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'" [rowSelection]="selectionMode"
-                [selectedRows]="selectedRows" [primaryKey]="'INV_NO'"
+                [selectedRows]="selectedRows" [primaryKey]="'PYMT_BATCH_NO'"
                 (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
 
                 @for (grdCol of grdColsARTPYMTY(); track grdCol.FIELD) {
@@ -538,43 +538,86 @@
 
 
             <div>
-                <igx-tabs class="summary-tabs" #ARTPYMTdetail style="min-width:600px; height:100%" >
+    <igx-tabs class="summary-tabs" #ARTPYMTdetail style="min-width:600px; height:100%">
 
-                <igx-tab-item>
-                    <!-- <igx-tab-header> -->
-                    <igx-tab-header >
+        <igx-tab-item>
+            <igx-tab-header>
+                <igx-icon class="summary-tab-icon" igxTabHeaderIcon>paid</igx-icon>
+                <span igxTabHeaderLabel>Open AR Paid</span>
+            </igx-tab-header>
 
-                        <igx-icon class="summary-tab-icon" igxTabHeaderIcon>paid</igx-icon>
-                        <span igxTabHeaderLabel>Open AR paid</span>
-                    </igx-tab-header>
-                    <igx-tab-content>
-                        <div class="grid__wrapper">
-                            grd
-                        </div>                    
-                    </igx-tab-content>
+            <igx-tab-content>
+                <div class="grid__wrapper">
+                    <igx-grid #grdARTPYMTX id="grdARTPYMTX" [data]="ARTPYMTX()" [rowHeight]="20"
+                        [height]="'220px'" [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'"
+                        [rowSelection]="selectionMode" [selectedRows]="selectedRows"
+                        (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
 
-                </igx-tab-item>
+                        @for (grdCol of grdColsARTPYMTX(); track grdCol.FIELD) {
+                        <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                            [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                            [hasSummary]="(grdCol['COLUMN_SUMMARY'] ? true : false)"
+                            [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                            [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                            [headerStyles]="grdHeaderStyles">
+                        </igx-column>
+                        }
 
-                <igx-tab-item>
-                    <!-- <igx-tab-header> -->
-                <igx-tab-header >
+                        <igx-grid-toolbar class="total-row">
+                            <igx-grid-toolbar-title>
+                                {{ grdARTPYMTX_title || 'Open AR Paid' }}
+                            </igx-grid-toolbar-title>
+                            <igx-grid-toolbar-actions>
+                                <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                            </igx-grid-toolbar-actions>
+                        </igx-grid-toolbar>
 
+                    </igx-grid>
+                </div>
+            </igx-tab-content>
+        </igx-tab-item>
 
-                        <igx-icon class="summary-tab-icon" igxTabHeaderIcon>money_off</igx-icon>
+        <igx-tab-item>
+            <igx-tab-header>
+                <igx-icon class="summary-tab-icon" igxTabHeaderIcon>money_off</igx-icon>
+                <span igxTabHeaderLabel>Deductions</span>
+            </igx-tab-header>
 
-                              <span igxTabHeaderLabel>Deductions....</span>
+            <igx-tab-content>
+                <div class="grid__wrapper">
+                    <igx-grid #grdARTPYMTZ id="grdARTPYMTZ" [data]="ARTPYMTZ()" [rowHeight]="20"
+                        [height]="'220px'" [width]="'1600px'" style="margin: 20px" ; [cellSelection]="'none'"
+                        [rowSelection]="selectionMode" [selectedRows]="selectedRows"
+                        (rowSelectionChanging)="rowSelectionChanged($event)" [hideRowSelectors]="hideRowSelectors">
 
-                    </igx-tab-header>
-                    <igx-tab-content>
-                        <div class="grid__wrapper">
-                            grd
-                        </div>
-                    </igx-tab-content>
-                </igx-tab-item>
-    
-            </igx-tabs>
-          
-            </div>                      
+                        @for (grdCol of grdColsARTPYMTZ(); track grdCol.FIELD) {
+                        <igx-column [field]=grdCol.FIELD [header]=grdCol.HEADER [width]=grdCol.WIDTH
+                            [dataType]=grdCol.DATATYPE [resizable]="true" [editable]="true"
+                            [hasSummary]="(grdCol['COLUMN_SUMMARY'] ? true : false)"
+                            [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
+                            [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
+                            [headerStyles]="grdHeaderStyles">
+                        </igx-column>
+                        }
+
+                        <igx-grid-toolbar class="total-row">
+                            <igx-grid-toolbar-title>
+                                {{ grdARTPYMTZ_title || 'Deductions' }}
+                            </igx-grid-toolbar-title>
+                            <igx-grid-toolbar-actions>
+                                <igx-grid-toolbar-exporter [exportExcel]="true" [exportCSV]="false"></igx-grid-toolbar-exporter>
+                                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                            </igx-grid-toolbar-actions>
+                        </igx-grid-toolbar>
+
+                    </igx-grid>
+                </div>
+            </igx-tab-content>
+        </igx-tab-item>
+
+    </igx-tabs>
+</div>                     
    
         </div>
     </div>
