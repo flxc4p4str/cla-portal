@@ -31,6 +31,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.1",
     "file-saver": "^2.0.5",
+    "libphonenumber-js": "^1.13.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

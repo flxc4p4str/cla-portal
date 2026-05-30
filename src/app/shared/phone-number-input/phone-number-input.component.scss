@@ -1,0 +1,133 @@
+:host {
+  display: inline-block;
+  width: 100%;
+  max-width: 20rem;
+  color: var(--text-primary);
+}
+
+.phone-input-shell {
+  position: relative;
+  display: block;
+}
+
+.phone-input {
+  --ig-size: var(--ig-size-medium);
+  width: 100%;
+}
+
+.phone-input--disabled {
+  color: var(--text-muted, #6b7280);
+}
+
+.country-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  height: 2.1rem;
+  min-width: 3.2rem;
+  border: 0;
+  border-radius: 0;
+  padding: 0 0.45rem 0 0.55rem;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.country-trigger:disabled {
+  cursor: not-allowed;
+}
+
+.country-flag {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.country-caret {
+  width: 0;
+  height: 0;
+  border-right: 0.22rem solid transparent;
+  border-left: 0.22rem solid transparent;
+  border-top: 0.28rem solid currentColor;
+  opacity: 0.78;
+}
+
+.number-input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  color: inherit;
+  background: transparent;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.number-input::placeholder {
+  color: var(--text-muted, #5f6f86);
+  opacity: 1;
+}
+
+.country-menu {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 18.5rem);
+  max-height: 12.5rem;
+  overflow-y: auto;
+  border: 1px solid var(--surface-border, #d7d7d7);
+  background: var(--surface, #fff);
+  box-shadow: 0 0.85rem 1.7rem rgb(0 0 0 / 0.18);
+}
+
+.country-option {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.38rem;
+  min-height: 2.2rem;
+  border: 0;
+  border-radius: 0;
+  padding: 0.42rem 0.55rem;
+  color: var(--text-primary, #1f2937);
+  background: var(--surface, #fff);
+  text-align: left;
+  cursor: pointer;
+}
+
+.country-option:hover,
+.country-option:focus-visible,
+.country-option--selected {
+  outline: 0;
+  background: color-mix(in srgb, var(--app-brand, #d71920) 8%, var(--surface, #fff));
+}
+
+.country-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.92rem;
+  line-height: 1.18;
+}
+
+.country-code {
+  color: var(--text-muted, #6b7280);
+  font-size: 0.78rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  :host {
+    max-width: none;
+  }
+
+  .country-menu {
+    width: 100%;
+  }
+}

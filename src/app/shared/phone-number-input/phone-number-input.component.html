@@ -1,0 +1,56 @@
+<div class="phone-input-shell" [class.phone-input-shell--open]="dropdownOpen()">
+<igx-input-group
+  class="phone-input"
+  type="box"
+  [class.phone-input--open]="dropdownOpen()"
+  [class.phone-input--disabled]="disabled()"
+>
+  <button
+    igxPrefix
+    class="country-trigger"
+    type="button"
+    [attr.aria-label]="'Select country code. Current country: ' + selectedCountry().name"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="dropdownOpen()"
+    [disabled]="disabled()"
+    (click)="toggleDropdown()"
+  >
+    <span class="country-flag" role="img" [attr.aria-label]="selectedCountry().flagLabel">{{ selectedCountry().flagText }}</span>
+    <span class="country-caret" aria-hidden="true"></span>
+  </button>
+
+  <input
+    igxInput
+    class="number-input"
+    type="tel"
+    autocomplete="tel"
+    [id]="inputId()"
+    [name]="name()"
+    [value]="formattedNumber()"
+    [placeholder]="placeholder()"
+    [attr.aria-label]="ariaLabel()"
+    [disabled]="disabled()"
+    (input)="onPhoneInput($event)"
+    (blur)="onInputBlur()"
+  />
+</igx-input-group>
+
+  @if (dropdownOpen()) {
+    <div class="country-menu" role="listbox" [attr.aria-label]="'Phone countries'">
+      @for (country of countries; track country.code) {
+        <button
+          class="country-option"
+          type="button"
+          role="option"
+          [class.country-option--selected]="country.code === selectedCountry().code"
+          [attr.aria-selected]="country.code === selectedCountry().code"
+          (pointerdown)="$event.preventDefault(); selectCountry(country)"
+        >
+          <span class="country-flag" role="img" [attr.aria-label]="country.flagLabel">{{ country.flagText }}</span>
+          <span class="country-name">{{ country.name }}</span>
+          <span class="country-code">{{ country.callingCode }}</span>
+        </button>
+      }
+    </div>
+  }
+</div>
