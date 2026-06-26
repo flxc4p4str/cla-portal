@@ -9,7 +9,7 @@ import { environment } from '@abs-environments/environment';
 import { ARTCUSTX_BOOK, ARTCUSTX_OPEN, ARTCUSTX_PYMT, ARTCUSTX_RF, ARTCUSTX_RTRN, ARTCUSTX_SHIP, SOTORDR1, SOTORDR2, GLTPARM2, ARTCUSTX_ALL, ARTCUSTX, SOTINVH1, SOTINVH2, ARTPYMTY, ARTPYMTX, ARTPYMTZ } from './summary.models';
 import { grdColsARTCUSTX_OPEN, grdColsARTCUSTX_BOOK, grdColsARTCUSTX_SHIP, grdColsARTCUSTX_RTRN, grdColsSOTORDR1, grdColsSOTORDR2, grdColsARTCUSTX_RF, grdColsARTCUSTX_PYMT, grdColsSOTINVH1, grdColsSOTINVH2, grdColsARTPYMTY, grdColsARTPYMTX, grdColsARTPYMTZ } from './summary.grids';
 import { IMXIcon, invoice } from '@igniteui/material-icons-extended';
-
+import { CurrencyPipe } from '@angular/common';
 
 // your mission is to change the http from JSON to 
 // 1) RxJs
@@ -20,9 +20,10 @@ import { IMXIcon, invoice } from '@igniteui/material-icons-extended';
 
 @Component({
   selector: 'app-summary',
-  imports: [IgxGridModule, IgxTabsModule, IgxIconModule, IgxButtonDirective, IgxRippleDirective ],
+  imports: [IgxGridModule, IgxTabsModule, IgxIconModule, IgxButtonDirective, IgxRippleDirective, CurrencyPipe ],
   templateUrl: './summary.html',
   styleUrl: './summary.scss',
+
 })
 export class Summary implements OnInit, AfterViewInit {
 //       let n:number = +(x.ORDR_DATE.toString());

@@ -289,14 +289,43 @@
                                 [summaries]=grdCol.COLUMN_SUMMARY [summaryFormatter]=grdCol.COLUMN_SUMMARY_FORMAT
                                 [pipeArgs]=grdCol.COLUMN_FORMAT class="column-header" [headerClasses]="'column-header'"
                                 [headerStyles]="grdHeaderStyles">
-                                @if (grdCol.FIELD === 'YP') {
-                                <ng-template igxCell let-val>
-                                    <!-- Use interpolation to access the mapped value from the component's map object -->
+
+
+                                <ng-template igxCell let-val let-cell="cell">
+                                     @if (grdCol.FIELD === 'YP') {
+                                      <!-- Use interpolation to access the mapped value from the component's map object -->
                                     <span [style.color]="val === CYP() ? 'green' : 'red'">
                                         {{ ypMap[val] }}
                                     </span>
+                                    }
+                                    @if (grdCol.FIELD === 'NET_SLS') {
+                                        <span
+                                            [style.color]="(cell.row.data.GRS_SLS - cell.row.data.DISC - cell.row.data.NET_SLS) !== 0 ? 'red' : 'black'"
+                                        >
+                                            {{ cell.value | currency}}
+                                        </span>
+                                    }
+                                    
+                                    <!-- @if (grdCol.FIELD === 'NET_PMT') {
+                                        <span
+                                            [style.color]="(cell.row.data.GRS_SLS - cell.row.data.DISC - cell.row.data.NET_SLS) !== 0 ? 'red' : 'black'"
+                                        >
+                                            {{ cell.value | currency}}
+                                        </span>
+                                    } -->
+
+                                    @else 
+                                                                        
+                                    {@if (grdCol.FIELD !== 'YP') {
+                                       {{ cell.value | currency }}
+                                    } @else {
+                                     <!-- {{ cell.value }} -->
+                                    }
+                                    }
+      
                                 </ng-template>
-                                }
+                                
+                              
                             </igx-column>
                             }
 
